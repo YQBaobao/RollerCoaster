@@ -2,3 +2,4 @@
 PyQt5~=5.15.6
 pywin32~=305
 win32gui~=221.6
+requests~=2.27.1

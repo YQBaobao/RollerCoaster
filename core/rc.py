@@ -9,26 +9,26 @@
 """
 
 import win32gui
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction
 
-from core.rc_ui import UiRollerCoaster
+from core.snowball import Snowball
+from uis.rc_ui import Ui_RollerCoaster
 from static.rc_rc import qInitResources
 
 qInitResources()
 
 
-class RollerCoasterApp(QWidget, UiRollerCoaster):
+class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     def __init__(self):
         super().__init__()
-        self.setup_ui(self)
-        # self.setAttribute(Qt.WA_TranslucentBackground)  # 窗体背景透明
+        self.setupUi(self)
         self.setWindowFlags(Qt.FramelessWindowHint)  # 窗口无边框
-        # self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)  # 窗口置顶，无边框
-        # self.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint | Qt.Tool)  # 窗口置顶，无边框，在任务栏不显示图标
-        # self.setStyleSheet("QLabel{color: white;}")
 
+        self.snowball = Snowball()
+        self.init_time()
+        self.show_value()
         self.tray_icon()
         self.init_ui()
 
@@ -37,12 +37,37 @@ class RollerCoasterApp(QWidget, UiRollerCoaster):
         m_h_bar = win32gui.FindWindowEx(m_h_taskbar, 0, "ReBarWindow32", None)  # 子窗口“ReBarWindow32”的窗口句柄
         m_h_min = win32gui.FindWindowEx(m_h_bar, 0, "MSTaskSwWClass", None)  # 子窗口“MSTaskSwWClass”的窗口句柄
         b = win32gui.GetWindowRect(m_h_bar)  # 获取m_hBar窗口尺寸b为[左，上，右，下]的数组
-        win32gui.MoveWindow(m_h_min, 0, 0, b[2] - b[0] - 160, b[3] - b[1], True)  # 调整m_hMin的窗口大小，为我们的程序预留出位置
+        win32gui.MoveWindow(m_h_min, 0, 0, b[2] - b[0] - 80, b[3] - b[1], True)  # 调整m_hMin的窗口大小，为我们的程序预留出位置
 
-        self.setGeometry(b[2] - b[0] - 160, 0, 160, b[3] - b[1])  # 调整我们自己的窗口到预留位置的大小
+        self.setGeometry(b[2] - b[0] - 80, 0, 60, b[3] - b[1])  # 调整我们自己的窗口到预留位置的大小
         win32gui.SetParent(int(self.winId()), m_h_bar)  # 将我们自己的窗口设置为m_hBar的子窗口
 
         self.show()  # 显示窗口
+
+    def init_time(self, interval: int = 2000):
+        self.time = QTimer(self)
+        self.time.setInterval(interval)
+        self.time.timeout.connect(self.get_value)
+
+        self.get_value()  # 首次
+
+    def get_value(self):
+        quote = self.snowball.quote('SH601127')
+        self.current = quote['data'][0]['current']  # 当前价格
+        self.percent = quote['data'][0]['percent']  # 跌涨幅度 %
+
+    def show_value(self):
+        """数据显示"""
+        self.time.start()  # 启动
+        if self.percent > 0:
+            self.setStyleSheet("QLabel{color: rgb(255, 0, 0);}")
+        elif self.percent < 0:
+            self.setStyleSheet("QLabel{color: rgb(0, 255, 0);")
+        else:
+            self.setStyleSheet("QLabel{color: rgb(0, 0, 0);")
+
+        self.label_value.setText(str(self.current))
+        self.label_rate.setText(str(self.percent) + '%')
 
     def tray_icon(self):
         """系统托盘"""
@@ -58,7 +83,6 @@ class RollerCoasterApp(QWidget, UiRollerCoaster):
         icon = QIcon()
         icon.addPixmap(QPixmap(":/rc/images/setting.png"), QIcon.Normal, QIcon.Off)
         setting.setIcon(icon)
-        icon = QIcon()
         icon = QIcon()
         icon.addPixmap(QPixmap(":/rc/images/quit.png"), QIcon.Normal, QIcon.Off)
         quit_.setIcon(icon)
@@ -89,6 +113,7 @@ class RollerCoasterApp(QWidget, UiRollerCoaster):
 
     def closeEvent(self, event) -> None:
         try:
+            self.time.stop()
             self.tray.hide()
             self.tray = None  # 清空托盘对象内存
         except Exception:

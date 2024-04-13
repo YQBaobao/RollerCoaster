@@ -10,13 +10,11 @@
 # -*- coding: utf-8 -*-
 
 
-import sys
-
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QMouseEvent
-from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtWidgets import QWidget
 
-from core.rc_ui import UiRollerCoaster
+from uis.rc_ui import UiRollerCoaster
 
 
 class MyWindow(QWidget, UiRollerCoaster):
