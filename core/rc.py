@@ -21,6 +21,7 @@ from static.rc_rc import qInitResources
 qInitResources()
 
 
+# noinspection PyUnresolvedReferences
 class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
     def __init__(self):
