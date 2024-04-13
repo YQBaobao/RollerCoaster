@@ -1,5 +1,6 @@
-# Python 3.6.8 x32bit
-PyQt5~=5.15.6
-pywin32~=305
-win32gui~=221.6
-requests~=2.27.1
+# Python 3.7.9 x32bit
+PyQt5
+pywin32
+pypiwin32 # win32gui
+requests
+PyInstaller
