@@ -56,6 +56,7 @@ class Snowball(object):
 
 if __name__ == '__main__':
     s = Snowball()
-    s.set_token('xq_a_token=a7dacb9398d5c3c8bf5d92115b281556f5f7eb52;')
+    s.set_token('xq_a_token=a7dacb9398d5c3c8bf3333333336f5f7eb52;')
+    print(s.quote('SZ002594'))
     print(s.quote('SH601127'))
-    print(s.quote_detail('SH601127'))
+    # print(s.quote_detail('SH601127'))

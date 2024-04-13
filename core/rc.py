@@ -13,6 +13,7 @@ from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction
 
+from core.signals import BaseSignal
 from core.snowball import Snowball
 from uis.rc_ui import Ui_RollerCoaster
 from static.rc_rc import qInitResources
@@ -21,14 +22,16 @@ qInitResources()
 
 
 class RollerCoasterApp(QWidget, Ui_RollerCoaster):
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.setWindowFlags(Qt.FramelessWindowHint)  # 窗口无边框
 
+        self.base_signal = BaseSignal()
         self.snowball = Snowball()
-        self.init_time()
-        self.show_value()
+
+        self.timer()
         self.tray_icon()
         self.init_ui()
 
@@ -39,32 +42,33 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         b = win32gui.GetWindowRect(m_h_bar)  # 获取m_hBar窗口尺寸b为[左，上，右，下]的数组
         win32gui.MoveWindow(m_h_min, 0, 0, b[2] - b[0] - 80, b[3] - b[1], True)  # 调整m_hMin的窗口大小，为我们的程序预留出位置
 
-        self.setGeometry(b[2] - b[0] - 80, 0, 60, b[3] - b[1])  # 调整我们自己的窗口到预留位置的大小
+        self.setGeometry(b[2] - b[0] - 80, 0, 80, b[3] - b[1])  # 调整我们自己的窗口到预留位置的大小
         win32gui.SetParent(int(self.winId()), m_h_bar)  # 将我们自己的窗口设置为m_hBar的子窗口
 
         self.show()  # 显示窗口
 
-    def init_time(self, interval: int = 2000):
+    def timer(self, interval: int = 5000):
         self.time = QTimer(self)
         self.time.setInterval(interval)
         self.time.timeout.connect(self.get_value)
 
-        self.get_value()  # 首次
-
     def get_value(self):
-        quote = self.snowball.quote('SH601127')
-        self.current = quote['data'][0]['current']  # 当前价格
-        self.percent = quote['data'][0]['percent']  # 跌涨幅度 %
+        try:
+            quote = self.snowball.quote(self.symbol)
+            self.current = quote['data'][0]['current']  # 当前价格
+            self.percent = quote['data'][0]['percent']  # 跌涨幅度 %
+        except Exception:
+            self.label_value.setText('错误')
 
     def show_value(self):
         """数据显示"""
-        self.time.start()  # 启动
+        self.get_value()  # 首次
         if self.percent > 0:
-            self.setStyleSheet("QLabel{color: rgb(255, 0, 0);}")
+            self.setStyleSheet('QLabel#label_value,#label_rate{color: rgb(255, 0, 0);}font: 75 10pt "Adobe Arabic";')
         elif self.percent < 0:
-            self.setStyleSheet("QLabel{color: rgb(0, 255, 0);")
+            self.setStyleSheet('QLabel#label_value,#label_rate{color: rgb(0, 255, 0);}font: 75 10pt "Adobe Arabic";')
         else:
-            self.setStyleSheet("QLabel{color: rgb(0, 0, 0);")
+            self.setStyleSheet('QLabel#label_value,#label_rate{color: rgb(0, 0, 0);}font: 75 10pt "Adobe Arabic";')
 
         self.label_value.setText(str(self.current))
         self.label_rate.setText(str(self.percent) + '%')
@@ -95,7 +99,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
     def tray_icon_activated(self, reason):
         """托盘图标事件"""
-        if reason == QSystemTrayIcon.Trigger:  # 单击
+        if reason == QSystemTrayIcon.DoubleClick:  # 双击
             if self.isMinimized() or not self.isVisible():
                 self.showNormal()  # 若是最小化，则先正常显示窗口，再变为活动窗口（暂时显示在最前面）
                 self.activateWindow()
@@ -104,7 +108,21 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             return
 
     def tray_menu_setting(self):
-        pass
+        from core.setting import UiSettingQWidget
+
+        self.base_signal.signal_symbol.connect(self.get_setting)
+        self.setting = UiSettingQWidget(self.base_signal)
+        self.setting.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)  # 取消帮助按钮
+        self.setting.exec()
+
+    def get_setting(self, data):
+        self.setting.close()
+        self.time.stop()  # 停止
+
+        self.symbol = data['symbol']
+        self.timer(data['interval'])
+        self.time.start()  # 启动
+        self.show_value()
 
     def tray_menu_quit(self):
         self.tray.hide()
