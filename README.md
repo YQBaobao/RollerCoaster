@@ -1,23 +1,20 @@
 # RollerCoaster
 
-### 这是什么？
+### What's this?
+Monitor real-time price changes through the stock code and place it on the desktop taskbar, a must-have for fishing
 
-通过股票代码，监听实时价格变化，并置于桌面任务栏，摸鱼必备
+### What can you do?
+- Use the stock code to monitor real-time price changes, the monitoring quantity is 1 (the code must be entered completely, such as: SZ002594)
+- Monitoring interval, minimum 2 seconds
+- If it rises, the font will be `red`. If it falls, the font will be `green`
+- Added the option to no longer obtain prices after the market closes, but to obtain prices half an hour in advance before the market opens (time period: 9:00-15:00)
 
-### 能干什么？
+### How to use it?
+- Download the `exe` installer and install it
+- After startup, go to the tray in the lower right corner of the system > Right-click the icon > Settings > Enter the code and select the delay interval
+- After entering, click OK
+- Right-click the icon in the tray and exit, and the program will exit.
+- Double-click the icon in the tray to switch between hiding and displaying
 
-- 用股票代码，监听实时价格变化，监听数量1个（代码必须输入完整，如：SZ002594）
-- 监听间隔，最短2秒
-- 若涨，则字体`红色`。若跌，则字体`绿色`
-
-### 怎么用的？
-
-- 下载`exe`安装程序，并安装
-- 启动后在系统右下角托盘内》右键图标》设置》输入代码，并选择延迟间隔
-- 输入后，点击确定即可
-- 托盘内》右键图标》退出，则程序退出
-- 托盘内》双击图标》切换隐藏，显示
-
-### 许可
-
-[使用 GPL-3.0 license](https://www.gnu.org/licenses/gpl-3.0.html)
+### License
+[Using GPL-3.0 license](https://www.gnu.org/licenses/gpl-3.0.html)
