@@ -1,4 +1,5 @@
 # RollerCoaster
+[中文说明](https://gitee.com/yqbao/roller-coaster/blob/master/README_zh.md)
 
 ### What's this?
 Monitor real-time price changes through the stock code and place it on the desktop taskbar, a must-have for fishing
