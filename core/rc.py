@@ -7,6 +7,7 @@
 @ Version     : V1.0.0
 @ Description :
 """
+import datetime
 import time
 
 import win32gui
@@ -15,14 +16,13 @@ from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction
 
 from core.signals import BaseSignal
-from core.snowball import Snowball
+from core.snowball import Snowball, GuShiTong
 from uis.rc_ui import Ui_RollerCoaster
 from static.rc_rc import qInitResources
 
 qInitResources()
 
 
-# noinspection PyUnresolvedReferences
 class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
     def __init__(self):
@@ -32,8 +32,10 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
         self.base_signal = BaseSignal()
         self.snowball = Snowball()
+        self.gu_shi_tong = GuShiTong()
 
         self.timer()
+        self.timer_start()
         self.tray_icon()
         self.init_ui()
 
@@ -54,6 +56,13 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.time.setInterval(interval)
         self.time.timeout.connect(self.show_value)
 
+    def timer_start(self, interval: int = 3 * 60 * 1000):
+        """启动定时器"""
+        self.time_start = QTimer(self)
+        self.time_start.setInterval(interval)
+        self.time_start.timeout.connect(self.start)
+        self.time_start.start()  # 启动
+
     def show_value(self):
         timestamp = int(time.time() * 1000)
         try:
@@ -71,6 +80,8 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
             self.label_value.setText(str(current))
             self.label_rate.setText(str(percent) + '%')
+            if self.get_trade_status == "已收盘":
+                self.time.stop()
         except Exception:
             self.label_value.setText('错误')
 
@@ -122,6 +133,14 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
         self.symbol = data['symbol']
         self.timer(data['interval'])
+        self.time.start()  # 启动
+        self.start()  # 首次
+
+    def start(self):
+        self.get_trade_status = self.gu_shi_tong.get_trade_status(symbol=self.symbol)
+        hour = datetime.datetime.now().hour
+        if self.get_trade_status == '已收盘' and (hour < 9 or 15 <= hour):
+            return
         self.time.start()  # 启动
 
     def tray_menu_quit(self):
