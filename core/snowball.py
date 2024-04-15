@@ -8,6 +8,7 @@
 @ Description : 雪球数据
 """
 import json
+import time
 
 import requests
 
@@ -24,9 +25,6 @@ class Snowball(object):
         'Connection': 'keep-alive'
 
     }
-
-    def set_token(self, token):
-        self.token = token
 
     def fetch_token(self, url, host="stock.xueqiu.com"):
         """带token"""
@@ -45,18 +43,19 @@ class Snowball(object):
             raise Exception(response.content)
         return json.loads(response.content)
 
-    def quote(self, symbol):
-        url = self.realtime_quote + symbol
+    def quote(self, symbol, timestamp):
+        url = self.realtime_quote + symbol + f'&_={timestamp}'
         return self.fetch(url)
 
-    def quote_detail(self, symbol):
-        url = self.realtime_quote_detail + symbol
+    def quote_detail(self, token, symbol, timestamp):
+        self.token = token
+        url = self.realtime_quote_detail + symbol + f'&_={timestamp}'
         return self.fetch_token(url)
 
 
 if __name__ == '__main__':
     s = Snowball()
-    s.set_token('xq_a_token=a7dacb9398d5c3c8bf3333333336f5f7eb52;')
-    print(s.quote('SZ002594'))
-    print(s.quote('SH601127'))
-    # print(s.quote_detail('SH601127'))
+    t = int(time.time() * 1000)
+    print(s.quote('SZ002594', t))
+    print(s.quote('SH601127', t))
+    # print(s.quote_detail('xq_a_token=a7dacb9398d5c3c8bf3333333336f5f7eb52;', 'SH601127', t))

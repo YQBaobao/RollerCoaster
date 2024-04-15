@@ -13,7 +13,7 @@ from uis.setting_ui import Ui_Settiing
 
 
 class UiSettingQWidget(QDialog, Ui_Settiing):
-    interval_time = [1000, 2000, 3000, 5000, 10000]  # 延迟
+    interval_time = [2000, 3000, 5000, 10000]  # 延迟
 
     def __init__(self, base_signal, parent=None):
         super().__init__(parent)

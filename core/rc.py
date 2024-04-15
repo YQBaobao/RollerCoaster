@@ -7,6 +7,7 @@
 @ Version     : V1.0.0
 @ Description :
 """
+import time
 
 import win32gui
 from PyQt5.QtCore import Qt, QTimer
@@ -51,28 +52,27 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     def timer(self, interval: int = 5000):
         self.time = QTimer(self)
         self.time.setInterval(interval)
-        self.time.timeout.connect(self.get_value)
-
-    def get_value(self):
-        try:
-            quote = self.snowball.quote(self.symbol)
-            self.current = quote['data'][0]['current']  # 当前价格
-            self.percent = quote['data'][0]['percent']  # 跌涨幅度 %
-        except Exception:
-            self.label_value.setText('错误')
+        self.time.timeout.connect(self.show_value)
 
     def show_value(self):
-        """数据显示"""
-        self.get_value()  # 首次
-        if self.percent > 0:
-            self.setStyleSheet('QLabel#label_value,#label_rate{color: rgb(255, 0, 0);}font: 75 10pt "Adobe Arabic";')
-        elif self.percent < 0:
-            self.setStyleSheet('QLabel#label_value,#label_rate{color: rgb(0, 255, 0);}font: 75 10pt "Adobe Arabic";')
-        else:
-            self.setStyleSheet('QLabel#label_value,#label_rate{color: rgb(0, 0, 0);}font: 75 10pt "Adobe Arabic";')
+        timestamp = int(time.time() * 1000)
+        try:
+            quote = self.snowball.quote(self.symbol, timestamp)
+            current = quote['data'][0]['current']  # 当前价格
+            percent = quote['data'][0]['percent']  # 跌涨幅度 %
+            if percent > 0:
+                self.setStyleSheet(
+                    'QLabel#label_value,#label_rate{color: rgb(170, 0, 0);}font: 75 10pt "Adobe Arabic";')
+            elif percent < 0:
+                self.setStyleSheet(
+                    'QLabel#label_value,#label_rate{color: rgb(0, 170, 0);}font: 75 10pt "Adobe Arabic";')
+            else:
+                self.setStyleSheet('QLabel#label_value,#label_rate{color: rgb(0, 0, 0);}font: 75 10pt "Adobe Arabic";')
 
-        self.label_value.setText(str(self.current))
-        self.label_rate.setText(str(self.percent) + '%')
+            self.label_value.setText(str(current))
+            self.label_rate.setText(str(percent) + '%')
+        except Exception:
+            self.label_value.setText('错误')
 
     def tray_icon(self):
         """系统托盘"""
@@ -123,7 +123,6 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.symbol = data['symbol']
         self.timer(data['interval'])
         self.time.start()  # 启动
-        self.show_value()
 
     def tray_menu_quit(self):
         self.tray.hide()

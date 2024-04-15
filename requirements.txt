@@ -1,6 +1,5 @@
 # Python 3.7.9 x32bit
 PyQt5
 pywin32
-pypiwin32 # win32gui
 requests
 PyInstaller

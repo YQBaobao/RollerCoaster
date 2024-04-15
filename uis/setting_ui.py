@@ -36,7 +36,6 @@ class Ui_Settiing(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
-        self.comboBox.addItem("")
         self.gridLayout.addWidget(self.comboBox, 1, 1, 1, 1)
         self.pushButton = QtWidgets.QPushButton(Settiing)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
@@ -48,7 +47,7 @@ class Ui_Settiing(object):
         self.gridLayout.addWidget(self.pushButton, 0, 2, 2, 1)
 
         self.retranslateUi(Settiing)
-        self.comboBox.setCurrentIndex(2)
+        self.comboBox.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Settiing)
 
     def retranslateUi(self, Settiing):
@@ -57,9 +56,8 @@ class Ui_Settiing(object):
         self.label.setText(_translate("Settiing", "完整代码"))
         self.lineEdit.setText(_translate("Settiing", "SZ002594"))
         self.label_2.setText(_translate("Settiing", "获取延迟"))
-        self.comboBox.setItemText(0, _translate("Settiing", "1秒"))
-        self.comboBox.setItemText(1, _translate("Settiing", "2秒"))
-        self.comboBox.setItemText(2, _translate("Settiing", "3秒"))
-        self.comboBox.setItemText(3, _translate("Settiing", "5秒"))
-        self.comboBox.setItemText(4, _translate("Settiing", "10秒"))
+        self.comboBox.setItemText(0, _translate("Settiing", "2秒"))
+        self.comboBox.setItemText(1, _translate("Settiing", "3秒"))
+        self.comboBox.setItemText(2, _translate("Settiing", "5秒"))
+        self.comboBox.setItemText(3, _translate("Settiing", "10秒"))
         self.pushButton.setText(_translate("Settiing", "确定"))
