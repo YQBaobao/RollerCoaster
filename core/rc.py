@@ -29,6 +29,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         super().__init__()
         self.setupUi(self)
         self.setWindowFlags(Qt.FramelessWindowHint)  # 窗口无边框
+        self.symbol = 'SZ002594'  # 默认
 
         self.base_signal = BaseSignal()
         self.snowball = Snowball()
@@ -122,12 +123,22 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     def tray_menu_setting(self):
         from core.rc_setting.setting import UiSettingQWidget
 
-        self.base_signal.signal_symbol.connect(self.get_setting)
+        self.base_signal.signal_symbol.connect(self.get_base)
+        self.base_signal.signal_background_color.connect(self.get_background_color)
+
         self.setting = UiSettingQWidget(self.base_signal, self)
         self.setting.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)  # 取消帮助按钮
+
+        self.setting.ui_base.pushButton_accepted.clicked.connect(self.setting.ui_base.setting_base)
+        self.setting.ui_background_color.pushButton_palette.clicked.connect(
+            self.setting.ui_background_color.get_palette)
+        self.setting.ui_background_color.pushButton_accepted_2.clicked.connect(
+            self.setting.ui_background_color.background_color)
+
         self.setting.exec()
 
-    def get_setting(self, data):
+    def get_base(self, data):
+        """基础"""
         self.setting.close()
         self.time.stop()  # 停止
 
@@ -135,6 +146,11 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.timer(data['interval'])
         self.time.start()  # 启动
         self.start()  # 首次
+
+    def get_background_color(self, data):
+        """背景色"""
+        self.setting.close()
+        print(data)
 
     def start(self):
         self.get_trade_status = self.gu_shi_tong.get_trade_status(symbol=self.symbol)

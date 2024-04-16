@@ -21,7 +21,6 @@ class UiBaseQWidget(QWidget, Ui_Base):
         self.base_signal = base_signal
 
         self.comboBox.setView(QListView())
-        self.pushButton_accepted.clicked.connect(self.setting_base)
 
     def setting_base(self):
         """基础设置"""

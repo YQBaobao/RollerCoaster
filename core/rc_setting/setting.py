@@ -33,30 +33,30 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         size = self.geometry()
         self.move(int((screen.width() - size.width()) / 2), int((screen.height() - size.height()) / 2))
         # 0
-        self.ui_home_widget = UiHomeQWidget(self)
-        grid_layout = QGridLayout(self.ui_home_widget)
+        self.ui_home = UiHomeQWidget(self)
+        grid_layout = QGridLayout(self.ui_home)
         grid_layout.setObjectName("gridLayout_5")
-        self.stackedWidget.addWidget(self.ui_home_widget)  # 0
+        self.stackedWidget.addWidget(self.ui_home)  # 0
         # 1
-        self.ui_base_widget = UiBaseQWidget(self.base_signal, self)
-        grid_layout = QGridLayout(self.ui_base_widget)
+        self.ui_base = UiBaseQWidget(self.base_signal, self)
+        grid_layout = QGridLayout(self.ui_base)
         grid_layout.setObjectName("gridLayout_6")
-        self.stackedWidget.addWidget(self.ui_base_widget)  # 1
+        self.stackedWidget.addWidget(self.ui_base)  # 1
         # 2
-        self.ui_background_color_widget = UiBackgroundColorQWidget(self)
-        grid_layout = QGridLayout(self.ui_background_color_widget)
+        self.ui_background_color = UiBackgroundColorQWidget(self.base_signal, self)
+        grid_layout = QGridLayout(self.ui_background_color)
         grid_layout.setObjectName("gridLayout_7")
-        self.stackedWidget.addWidget(self.ui_background_color_widget)  # 2
+        self.stackedWidget.addWidget(self.ui_background_color)  # 2
         # 3
-        self.ui_shortcut_key_widget = UiShortcutKeyQWidget(self)
-        grid_layout = QGridLayout(self.ui_shortcut_key_widget)
+        self.ui_shortcut_key = UiShortcutKeyQWidget(self)
+        grid_layout = QGridLayout(self.ui_shortcut_key)
         grid_layout.setObjectName("gridLayout_8")
-        self.stackedWidget.addWidget(self.ui_shortcut_key_widget)  # 3
+        self.stackedWidget.addWidget(self.ui_shortcut_key)  # 3
         # 4
-        self.ui_what_new_widget = UiWhatNewQWidget(self)
-        grid_layout = QGridLayout(self.ui_what_new_widget)
+        self.ui_what_new = UiWhatNewQWidget(self)
+        grid_layout = QGridLayout(self.ui_what_new)
         grid_layout.setObjectName("gridLayout_9")
-        self.stackedWidget.addWidget(self.ui_what_new_widget)  # 4
+        self.stackedWidget.addWidget(self.ui_what_new)  # 4
 
     def init_action_left_menu(self):
         """动作"""
