@@ -5,4 +5,7 @@
         <file>./images/setting.png</file>
         <file>./images/quit.png</file>
     </qresource>
+    <qresource prefix="qss">
+        <file>./qss/rc.qss</file>
+    </qresource>
 </RCC>

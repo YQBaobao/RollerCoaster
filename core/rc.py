@@ -120,10 +120,10 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             return
 
     def tray_menu_setting(self):
-        from core.setting import UiSettingQWidget
+        from core.rc_setting.setting import UiSettingQWidget
 
         self.base_signal.signal_symbol.connect(self.get_setting)
-        self.setting = UiSettingQWidget(self.base_signal)
+        self.setting = UiSettingQWidget(self.base_signal, self)
         self.setting.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)  # 取消帮助按钮
         self.setting.exec()
 

@@ -2,17 +2,17 @@
 # -*- coding: UTF-8 -*-
 """
 @ Project     : RollerCoaster 
-@ File        : setting.py
+@ File        : base.py
 @ Author      : yqbao
 @ Version     : V1.0.0
 @ Description : 
 """
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWidgets import QWidget, QListView
 
-from uis.setting_ui import Ui_Settiing
+from uis.rc_setting.base.base import Ui_Base
 
 
-class UiSettingQWidget(QDialog, Ui_Settiing):
+class UiBaseQWidget(QWidget, Ui_Base):
     interval_time = [2000, 3000, 5000, 10000]  # 延迟
 
     def __init__(self, base_signal, parent=None):
@@ -20,9 +20,11 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         self.setupUi(self)
         self.base_signal = base_signal
 
-        self.pushButton.clicked.connect(self.setting)
+        self.comboBox.setView(QListView())
+        self.pushButton_accepted.clicked.connect(self.setting_base)
 
-    def setting(self):
+    def setting_base(self):
+        """基础设置"""
         symbol = self.lineEdit.text()
         interval = self.comboBox.currentIndex()
         data = {
