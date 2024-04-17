@@ -61,6 +61,11 @@ QPushButton#pushButton_accepted,#pushButton_accepted_2,#pushButton_accepted_3,#p
     padding-left: 0px;
     min-width: 70px;
 }
+QPushButton#pb_open_setting,#pb_show_data,#pb_red_green_switch,#pb_boss_key{
+    text-align: center;
+    padding-left: 0px;
+    background-color:rgb(200 , 200 , 200);
+}
 
 QPushButton#pushButton_see_more{
     padding-left: 0px;

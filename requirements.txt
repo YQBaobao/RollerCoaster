@@ -2,4 +2,5 @@
 PyQt5
 pywin32
 requests
+configobj
 PyInstaller

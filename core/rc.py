@@ -8,12 +8,13 @@
 @ Description :
 """
 import datetime
+import os
 import time
 
 import win32gui
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
-from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction
+from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor, QKeySequence
+from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction, QShortcut
 
 from core.signals import BaseSignal
 from core.snowball import Snowball, GuShiTong
@@ -42,11 +43,12 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.snowball = Snowball()
         self.gu_shi_tong = GuShiTong()
 
-        self.timer()
-        self.timer_start()
-        self.tray_icon()
-        self.init_ui()
-        self.init_action()
+        self.timer()  # 请求定时
+        self.timer_start()  # 收盘后定时
+        self.tray_icon()  # 托盘
+        self.init_ui()  # 初始化UI
+        self.init_action()  # 动作
+        self.init_shortcut_key()  # 快捷键
 
     def init_ui(self):
         m_h_taskbar = win32gui.FindWindow("Shell_TrayWnd", None)  # 任务栏“Shell_TaryWnd”的窗口句柄
@@ -63,13 +65,27 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.setPalette(palette)
         self.label_value.setStyleSheet(self.light)
         self.label_rate.setStyleSheet(self.light)
-        self.show()  # 显示窗口
 
     def init_action(self):
         """信号"""
         self.base_signal.signal_symbol.connect(self.set_base)
         self.base_signal.signal_background_color.connect(self.set_background_color)
         self.base_signal.signal_setting_close.connect(self.close_setting)
+        self.base_signal.signal_shortcut_key.connect(self.set_shortcut_key)
+
+    def init_shortcut_key(self):
+        from configobj import ConfigObj
+        file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../temp/user_data.ini")
+        config = ConfigObj(file_path, encoding='UTF8')
+        open_setting = config['shortcut_key']['open_setting']
+        show_data = config['shortcut_key']['show_data']
+        red_green_switch = config['shortcut_key']['red_green_switch']
+        boss_key = config['shortcut_key']['boss_key']
+
+        QShortcut(QKeySequence(open_setting), self, lambda: self.base_signal.signal_shortcut_key.emit(1))
+        QShortcut(QKeySequence(show_data), self, lambda: self.base_signal.signal_shortcut_key.emit(2))
+        QShortcut(QKeySequence(red_green_switch), self, lambda: self.base_signal.signal_shortcut_key.emit(3))
+        QShortcut(QKeySequence(boss_key), self, lambda: self.base_signal.signal_shortcut_key.emit(4))
 
     def timer(self, interval: int = 5000):
         self.time = QTimer(self)
@@ -171,6 +187,12 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         palette.setColor(QPalette.Background, data)
         self.setPalette(palette)
         self.default_style = self.dark if '#eeeeee' == data.name() else self.light
+
+    def set_shortcut_key(self, data):
+        if data == 1:
+            self.tray_menu_setting()
+        print(data)
+        return
 
     def start(self):
         self.get_trade_status = self.gu_shi_tong.get_trade_status(symbol=self.symbol)

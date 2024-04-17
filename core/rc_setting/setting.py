@@ -57,7 +57,7 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         grid_layout.setObjectName("gridLayout_7")
         self.stackedWidget.addWidget(self.ui_back_color)  # 2
         # 3
-        self.ui_shortcut_key = UiShortcutKeyQWidget(self)
+        self.ui_shortcut_key = UiShortcutKeyQWidget(self.base_signal, self)
         grid_layout = QGridLayout(self.ui_shortcut_key)
         grid_layout.setObjectName("gridLayout_8")
         self.stackedWidget.addWidget(self.ui_shortcut_key)  # 3
