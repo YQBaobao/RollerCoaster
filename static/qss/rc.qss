@@ -51,7 +51,7 @@ QPushButton:checked{
 
 
 /* 特定按钮样式 */
-QPushButton#pushButton_accepted,#pushButton_accepted_2,#pushButton_accepted_3{
+QPushButton#pushButton_accepted,#pushButton_accepted_2,#pushButton_accepted_3,#pushButton_palette{
     border: 1px solid;
     text-align: center;
     padding-left: 0px;

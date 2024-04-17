@@ -12,7 +12,7 @@ import time
 
 import win32gui
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction
 
 from core.signals import BaseSignal
@@ -56,8 +56,8 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
     def init_action(self):
         """信号"""
-        self.base_signal.signal_symbol.connect(self.get_base)
-        self.base_signal.signal_background_color.connect(self.get_background_color)
+        self.base_signal.signal_symbol.connect(self.set_base)
+        self.base_signal.signal_background_color.connect(self.set_background_color)
         self.base_signal.signal_setting_close.connect(self.close_setting)
 
     def timer(self, interval: int = 5000):
@@ -143,7 +143,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     def close_setting(self):
         self.setting_is_active_window = False
 
-    def get_base(self, data):
+    def set_base(self, data):
         """基础"""
         self.time.stop()  # 停止
 
@@ -152,9 +152,11 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.time.start()  # 启动
         self.start()  # 首次
 
-    def get_background_color(self, data):
+    def set_background_color(self, data: QColor):
         """背景色"""
-        print(data)
+        palette = self.palette()
+        palette.setColor(QPalette.Background, data)
+        self.setPalette(palette)
 
     def start(self):
         self.get_trade_status = self.gu_shi_tong.get_trade_status(symbol=self.symbol)

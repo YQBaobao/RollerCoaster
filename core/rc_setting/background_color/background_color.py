@@ -7,6 +7,7 @@
 @ Version     : V1.0.0
 @ Description : 
 """
+from PyQt5.QtGui import QColor, QPalette
 from PyQt5.QtWidgets import QWidget, QColorDialog
 
 from core.signals import BaseSignal
@@ -14,10 +15,10 @@ from uis.rc_setting.background_color.backgroud_color import Ui_BackgroundColor
 
 
 class UiBackgroundColorQWidget(QWidget, Ui_BackgroundColor):
-    dark = '#101010'
-    light = '#eeeeee'
-    dark_transparent = "#212221"
-    light_transparent = '#c7c8c7'
+    dark = QColor(16, 16, 16)
+    light = QColor(238, 238, 238)
+    dark_transparent = QColor(33, 34, 33)
+    light_transparent = QColor(199, 200, 199)
 
     def __init__(self, base_signal: BaseSignal = None, parent=None):
         super().__init__(parent)
@@ -26,7 +27,8 @@ class UiBackgroundColorQWidget(QWidget, Ui_BackgroundColor):
 
     def get_palette(self):
         c = QColorDialog.getColor()
-        self.base_signal.signal_background_color.emit(c.name())
+        self.label.setStyleSheet('border-radius:6px;background-color:{}'.format(c.name()))
+        self.base_signal.signal_background_color.emit(c)
 
     def background_color(self):
         c = self.dark
@@ -38,4 +40,5 @@ class UiBackgroundColorQWidget(QWidget, Ui_BackgroundColor):
             c = self.light_transparent
         if self.radioButton_2.isChecked() and self.checkBox.isChecked():
             c = self.dark_transparent
+        self.label_2.setStyleSheet('border-radius:6px;background-color:{}'.format(c.name()))
         self.base_signal.signal_background_color.emit(c)
