@@ -17,15 +17,12 @@ class Ui_WhatNew(object):
         WhatNew.resize(432, 195)
         self.gridLayout = QtWidgets.QGridLayout(WhatNew)
         self.gridLayout.setObjectName("gridLayout")
-        self.label_12 = QtWidgets.QLabel(WhatNew)
-        self.label_12.setObjectName("label_12")
-        self.gridLayout.addWidget(self.label_12, 0, 0, 1, 1)
-        self.pushButton_see_more = QtWidgets.QPushButton(WhatNew)
-        self.pushButton_see_more.setObjectName("pushButton_see_more")
-        self.gridLayout.addWidget(self.pushButton_see_more, 1, 0, 1, 1)
         self.textBrowser = QtWidgets.QTextBrowser(WhatNew)
         self.textBrowser.setObjectName("textBrowser")
-        self.gridLayout.addWidget(self.textBrowser, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.textBrowser, 1, 0, 1, 1)
+        self.pushButton_see_more = QtWidgets.QPushButton(WhatNew)
+        self.pushButton_see_more.setObjectName("pushButton_see_more")
+        self.gridLayout.addWidget(self.pushButton_see_more, 0, 0, 1, 1)
 
         self.retranslateUi(WhatNew)
         QtCore.QMetaObject.connectSlotsByName(WhatNew)
@@ -33,5 +30,4 @@ class Ui_WhatNew(object):
     def retranslateUi(self, WhatNew):
         _translate = QtCore.QCoreApplication.translate
         WhatNew.setWindowTitle(_translate("WhatNew", "Form"))
-        self.label_12.setText(_translate("WhatNew", "<html><head/><body><p><span style=\" font-size:14pt; font-weight:600;\">新功能</span></p></body></html>"))
         self.pushButton_see_more.setText(_translate("WhatNew", "在 GitHub 上可看到更详细的更新说明"))

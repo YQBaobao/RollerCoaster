@@ -8,7 +8,7 @@
 @ Description : 
 """
 from PyQt5.QtCore import Qt, QFile
-from PyQt5.QtWidgets import QDialog, QGridLayout, QDesktopWidget
+from PyQt5.QtWidgets import QDialog, QGridLayout
 
 from core.rc_setting.background_color.background_color import UiBackgroundColorQWidget
 from core.rc_setting.base.base import UiBaseQWidget
