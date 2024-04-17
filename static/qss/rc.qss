@@ -25,6 +25,15 @@ QStackedWidget{
     border-color: rgb(210, 210, 210);
 }
 
+/* QMessageBox中的QPushButton样式 */
+QMessageBox QPushButton {
+    border: 1px solid;
+    border-radius: 6px;
+    text-align: center;
+    padding-left: 0px;
+    min-width: 60px;
+}
+
 /*全局 QPushButton 开始*/
 QPushButton{
     border: none;

@@ -41,9 +41,6 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         qss.close()
 
     def init_ui(self):
-        screen = QDesktopWidget().screenGeometry()
-        size = self.geometry()
-        self.move(int((screen.width() - size.width()) / 2), int((screen.height() - size.height()) / 2))
         # 0
         self.ui_home = UiHomeQWidget(self)
         grid_layout = QGridLayout(self.ui_home)

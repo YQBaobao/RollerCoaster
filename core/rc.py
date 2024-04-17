@@ -25,12 +25,18 @@ qInitResources()
 
 class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     symbol = 'SZ002594'  # 默认
+    up = 'color: rgb(170, 0, 0);'
+    down = 'color: rgb(0, 170, 0);'
+    light = 'color: rgb(255, 255, 255);'
+    dark = 'color: rgb(0, 0, 0);'
 
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.setWindowFlags(Qt.FramelessWindowHint)  # 窗口无边框
         self.setting_is_active_window = False
+        self.start_status = True
+        self.default_style = self.light  # 默认白
 
         self.base_signal = BaseSignal()
         self.snowball = Snowball()
@@ -55,6 +61,8 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         palette = self.palette()
         palette.setColor(QPalette.Background, QColor(16, 16, 16))
         self.setPalette(palette)
+        self.label_value.setStyleSheet(self.light)
+        self.label_rate.setStyleSheet(self.light)
         self.show()  # 显示窗口
 
     def init_action(self):
@@ -66,7 +74,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     def timer(self, interval: int = 5000):
         self.time = QTimer(self)
         self.time.setInterval(interval)
-        self.time.timeout.connect(self.show_value)
+        self.time.timeout.connect(lambda: self.show_value(self.default_style))
 
     def timer_start(self, interval: int = 3 * 60 * 1000):
         """启动定时器"""
@@ -75,18 +83,21 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.time_start.timeout.connect(self.start)
         self.time_start.start()  # 启动
 
-    def show_value(self):
+    def show_value(self, style):
         timestamp = int(time.time() * 1000)
         try:
             quote = self.snowball.quote(self.symbol, timestamp)
             current = quote['data'][0]['current']  # 当前价格
             percent = quote['data'][0]['percent']  # 跌涨幅度 %
             if percent > 0:
-                self.setStyleSheet('QLabel#label_value,#label_rate{color: rgb(170, 0, 0);}')
+                self.label_value.setStyleSheet(self.up)
+                self.label_rate.setStyleSheet(self.up)
             elif percent < 0:
-                self.setStyleSheet('QLabel#label_value,#label_rate{color: rgb(0, 170, 0);}')
+                self.label_value.setStyleSheet(self.down)
+                self.label_rate.setStyleSheet(self.down)
             else:
-                self.setStyleSheet('QLabel#label_value,#label_rate{color: rgb(255, 255, 255);}')
+                self.label_value.setStyleSheet(style)
+                self.label_rate.setStyleSheet(style)
 
             self.label_value.setText(str(current))
             self.label_rate.setText(str(percent) + '%')
@@ -135,7 +146,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             return
         from core.rc_setting.setting import UiSettingQWidget
 
-        self.setting = UiSettingQWidget(self.base_signal, self)
+        self.setting = UiSettingQWidget(self.base_signal)
         self.setting.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)  # 取消帮助按钮
 
         self.setting_is_active_window = True
@@ -152,19 +163,23 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.timer(data['interval'])
         self.time.start()  # 启动
         self.start()  # 首次
+        self.setting.pushButton_background_color.setEnabled(False)
 
     def set_background_color(self, data: QColor):
         """背景色"""
         palette = self.palette()
         palette.setColor(QPalette.Background, data)
         self.setPalette(palette)
+        self.default_style = self.dark if '#eeeeee' == data.name() else self.light
 
     def start(self):
         self.get_trade_status = self.gu_shi_tong.get_trade_status(symbol=self.symbol)
         hour = datetime.datetime.now().hour
         if self.get_trade_status == '已收盘' and (hour < 9 or 15 <= hour):
             return
-        self.time.start()  # 启动
+        if self.start_status:  # 修复定时器 time 的重复启动
+            self.time.start()  # 启动
+        self.start_status = False
 
     def tray_menu_quit(self):
         self.tray.hide()
@@ -173,6 +188,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
     def closeEvent(self, event) -> None:
         try:
+            self.setting.close()
             self.time.stop()
             self.tray.hide()
             self.tray = None  # 清空托盘对象内存

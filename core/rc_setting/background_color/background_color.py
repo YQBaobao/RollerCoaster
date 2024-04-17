@@ -27,7 +27,7 @@ class UiBackgroundColorQWidget(QWidget, Ui_BackgroundColor):
 
     def get_palette(self):
         c = QColorDialog.getColor()
-        self.label.setStyleSheet('border-radius:6px;background-color:{}'.format(c.name()))
+        self.pushButton_palette.setStyleSheet('background-color:{}'.format(c.name()))
         self.base_signal.signal_background_color.emit(c)
 
     def background_color(self):
@@ -40,5 +40,4 @@ class UiBackgroundColorQWidget(QWidget, Ui_BackgroundColor):
             c = self.light_transparent
         if self.radioButton_2.isChecked() and self.checkBox.isChecked():
             c = self.dark_transparent
-        self.label_2.setStyleSheet('border-radius:6px;background-color:{}'.format(c.name()))
         self.base_signal.signal_background_color.emit(c)

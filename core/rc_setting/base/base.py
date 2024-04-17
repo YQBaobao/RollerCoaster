@@ -7,7 +7,7 @@
 @ Version     : V1.0.0
 @ Description : 
 """
-from PyQt5.QtWidgets import QWidget, QListView
+from PyQt5.QtWidgets import QWidget, QListView, QMessageBox
 
 from uis.rc_setting.base.base import Ui_Base
 
@@ -24,6 +24,13 @@ class UiBaseQWidget(QWidget, Ui_Base):
 
     def setting_base(self):
         """基础设置"""
+        msg = '请确认任务栏中，“数据”背景色是否与系统任务栏颜色一致？\n“确认”后将无法再修改背景色！'
+        message = QMessageBox(QMessageBox.Information, '确认框', msg, QMessageBox.Yes | QMessageBox.No, parent=self)
+        message.button(QMessageBox.Yes).setText("确认")
+        message.button(QMessageBox.No).setText("取消")
+        message.exec()
+        if message.clickedButton() != message.button(QMessageBox.Yes):
+            return
         symbol = self.lineEdit.text()
         interval = self.comboBox.currentIndex()
         data = {
