@@ -7,7 +7,7 @@
 @ Version     : V1.0.0
 @ Description : 
 """
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QFile
 from PyQt5.QtWidgets import QDialog, QGridLayout, QDesktopWidget
 
 from core.rc_setting.background_color.background_color import UiBackgroundColorQWidget
@@ -24,12 +24,21 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
     def __init__(self, base_signal, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+        self.init_style()
         self.base_signal = base_signal
 
         self.stackedWidget.setCurrentIndex(0)
         self.init_ui()
         self.init_action_left_menu()
         self.init_action_widget()
+
+    def init_style(self):
+        qss = QFile(':/qss/qss/rc.qss')
+        if qss.open(QFile.ReadOnly | QFile.Text):
+            style_bytearray = qss.readAll()  # 类型为 QByteArray
+            style = str(style_bytearray, encoding='UTF-8')
+            self.setStyleSheet(style)
+        qss.close()
 
     def init_ui(self):
         screen = QDesktopWidget().screenGeometry()
