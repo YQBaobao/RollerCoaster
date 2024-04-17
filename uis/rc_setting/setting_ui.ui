@@ -26,7 +26,7 @@
    <string>RollerCoaster</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../static/rc.qrc">
+   <iconset resource="../../static/rc.qrc">
     <normaloff>:/rc/images/microscope.ico</normaloff>:/rc/images/microscope.ico</iconset>
   </property>
   <layout class="QGridLayout" name="_2">
@@ -147,7 +147,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../static/rc.qrc"/>
+  <include location="../../static/rc.qrc"/>
  </resources>
  <connections/>
  <buttongroups>

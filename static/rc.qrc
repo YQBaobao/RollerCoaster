@@ -8,4 +8,7 @@
     <qresource prefix="qss">
         <file>./qss/rc.qss</file>
     </qresource>
+    <qresource prefix="button">
+        <file>./images/triangle_down.svg</file>
+    </qresource>
 </RCC>

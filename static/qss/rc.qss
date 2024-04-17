@@ -10,11 +10,6 @@ QFrame#frame{
     border-color: rgb(210, 210, 210);
 }
 
-QFrame#line,QFrame#line2{
-    border:none;
-    background-color:#000000;
-    max-height: 1px;
-}
 
 /*全局 QGroupBox*/
 QGroupBox{
@@ -156,7 +151,7 @@ QComboBox::drop-down {
 }
 
 QComboBox::down-arrow {
-    image: url(":/button/images/svg_icons/icon_menu_triangle_down.svg");
+    image: url(":/button/images/triangle_down.svg");
 }
 
 QComboBox::down-arrow:on { /* shift the arrow when popup is open */

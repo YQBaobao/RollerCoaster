@@ -47,11 +47,14 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         m_h_bar = win32gui.FindWindowEx(m_h_taskbar, 0, "ReBarWindow32", None)  # 子窗口“ReBarWindow32”的窗口句柄
         m_h_min = win32gui.FindWindowEx(m_h_bar, 0, "MSTaskSwWClass", None)  # 子窗口“MSTaskSwWClass”的窗口句柄
         b = win32gui.GetWindowRect(m_h_bar)  # 获取m_hBar窗口尺寸b为[左，上，右，下]的数组
-        win32gui.MoveWindow(m_h_min, 0, 0, b[2] - b[0] - 80, b[3] - b[1], True)  # 调整m_hMin的窗口大小，为我们的程序预留出位置
+        win32gui.MoveWindow(m_h_min, 0, 0, b[2] - b[0] - 75, b[3] - b[1], True)  # 调整m_hMin的窗口大小，为我们的程序预留出位置
 
-        self.setGeometry(b[2] - b[0] - 80, 0, 80, b[3] - b[1])  # 调整我们自己的窗口到预留位置的大小
+        self.setGeometry(b[2] - b[0] - 75, -5, 75, b[3] - b[1])  # 调整我们自己的窗口到预留位置的大小
         win32gui.SetParent(int(self.winId()), m_h_bar)  # 将我们自己的窗口设置为m_hBar的子窗口
 
+        palette = self.palette()
+        palette.setColor(QPalette.Background, QColor(16, 16, 16))
+        self.setPalette(palette)
         self.show()  # 显示窗口
 
     def init_action(self):
@@ -79,13 +82,11 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             current = quote['data'][0]['current']  # 当前价格
             percent = quote['data'][0]['percent']  # 跌涨幅度 %
             if percent > 0:
-                self.setStyleSheet(
-                    'QLabel#label_value,#label_rate{color: rgb(170, 0, 0);}font: 75 10pt "Adobe Arabic";')
+                self.setStyleSheet('QLabel#label_value,#label_rate{color: rgb(170, 0, 0);}')
             elif percent < 0:
-                self.setStyleSheet(
-                    'QLabel#label_value,#label_rate{color: rgb(0, 170, 0);}font: 75 10pt "Adobe Arabic";')
+                self.setStyleSheet('QLabel#label_value,#label_rate{color: rgb(0, 170, 0);}')
             else:
-                self.setStyleSheet('QLabel#label_value,#label_rate{color: rgb(0, 0, 0);}font: 75 10pt "Adobe Arabic";')
+                self.setStyleSheet('QLabel#label_value,#label_rate{color: rgb(255, 255, 255);}')
 
             self.label_value.setText(str(current))
             self.label_rate.setText(str(percent) + '%')
