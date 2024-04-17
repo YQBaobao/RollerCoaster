@@ -11,5 +11,7 @@ from PyQt5.QtCore import QObject, pyqtSignal
 
 
 class BaseSignal(QObject):
-    signal_symbol = pyqtSignal(dict)
-    signal_background_color = pyqtSignal(str)
+    signal_symbol = pyqtSignal(dict)  # 基础信号
+    signal_background_color = pyqtSignal(str)  # 背景色信号
+
+    signal_setting_close = pyqtSignal()  # 设置页面关闭信号

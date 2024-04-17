@@ -7,6 +7,7 @@
 @ Version     : V1.0.0
 @ Description : 
 """
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QGridLayout, QDesktopWidget
 
 from core.rc_setting.background_color.background_color import UiBackgroundColorQWidget
@@ -18,15 +19,17 @@ from uis.rc_setting.setting_ui import Ui_Settiing
 
 
 class UiSettingQWidget(QDialog, Ui_Settiing):
+    type = Qt.UniqueConnection
 
     def __init__(self, base_signal, parent=None):
         super().__init__(parent)
         self.setupUi(self)
         self.base_signal = base_signal
 
+        self.stackedWidget.setCurrentIndex(0)
         self.init_ui()
         self.init_action_left_menu()
-        self.stackedWidget.setCurrentIndex(0)
+        self.init_action_widget()
 
     def init_ui(self):
         screen = QDesktopWidget().screenGeometry()
@@ -43,10 +46,10 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         grid_layout.setObjectName("gridLayout_6")
         self.stackedWidget.addWidget(self.ui_base)  # 1
         # 2
-        self.ui_background_color = UiBackgroundColorQWidget(self.base_signal, self)
-        grid_layout = QGridLayout(self.ui_background_color)
+        self.ui_back_color = UiBackgroundColorQWidget(self.base_signal, self)
+        grid_layout = QGridLayout(self.ui_back_color)
         grid_layout.setObjectName("gridLayout_7")
-        self.stackedWidget.addWidget(self.ui_background_color)  # 2
+        self.stackedWidget.addWidget(self.ui_back_color)  # 2
         # 3
         self.ui_shortcut_key = UiShortcutKeyQWidget(self)
         grid_layout = QGridLayout(self.ui_shortcut_key)
@@ -59,9 +62,20 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         self.stackedWidget.addWidget(self.ui_what_new)  # 4
 
     def init_action_left_menu(self):
-        """动作"""
-        self.pushButton_home.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(0))
-        self.pushButton_base.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(1))
-        self.pushButton_background_color.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(2))
-        self.pushButton_shortcut_key.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(3))
-        self.pushButton_what_new.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(4))
+        """菜单动作"""
+        self.pushButton_home.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(0), self.type)
+        self.pushButton_base.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(1), self.type)
+        self.pushButton_background_color.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(2), self.type)
+        self.pushButton_shortcut_key.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(3), self.type)
+        self.pushButton_what_new.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(4), self.type)
+
+    def init_action_widget(self):
+        """部件动作"""
+        self.ui_base.pushButton_accepted.clicked.connect(self.ui_base.setting_base, self.type)
+
+        self.ui_back_color.pushButton_palette.clicked.connect(self.ui_back_color.get_palette, self.type)
+        self.ui_back_color.pushButton_accepted_2.clicked.connect(self.ui_back_color.background_color, self.type)
+
+    def closeEvent(self, a0):
+        self.base_signal.signal_setting_close.emit()
+        super(UiSettingQWidget, self).closeEvent(a0)

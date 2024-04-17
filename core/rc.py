@@ -24,12 +24,13 @@ qInitResources()
 
 
 class RollerCoasterApp(QWidget, Ui_RollerCoaster):
+    symbol = 'SZ002594'  # 默认
 
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.setWindowFlags(Qt.FramelessWindowHint)  # 窗口无边框
-        self.symbol = 'SZ002594'  # 默认
+        self.setting_is_active_window = False
 
         self.base_signal = BaseSignal()
         self.snowball = Snowball()
@@ -39,6 +40,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.timer_start()
         self.tray_icon()
         self.init_ui()
+        self.init_action()
 
     def init_ui(self):
         m_h_taskbar = win32gui.FindWindow("Shell_TrayWnd", None)  # 任务栏“Shell_TaryWnd”的窗口句柄
@@ -51,6 +53,12 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         win32gui.SetParent(int(self.winId()), m_h_bar)  # 将我们自己的窗口设置为m_hBar的子窗口
 
         self.show()  # 显示窗口
+
+    def init_action(self):
+        """信号"""
+        self.base_signal.signal_symbol.connect(self.get_base)
+        self.base_signal.signal_background_color.connect(self.get_background_color)
+        self.base_signal.signal_setting_close.connect(self.close_setting)
 
     def timer(self, interval: int = 5000):
         self.time = QTimer(self)
@@ -121,25 +129,22 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             return
 
     def tray_menu_setting(self):
+        if self.setting_is_active_window:  # 避免重复New
+            self.setting.show()
+            return
         from core.rc_setting.setting import UiSettingQWidget
-
-        self.base_signal.signal_symbol.connect(self.get_base)
-        self.base_signal.signal_background_color.connect(self.get_background_color)
 
         self.setting = UiSettingQWidget(self.base_signal, self)
         self.setting.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)  # 取消帮助按钮
 
-        self.setting.ui_base.pushButton_accepted.clicked.connect(self.setting.ui_base.setting_base)
-        self.setting.ui_background_color.pushButton_palette.clicked.connect(
-            self.setting.ui_background_color.get_palette)
-        self.setting.ui_background_color.pushButton_accepted_2.clicked.connect(
-            self.setting.ui_background_color.background_color)
-
+        self.setting_is_active_window = True
         self.setting.exec()
+
+    def close_setting(self):
+        self.setting_is_active_window = False
 
     def get_base(self, data):
         """基础"""
-        self.setting.close()
         self.time.stop()  # 停止
 
         self.symbol = data['symbol']
@@ -149,7 +154,6 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
     def get_background_color(self, data):
         """背景色"""
-        self.setting.close()
         print(data)
 
     def start(self):
