@@ -86,7 +86,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
     def init_shortcut_key(self):
         from configobj import ConfigObj
-        file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../temp/user_data.ini")
+        file_path = os.path.join(os.path.dirname(__file__), "../temp/user_data.ini")
         config = ConfigObj(file_path, encoding='UTF8')
         self.open_setting = config['shortcut_key']['open_setting']
         self.show_data = config['shortcut_key']['show_data']
@@ -201,13 +201,9 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
     def set_shortcut_key(self, data):
         print(data)
-        if data == 1 and not self.open_setting_status:
+        if data == 1:
             self.tray_menu_setting()
-            self.open_setting_status = True
             return
-        if data == 1 and self.open_setting_status:
-            self.setting.close()
-            self.open_setting_status = False
         return
 
     def start(self):
