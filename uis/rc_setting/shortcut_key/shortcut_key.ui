@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QLabel" name="label_9">
      <property name="text">
-      <string>打开/关闭设置页</string>
+      <string>打开/关闭设置</string>
      </property>
     </widget>
    </item>
@@ -29,39 +29,23 @@
     </widget>
    </item>
    <item row="2" column="1" colspan="2">
-    <widget class="QPushButton" name="pb_red_green_switch">
-     <property name="text">
-      <string>P</string>
-     </property>
-    </widget>
+    <widget class="QPushButton" name="pb_red_green_switch"/>
    </item>
    <item row="2" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>绿色切换为红色</string>
+      <string>绿变红（滑稽）</string>
      </property>
     </widget>
    </item>
    <item row="3" column="1" colspan="2">
-    <widget class="QPushButton" name="pb_boss_key">
-     <property name="text">
-      <string>Ctrl+Space</string>
-     </property>
-    </widget>
+    <widget class="QPushButton" name="pb_boss_key"/>
    </item>
    <item row="1" column="1" colspan="2">
-    <widget class="QPushButton" name="pb_show_data">
-     <property name="text">
-      <string>Alt+D</string>
-     </property>
-    </widget>
+    <widget class="QPushButton" name="pb_show_data"/>
    </item>
    <item row="0" column="1" colspan="2">
-    <widget class="QPushButton" name="pb_open_setting">
-     <property name="text">
-      <string>Alt+S</string>
-     </property>
-    </widget>
+    <widget class="QPushButton" name="pb_open_setting"/>
    </item>
    <item row="3" column="0">
     <widget class="QLabel" name="label_11">

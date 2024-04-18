@@ -48,11 +48,7 @@ class Ui_ShortcutKey(object):
     def retranslateUi(self, ShortcutKey):
         _translate = QtCore.QCoreApplication.translate
         ShortcutKey.setWindowTitle(_translate("ShortcutKey", "Form"))
-        self.label_9.setText(_translate("ShortcutKey", "打开/关闭设置页"))
+        self.label_9.setText(_translate("ShortcutKey", "打开/关闭设置"))
         self.label_10.setText(_translate("ShortcutKey", "显示/隐藏任务栏数据"))
-        self.pb_red_green_switch.setText(_translate("ShortcutKey", "P"))
-        self.label.setText(_translate("ShortcutKey", "绿色切换为红色"))
-        self.pb_boss_key.setText(_translate("ShortcutKey", "Ctrl+Space"))
-        self.pb_show_data.setText(_translate("ShortcutKey", "Alt+D"))
-        self.pb_open_setting.setText(_translate("ShortcutKey", "Alt+S"))
+        self.label.setText(_translate("ShortcutKey", "绿变红（滑稽）"))
         self.label_11.setText(_translate("ShortcutKey", "老板键"))

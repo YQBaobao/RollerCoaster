@@ -3,4 +3,5 @@ PyQt5
 pywin32
 requests
 configobj
+system_hotkey
 PyInstaller

@@ -15,9 +15,12 @@ import win32gui
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor, QKeySequence
 from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction, QShortcut
+from configobj import ConfigObj
+from system_hotkey import SystemHotkey, InvalidKeyError, SystemRegisterError
 
 from core.signals import BaseSignal
 from core.snowball import Snowball, GuShiTong
+from temp import TEMP
 from uis.rc_ui import Ui_RollerCoaster
 from static.rc_rc import qInitResources
 
@@ -30,10 +33,10 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     down = 'color: rgb(0, 170, 0);'
     light = 'color: rgb(255, 255, 255);'
     dark = 'color: rgb(0, 0, 0);'
-    open_setting = "Alt+S"  # 默认快捷键
-    show_data = "Alt+D"
-    red_green_switch = "P"
-    boss_key = "Ctrl+Space"
+    open_setting = ('control', 'up')  # 默认快捷键
+    show_data = ('control', 'down')
+    red_green_switch = ('control', 'left')
+    boss_key = ('control', 'right')
 
     def __init__(self):
         super().__init__()
@@ -52,14 +55,22 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.setting_is_active_window = False
         self.start_status = True
         self.default_style = self.light  # 默认白
-        self.open_setting_status = False
-        self.show_data_status = False
+        self.down_style = self.down  # 默认绿
         self.red_green_switch_status = False
-        self.boss_key_status = False
 
         self.base_signal = BaseSignal()
         self.snowball = Snowball()
         self.gu_shi_tong = GuShiTong()
+
+        self.user_data_path = os.path.join(TEMP, "user_data.ini")
+        # 不存在用户数据，则新建
+        if not os.path.exists(self.user_data_path):
+            with open(self.user_data_path, "w") as f:
+                user_data = (
+                    "[base]\nsymbol = 'SZ002594'\ninterval = 2000\n\n"
+                    "[shortcut_key]\nopen_setting = control+up\nshow_data = control+down\n"
+                    "red_green_switch = control+left\nboss_key = control+right")
+                f.write(user_data)
 
     def init_ui(self):
         m_h_taskbar = win32gui.FindWindow("Shell_TrayWnd", None)  # 任务栏“Shell_TaryWnd”的窗口句柄
@@ -85,23 +96,35 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.base_signal.signal_shortcut_key.connect(self.set_shortcut_key)
 
     def init_shortcut_key(self):
-        from configobj import ConfigObj
-        file_path = os.path.join(os.path.dirname(__file__), "../temp/user_data.ini")
-        config = ConfigObj(file_path, encoding='UTF8')
-        self.open_setting = config['shortcut_key']['open_setting']
-        self.show_data = config['shortcut_key']['show_data']
-        self.red_green_switch = config['shortcut_key']['red_green_switch']
-        self.boss_key = config['shortcut_key']['boss_key']
+        # 获取用户数据
+        config = ConfigObj(self.user_data_path, encoding='UTF8')
+        self.open_setting = self.shortcut_key_format(config['shortcut_key']['open_setting'])
+        self.show_data = self.shortcut_key_format(config['shortcut_key']['show_data'])
+        self.red_green_switch = self.shortcut_key_format(config['shortcut_key']['red_green_switch'])
+        self.boss_key = self.shortcut_key_format(config['shortcut_key']['boss_key'])
 
-        QShortcut(QKeySequence(self.open_setting), self, lambda: self.base_signal.signal_shortcut_key.emit(1))
-        QShortcut(QKeySequence(self.show_data), self, lambda: self.base_signal.signal_shortcut_key.emit(2))
-        QShortcut(QKeySequence(self.red_green_switch), self, lambda: self.base_signal.signal_shortcut_key.emit(3))
-        QShortcut(QKeySequence(self.boss_key), self, lambda: self.base_signal.signal_shortcut_key.emit(4))
+        # 初始化快捷键
+        self.key_open_setting = SystemHotkey()
+        self.key_show_data = SystemHotkey()
+        self.key_red_green_switch = SystemHotkey()
+        self.key_boss_key = SystemHotkey()
+        try:
+            self.key_open_setting.register(self.open_setting, callback=lambda x: self.keypress_callback(1))
+            self.key_show_data.register(self.show_data, callback=lambda x: self.keypress_callback(2))
+            self.key_red_green_switch.register(self.red_green_switch, callback=lambda x: self.keypress_callback(3))
+            self.key_boss_key.register(self.boss_key, callback=lambda x: self.keypress_callback(4))
+        except InvalidKeyError or SystemRegisterError:
+            pass
+
+    @staticmethod
+    def shortcut_key_format(shortcut_key=''):
+        key = shortcut_key.split('+')
+        return key
 
     def timer(self, interval: int = 5000):
         self.time = QTimer(self)
         self.time.setInterval(interval)
-        self.time.timeout.connect(lambda: self.show_value(self.default_style))
+        self.time.timeout.connect(lambda: self.show_value(self.down_style, self.default_style))
 
     def timer_start(self, interval: int = 3 * 60 * 1000):
         """启动定时器"""
@@ -110,7 +133,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.time_start.timeout.connect(self.start)
         self.time_start.start()  # 启动
 
-    def show_value(self, style):
+    def show_value(self, down_style, default_style):
         timestamp = int(time.time() * 1000)
         try:
             quote = self.snowball.quote(self.symbol, timestamp)
@@ -120,11 +143,11 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
                 self.label_value.setStyleSheet(self.up)
                 self.label_rate.setStyleSheet(self.up)
             elif percent < 0:
-                self.label_value.setStyleSheet(self.down)
-                self.label_rate.setStyleSheet(self.down)
+                self.label_value.setStyleSheet(down_style)
+                self.label_rate.setStyleSheet(down_style)
             else:
-                self.label_value.setStyleSheet(style)
-                self.label_rate.setStyleSheet(style)
+                self.label_value.setStyleSheet(default_style)
+                self.label_rate.setStyleSheet(default_style)
 
             self.label_value.setText(str(current))
             self.label_rate.setText(str(percent) + '%')
@@ -160,16 +183,12 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     def tray_icon_activated(self, reason):
         """托盘图标事件"""
         if reason == QSystemTrayIcon.DoubleClick:  # 双击
-            if self.isMinimized() or not self.isVisible():
-                self.showNormal()  # 若是最小化，则先正常显示窗口，再变为活动窗口（暂时显示在最前面）
-                self.activateWindow()
-                return
-            self.showMinimized()  # 若不是最小化，则最小化
-            return
+            # 若是最小化，则正常显示窗口,若不是最小化，则最小化
+            self.showNormal() if self.isMinimized() or not self.isVisible() else self.showMinimized()
 
     def tray_menu_setting(self):
         if self.setting_is_active_window:  # 避免重复New
-            self.setting.show()
+            self.setting.activateWindow()  # 激活
             return
         from core.rc_setting.setting import UiSettingQWidget
 
@@ -200,11 +219,31 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.default_style = self.dark if '#eeeeee' == data.name() else self.light
 
     def set_shortcut_key(self, data):
-        print(data)
         if data == 1:
-            self.tray_menu_setting()
+            try:
+                self.setting.close() if self.setting.isActiveWindow() else self.tray_menu_setting()
+            except Exception:
+                self.tray_menu_setting()  # 显示设置
             return
-        return
+        if data == 2:
+            # 若是最小化，则正常显示窗口,若不是最小化，则最小化
+            self.showNormal() if self.isMinimized() or not self.isVisible() else self.showMinimized()
+            return
+        if data == 3:
+            self.down_style = self.up if self.down_style == self.down else self.down
+            return
+        if data == 4:
+            try:
+                if self.setting.isActiveWindow():
+                    self.setting.close()
+            except Exception:
+                pass
+            if not self.isMinimized():
+                self.showMinimized()
+            return
+
+    def keypress_callback(self, v):
+        self.base_signal.signal_shortcut_key.emit(v)
 
     def start(self):
         self.get_trade_status = self.gu_shi_tong.get_trade_status(symbol=self.symbol)
