@@ -14,13 +14,65 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
-    <widget class="QTextBrowser" name="textBrowser"/>
-   </item>
    <item row="0" column="0">
-    <widget class="QPushButton" name="pushButton_see_more">
+    <widget class="QLabel" name="label_3">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
-      <string>在 GitHub 上可看到更详细的更新说明</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;过山车&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0" colspan="2">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>联系我：&lt;a href=&quot;https://www.cnblogs.com/yqbaowo/&quot;&gt;cnblogs.com&lt;/a&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0" colspan="3">
+    <widget class="QLabel" name="label_7">
+     <property name="text">
+      <string>开源协议：&lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;GPL-3.0 license&lt;/a&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="3">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>备：&lt;a href=&quot;https://gitee.com/yqbao/roller-coaster/releases&quot;&gt;前往 Gitee 查看更加详细的更新说明&lt;/a&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="3">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>主：&lt;a href=&quot;https://github.com/YQBaobao/RollerCoaster/releases&quot;&gt;前往 GitHub 查看详细的更新说明&lt;/a&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>哎嘿：让你时刻体验过山车一样的快感（滑稽）</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="2">
+    <widget class="QLabel" name="label_8">
+     <property name="text">
+      <string>&lt;a href=&quot;https://www.foxmail.com/&quot;&gt;foxmail&lt;/a&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <widget class="QLabel" name="label_9">
+     <property name="text">
+      <string>-RollerCoaster</string>
      </property>
     </widget>
    </item>

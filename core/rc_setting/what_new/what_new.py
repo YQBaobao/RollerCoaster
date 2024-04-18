@@ -16,3 +16,9 @@ class UiWhatNewQWidget(QWidget, Ui_WhatNew):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+
+        self.label.setOpenExternalLinks(True)
+        self.label_2.setOpenExternalLinks(True)
+        self.label_5.setOpenExternalLinks(True)
+        self.label_7.setOpenExternalLinks(True)
+        self.label_8.setOpenExternalLinks(True)
