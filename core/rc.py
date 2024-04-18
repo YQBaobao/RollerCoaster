@@ -17,7 +17,6 @@ from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
 from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction
 from configobj import ConfigObj
 from system_hotkey import SystemHotkey
-from system_hotkey.system_hotkey import SystemRegisterError, InvalidKeyError
 
 from core.message_box import MessageBox
 from core.signals import BaseSignal
@@ -170,16 +169,22 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
         tray_menu = QMenu()
         setting = QAction(QIcon('exit.png'), u'设置', self)  # 添加一级菜单动作选项
+        open_license = QAction(QIcon('exit.png'), u'开源许可', self)
         quit_ = QAction(QIcon('exit.png'), u'退出', self)
         icon = QIcon()
         icon.addPixmap(QPixmap(":/rc/images/setting.png"), QIcon.Normal, QIcon.Off)
         setting.setIcon(icon)
         icon = QIcon()
+        icon.addPixmap(QPixmap(":/rc/images/open_license.png"), QIcon.Normal, QIcon.Off)
+        open_license.setIcon(icon)
+        icon = QIcon()
         icon.addPixmap(QPixmap(":/rc/images/quit.png"), QIcon.Normal, QIcon.Off)
         quit_.setIcon(icon)
         tray_menu.addAction(setting)
+        tray_menu.addAction(open_license)
         tray_menu.addAction(quit_)
         setting.triggered.connect(self.tray_menu_setting)
+        open_license.triggered.connect(self.tray_menu_license)
         quit_.triggered.connect(self.tray_menu_quit)
         self.tray.setContextMenu(tray_menu)  # 把tray_menu设定为托盘的右键菜单
         self.tray.show()
@@ -201,6 +206,19 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
         self.setting_is_active_window = True
         self.setting.exec()
+
+    def tray_menu_license(self):
+        """开源协议"""
+        from core.openLicense.open_license import UiOpenLicenseQWidget
+
+        open_license_dialog = UiOpenLicenseQWidget(self)
+        open_license_dialog.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)  # 取消帮助按钮
+        open_license_dialog.exec()
+
+    def tray_menu_quit(self):
+        self.tray.hide()
+        self.tray = None  # 清空托盘对象内存
+        self.close()
 
     def close_setting(self):
         self.setting_is_active_window = False
@@ -257,11 +275,6 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         if self.start_status:  # 修复定时器 time 的重复启动
             self.time.start()  # 启动
         self.start_status = False
-
-    def tray_menu_quit(self):
-        self.tray.hide()
-        self.tray = None  # 清空托盘对象内存
-        self.close()
 
     def closeEvent(self, event) -> None:
         try:

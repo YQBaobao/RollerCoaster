@@ -2,8 +2,20 @@
 <ui version="4.0">
  <class>RollerCoaster</class>
  <widget class="QWidget" name="RollerCoaster">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>94</width>
+    <height>48</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>From</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../static/rc.qrc">
+    <normaloff>:/rc/images/lined_up_32px.png</normaloff>:/rc/images/lined_up_32px.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -34,6 +46,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../static/rc.qrc"/>
+ </resources>
  <connections/>
 </ui>

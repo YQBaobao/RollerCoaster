@@ -14,6 +14,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_RollerCoaster(object):
     def setupUi(self, RollerCoaster):
         RollerCoaster.setObjectName("RollerCoaster")
+        RollerCoaster.resize(94, 48)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/rc/images/lined_up_32px.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        RollerCoaster.setWindowIcon(icon)
         self.gridLayout = QtWidgets.QGridLayout(RollerCoaster)
         self.gridLayout.setObjectName("gridLayout")
         self.label_value = QtWidgets.QLabel(RollerCoaster)
