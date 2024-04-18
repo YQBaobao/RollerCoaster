@@ -14,6 +14,7 @@ from PyQt5.QtGui import QKeyEvent
 from PyQt5.QtWidgets import QWidget
 from configobj import ConfigObj
 
+from core.message_box import MessageBox
 from temp import TEMP
 from uis.rc_setting.shortcut_key.shortcut_key import Ui_ShortcutKey
 
@@ -32,39 +33,31 @@ class UiShortcutKeyQWidget(QWidget, Ui_ShortcutKey):
     def init_ui(self):
         file_path = os.path.join(TEMP, "user_data.ini")
         self.config = ConfigObj(file_path, encoding='UTF8')
-        self.pb_open_setting.setText(self.shortcut_key_format(self.config['shortcut_key']['open_setting']))
-        self.pb_show_data.setText(self.shortcut_key_format(self.config['shortcut_key']['show_data']))
-        self.pb_red_green_switch.setText(self.shortcut_key_format(self.config['shortcut_key']['red_green_switch']))
-        self.pb_boss_key.setText(self.shortcut_key_format(self.config['shortcut_key']['boss_key']))
+        self.pb_open_setting.setText(self.shortcut_key_show(self.config['shortcut_key']['open_setting']))
+        self.pb_show_data.setText(self.shortcut_key_show(self.config['shortcut_key']['show_data']))
+        self.pb_red_green_switch.setText(self.shortcut_key_show(self.config['shortcut_key']['red_green_switch']))
+        self.pb_boss_key.setText(self.shortcut_key_show(self.config['shortcut_key']['boss_key']))
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
         print("按下：" + str(event.key()), event.text())
         if self.button == 1:
             key = self.shortcut_key_unformat(self.key, event)
-            self.config['shortcut_key']['open_setting'] = '+'.join(key)
-            self.config.write()
-            key = self.shortcut_key_show(key)
+            key = self.set_shortcut_key(key)
             self.pb_open_setting.setText('+'.join(key))
 
         if self.button == 2:
             key = self.shortcut_key_unformat(self.key, event)
-            self.config['shortcut_key']['show_data'] = '+'.join(key)
-            self.config.write()
-            key = self.shortcut_key_show(key)
+            key = self.set_shortcut_key(key)
             self.pb_show_data.setText('+'.join(key))
 
         if self.button == 3:
             key = self.shortcut_key_unformat(self.key, event)
-            self.config['shortcut_key']['red_green_switch'] = '+'.join(key)
-            self.config.write()
-            key = self.shortcut_key_show(key)
+            key = self.set_shortcut_key(key)
             self.pb_red_green_switch.setText('+'.join(key))
 
         if self.button == 4:
             key = self.shortcut_key_unformat(self.key, event)
-            self.config['shortcut_key']['boss_key'] = '+'.join(key)
-            self.config.write()
-            key = self.shortcut_key_show(key)
+            key = self.set_shortcut_key(key)
             self.pb_boss_key.setText('+'.join(key))
 
     def key_open_setting(self):
@@ -88,20 +81,48 @@ class UiShortcutKeyQWidget(QWidget, Ui_ShortcutKey):
         self.key = []
         self.pb_boss_key.setText('')
 
+    def shortcut_key_save(self):
+        """保存在用户数据"""
+        open_setting = self.shortcut_key_format(self.pb_open_setting.text())
+        show_data = self.shortcut_key_format(self.pb_show_data.text())
+        red_green_switch = self.shortcut_key_format(self.pb_red_green_switch.text())
+        boss_key = self.shortcut_key_format(self.pb_boss_key.text())
+
+        self.config['shortcut_key']['open_setting'] = open_setting
+        self.config['shortcut_key']['show_data'] = show_data
+        self.config['shortcut_key']['red_green_switch'] = red_green_switch
+        self.config['shortcut_key']['boss_key'] = boss_key
+        self.config.write()
+
+        self.signal.signal_shortcut_key_update.emit()
+        self.message_box = MessageBox()
+        self.message_box.info_message('设置已更新。', self)
+
     @staticmethod
-    def shortcut_key_show(key):
+    def set_shortcut_key(key):
         for i, v in enumerate(key):
             x = v.lower()
             if x == "control":
                 key[i] = "ctrl"
-            elif x == "super":
+            if x == "super":
                 key[i] = "win"
-            else:
-                key[i] = x
         return key
 
     @staticmethod
-    def shortcut_key_format(shortcut_key=''):
+    def shortcut_key_format(key):
+        key = key.split('+')
+        for i, v in enumerate(key):
+            x = v.lower()
+            if x == "ctrl":
+                key[i] = "control"
+            elif x == "win":
+                key[i] = "super"
+            else:
+                key[i] = x
+        return '+'.join(key)
+
+    @staticmethod
+    def shortcut_key_show(shortcut_key=''):
         key = shortcut_key.split('+')
         for i, v in enumerate(key):
             x = v.lower()
@@ -118,22 +139,22 @@ class UiShortcutKeyQWidget(QWidget, Ui_ShortcutKey):
         # TODO 设置组合键时，必须按下松开，而不是连续按,这有点反人类
         if event.modifiers() == Qt.ControlModifier:
             key.append('control')
-            key = filter(lambda x: x and x.strip(), key)
+            key = list(filter(lambda x: x and x.strip(), key))
             return key
         if event.modifiers() == Qt.ShiftModifier:
             key.append('shift')
-            key = filter(lambda x: x and x.strip(), key)
+            key = list(filter(lambda x: x and x.strip(), key))
             return key
         if event.modifiers() == Qt.AltModifier:
             key.append('alt')
-            key = filter(lambda x: x and x.strip(), key)
+            key = list(filter(lambda x: x and x.strip(), key))
             return key
         if event.modifiers() == Qt.Key_Meta:
             key.append('super')
-            key = filter(lambda x: x and x.strip(), key)
+            key = list(filter(lambda x: x and x.strip(), key))
             return key
         if key:
             key.append(event.text())
-            key = filter(lambda x: x and x.strip(), key)
+            key = list(filter(lambda x: x and x.strip(), key))
             return key
         return event.text()

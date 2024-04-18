@@ -13,11 +13,13 @@ import time
 
 import win32gui
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor, QKeySequence
-from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction, QShortcut
+from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
+from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction
 from configobj import ConfigObj
-from system_hotkey import SystemHotkey, InvalidKeyError, SystemRegisterError
+from system_hotkey import SystemHotkey
+from system_hotkey.system_hotkey import SystemRegisterError, InvalidKeyError
 
+from core.message_box import MessageBox
 from core.signals import BaseSignal
 from core.snowball import Snowball, GuShiTong
 from temp import TEMP
@@ -37,6 +39,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     show_data = ('control', 'down')
     red_green_switch = ('control', 'left')
     boss_key = ('control', 'right')
+    shortcut_key_label = ['打开/关闭设置', '显示/隐藏任务栏数据', '绿变红（滑稽）', '老板键']
 
     def __init__(self):
         super().__init__()
@@ -61,6 +64,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.base_signal = BaseSignal()
         self.snowball = Snowball()
         self.gu_shi_tong = GuShiTong()
+        self.message_box = MessageBox()
 
         self.user_data_path = os.path.join(TEMP, "user_data.ini")
         # 不存在用户数据，则新建
@@ -94,6 +98,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.base_signal.signal_background_color.connect(self.set_background_color)
         self.base_signal.signal_setting_close.connect(self.close_setting)
         self.base_signal.signal_shortcut_key.connect(self.set_shortcut_key)
+        self.base_signal.signal_shortcut_key_update.connect(self.init_shortcut_key)  # 更新快捷键
 
     def init_shortcut_key(self):
         # 获取用户数据
@@ -104,16 +109,15 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.boss_key = self.shortcut_key_format(config['shortcut_key']['boss_key'])
 
         # 初始化快捷键
-        self.key_open_setting = SystemHotkey()
-        self.key_show_data = SystemHotkey()
-        self.key_red_green_switch = SystemHotkey()
-        self.key_boss_key = SystemHotkey()
+        self._init_shortcut_key(SystemHotkey(), self.open_setting, 1)
+        self._init_shortcut_key(SystemHotkey(), self.show_data, 2)
+        self._init_shortcut_key(SystemHotkey(), self.red_green_switch, 3)
+        self._init_shortcut_key(SystemHotkey(), self.boss_key, 4)
+
+    def _init_shortcut_key(self, key: SystemHotkey, button, v):
         try:
-            self.key_open_setting.register(self.open_setting, callback=lambda x: self.keypress_callback(1))
-            self.key_show_data.register(self.show_data, callback=lambda x: self.keypress_callback(2))
-            self.key_red_green_switch.register(self.red_green_switch, callback=lambda x: self.keypress_callback(3))
-            self.key_boss_key.register(self.boss_key, callback=lambda x: self.keypress_callback(4))
-        except InvalidKeyError or SystemRegisterError:
+            key.register(button, callback=lambda x: self.keypress_callback(v))
+        except Exception:
             pass
 
     @staticmethod

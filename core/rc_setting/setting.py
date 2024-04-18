@@ -86,6 +86,7 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         self.ui_shortcut_key.pb_show_data.clicked.connect(self.ui_shortcut_key.key_show_data, self.type)
         self.ui_shortcut_key.pb_red_green_switch.clicked.connect(self.ui_shortcut_key.key_red_green_switch, self.type)
         self.ui_shortcut_key.pb_boss_key.clicked.connect(self.ui_shortcut_key.key_boss_key, self.type)
+        self.ui_shortcut_key.pb_accepted_3.clicked.connect(self.ui_shortcut_key.shortcut_key_save, self.type)
 
     def closeEvent(self, a0):
         self.base_signal.signal_setting_close.emit()
