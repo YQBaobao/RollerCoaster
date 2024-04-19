@@ -100,38 +100,20 @@ class UiShortcutKeyQWidget(QWidget, Ui_ShortcutKey):
 
     @staticmethod
     def set_shortcut_key(key):
-        for i, v in enumerate(key):
-            x = v.lower()
-            if x == "control":
-                key[i] = "ctrl"
-            if x == "super":
-                key[i] = "win"
+        re = {'control': 'ctrl', 'super': 'win'}
+        key = [re[i] if i in re else i for i in key]
         return key
 
     @staticmethod
     def shortcut_key_format(key):
         key = key.split('+')
-        for i, v in enumerate(key):
-            x = v.lower()
-            if x == "ctrl":
-                key[i] = "control"
-            elif x == "win":
-                key[i] = "super"
-            else:
-                key[i] = x
+        re = {'ctrl': 'control', 'win': 'super'}
+        key = [re[i] if i in re else i for i in key]
         return '+'.join(key)
 
-    @staticmethod
-    def shortcut_key_show(shortcut_key=''):
+    def shortcut_key_show(self, shortcut_key=''):
         key = shortcut_key.split('+')
-        for i, v in enumerate(key):
-            x = v.lower()
-            if x == "control":
-                key[i] = "ctrl"
-            elif x == "super":
-                key[i] = "win"
-            else:
-                key[i] = x
+        key = self.set_shortcut_key(key)
         return '+'.join(key)
 
     @staticmethod
@@ -149,7 +131,7 @@ class UiShortcutKeyQWidget(QWidget, Ui_ShortcutKey):
             key.append('alt')
             key = list(filter(lambda x: x and x.strip(), key))
             return key
-        if event.modifiers() == Qt.Key_Meta:
+        if event.key() == Qt.Key_Meta:
             key.append('super')
             key = list(filter(lambda x: x and x.strip(), key))
             return key
