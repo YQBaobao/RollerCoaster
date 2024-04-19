@@ -29,7 +29,9 @@ qInitResources()
 
 
 class RollerCoasterApp(QWidget, Ui_RollerCoaster):
-    symbol = 'SZ002594'  # 默认
+    symbol = ['SZ002594']  # 默认
+    current = [0]
+    percent = [0]
     up = 'color: rgb(170, 0, 0);'
     down = 'color: rgb(0, 170, 0);'
     light = 'color: rgb(255, 255, 255);'
@@ -48,6 +50,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
         self.timer()  # 请求定时
         self.timer_start()  # 收盘后定时
+        self.timer_polling()  # 交替
         self.tray_icon()  # 托盘
         self.init_ui()  # 初始化UI
         self.init_action()  # 动作
@@ -58,7 +61,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.start_status = True
         self.default_style = self.light  # 默认白
         self.down_style = self.down  # 默认绿
-        self.red_green_switch_status = False
+        self.polling_status = 1
 
         self.base_signal = BaseSignal()
         self.snowball = Snowball()
@@ -70,7 +73,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         if not os.path.exists(self.user_data_path):
             with open(self.user_data_path, "w") as f:
                 user_data = (
-                    "[base]\nsymbol = 'SZ002594'\ninterval = 2000\n\n"
+                    "[base]\nsymbol = 'SZ002594'\nsymbol_2=\ninterval = 2000\n\n"
                     "[shortcut_key]\nopen_setting = control+up\nshow_data = control+down\n"
                     "red_green_switch = control+left\nboss_key = control+right")
                 f.write(user_data)
@@ -127,7 +130,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     def timer(self, interval: int = 5000):
         self.time = QTimer(self)
         self.time.setInterval(interval)
-        self.time.timeout.connect(lambda: self.show_value(self.down_style, self.default_style))
+        self.time.timeout.connect(lambda: self.get_value(self.symbol))
 
     def timer_start(self, interval: int = 3 * 60 * 1000):
         """启动定时器"""
@@ -136,28 +139,58 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.time_start.timeout.connect(self.start)
         self.time_start.start()  # 启动
 
-    def show_value(self, down_style, default_style):
-        timestamp = int(time.time() * 1000)
-        try:
-            quote = self.snowball.quote(self.symbol, timestamp)
-            current = quote['data'][0]['current']  # 当前价格
-            percent = quote['data'][0]['percent']  # 跌涨幅度 %
-            if percent > 0:
-                self.label_value.setStyleSheet(self.up)
-                self.label_rate.setStyleSheet(self.up)
-            elif percent < 0:
-                self.label_value.setStyleSheet(down_style)
-                self.label_rate.setStyleSheet(down_style)
-            else:
-                self.label_value.setStyleSheet(default_style)
-                self.label_rate.setStyleSheet(default_style)
+    def timer_polling(self, interval: int = 1000):
+        """交替定时，默认1秒"""
+        self.time_polling = QTimer(self)
+        self.time_polling.setInterval(interval)
+        self.time_polling.timeout.connect(
+            lambda: self.show_value_polling(self.symbol, self.down_style, self.default_style))
 
-            self.label_value.setText(str(current))
-            self.label_rate.setText(str(percent) + '%')
+    def get_value(self, symbols: list):
+        try:
+            self.current, self.percent = [], []
+            timestamp = int(time.time() * 1000)
+            for symbol in symbols:
+                quote = self.snowball.quote(symbol, timestamp)
+                current = quote['data'][0]['current']  # 当前价格
+                percent = quote['data'][0]['percent']  # 跌涨幅度 %
+                self.current.append(current)
+                self.percent.append(percent)
             if self.get_trade_status == "已收盘":
                 self.time.stop()
         except Exception:
             self.label_value.setText('错误')
+
+    def show_value_polling(self, symbols, down_style, default_style):
+        """交替显示"""
+        try:
+            if len(symbols) == 1:  # 不交替
+                current, percent = self.current[-1], self.percent[-1]
+                self.set_color(current, percent, down_style, default_style)
+                return
+            if len(symbols) == 2 and self.polling_status % 2 != 0:
+                current, percent = self.current[0], self.percent[0]
+                self.set_color(current, percent, down_style, default_style)
+                self.polling_status = 2
+            else:
+                current, percent = self.current[-1], self.percent[-1]
+                self.set_color(current, percent, down_style, default_style)
+                self.polling_status = 1
+        except Exception:
+            pass
+
+    def set_color(self, current, percent, down_style, default_style):
+        if percent > 0:
+            self.label_value.setStyleSheet(self.up)
+            self.label_rate.setStyleSheet(self.up)
+        elif percent < 0:
+            self.label_value.setStyleSheet(down_style)
+            self.label_rate.setStyleSheet(down_style)
+        else:
+            self.label_value.setStyleSheet(default_style)
+            self.label_rate.setStyleSheet(default_style)
+        self.label_value.setText(str(current))
+        self.label_rate.setText(str(percent) + '%')
 
     def tray_icon(self):
         """系统托盘"""
@@ -233,6 +266,10 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.start()  # 首次
         self.setting.pushButton_background_color.setEnabled(False)
 
+        self.time_polling.stop()
+        self.timer_polling(data['interval'] / 2)
+        self.time_polling.start()
+
     def set_background_color(self, data: QColor):
         """背景色"""
         palette = self.palette()
@@ -268,7 +305,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.base_signal.signal_shortcut_key.emit(v)
 
     def start(self):
-        self.get_trade_status = self.gu_shi_tong.get_trade_status(symbol=self.symbol)
+        self.get_trade_status = self.gu_shi_tong.get_trade_status(symbol=self.symbol[-1])
         hour = datetime.datetime.now().hour
         if self.get_trade_status == '已收盘' and (hour < 9 or 15 <= hour):
             return
@@ -279,6 +316,8 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     def closeEvent(self, event) -> None:
         try:
             self.setting.close()
+            self.time_start.stop()
+            self.time_polling.stop()
             self.time.stop()
             self.tray.hide()
             self.tray = None  # 清空托盘对象内存
