@@ -68,6 +68,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.user_data_path = os.path.join(TEMP, "user_data.ini")
         # 不存在用户数据，则新建
         if not os.path.exists(self.user_data_path):
+            os.mkdir(os.path.dirname(self.user_data_path))
             with open(self.user_data_path, "w") as f:
                 user_data = (
                     "[base]\nsymbol = 'SZ002594'\ninterval = 2000\n\n"
