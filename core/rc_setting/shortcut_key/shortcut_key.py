@@ -135,6 +135,26 @@ class UiShortcutKeyQWidget(QWidget, Ui_ShortcutKey):
             key.append('super')
             key = list(filter(lambda x: x and x.strip(), key))
             return key
+        if event.key() == Qt.Key_Up:
+            key.append('up')
+            key = list(filter(lambda x: x and x.strip(), key))
+            return key
+        if event.key() == Qt.Key_Down:
+            key.append('down')
+            key = list(filter(lambda x: x and x.strip(), key))
+            return key
+        if event.key() == Qt.Key_Left:
+            key.append('left')
+            key = list(filter(lambda x: x and x.strip(), key))
+            return key
+        if event.key() == Qt.Key_Right:
+            key.append('right')
+            key = list(filter(lambda x: x and x.strip(), key))
+            return key
+        if event.key() == Qt.Key_Delete:
+            key.append('delete')
+            key = list(filter(lambda x: x and x.strip(), key))
+            return key
         if key:
             key.append(event.text())
             key = list(filter(lambda x: x and x.strip(), key))
