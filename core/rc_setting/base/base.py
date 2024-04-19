@@ -7,8 +7,12 @@
 @ Version     : V1.0.0
 @ Description : 
 """
-from PyQt5.QtWidgets import QWidget, QListView, QMessageBox
+import os
 
+from PyQt5.QtWidgets import QWidget, QListView, QMessageBox
+from configobj import ConfigObj
+
+from temp import TEMP
 from uis.rc_setting.base.base import Ui_Base
 
 
@@ -21,6 +25,13 @@ class UiBaseQWidget(QWidget, Ui_Base):
         self.base_signal = base_signal
 
         self.comboBox.setView(QListView())
+        self.init_ui()
+
+    def init_ui(self):
+        file_path = os.path.join(TEMP, "user_data.ini")
+        self.config = ConfigObj(file_path, encoding='UTF8')
+        self.lineEdit.setText(self.config['base']['symbol'])
+        self.comboBox.setCurrentText(self.config['base']['interval'])
 
     def setting_base(self):
         """基础设置"""
@@ -37,4 +48,14 @@ class UiBaseQWidget(QWidget, Ui_Base):
             'symbol': symbol,
             'interval': self.interval_time[interval]
         }
+        self.user_data_save()
         self.base_signal.signal_symbol.emit(data)
+
+    def user_data_save(self):
+        """保存在用户数据"""
+        symbol = self.lineEdit.text()
+        interval = self.comboBox.currentText()
+
+        self.config['base']['symbol'] = symbol
+        self.config['base']['interval'] = interval
+        self.config.write()
