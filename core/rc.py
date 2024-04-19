@@ -77,9 +77,10 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
                 pass
             with open(self.user_data_path, "w") as f:
                 user_data = (
-                    "[base]\nsymbol = 'SZ002594'\nsymbol_2=\ninterval = 2000\n\n"
-                    "[shortcut_key]\nopen_setting = control+up\nshow_data = control+down\n"
-                    "red_green_switch = control+left\nboss_key = control+right")
+                    '[base]\nsymbol = SZ002594\nsymbol_2=\ninterval = 2000\n\n'
+                    '[background_color]\ncolor = "#101010"\n\n'
+                    '[shortcut_key]\nopen_setting = control+up\nshow_data = control+down\n'
+                    'red_green_switch = control+left\nboss_key = control+right')
                 f.write(user_data)
 
     def init_ui(self):
@@ -92,8 +93,10 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.setGeometry(b[2] - b[0] - 75, -5, 75, b[3] - b[1])  # 调整我们自己的窗口到预留位置的大小
         win32gui.SetParent(int(self.winId()), m_h_bar)  # 将我们自己的窗口设置为m_hBar的子窗口
 
+        config = ConfigObj(self.user_data_path, encoding='UTF8')
+        color = QColor(config['background_color']['color'])
         palette = self.palette()
-        palette.setColor(QPalette.Background, QColor(16, 16, 16))
+        palette.setColor(QPalette.Background, color)
         self.setPalette(palette)
         self.label_value.setStyleSheet(self.light)
         self.label_rate.setStyleSheet(self.light)

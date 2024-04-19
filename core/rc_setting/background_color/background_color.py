@@ -7,10 +7,14 @@
 @ Version     : V1.0.0
 @ Description : 
 """
-from PyQt5.QtGui import QColor, QPalette
+import os
+
+from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QWidget, QColorDialog
+from configobj import ConfigObj
 
 from core.signals import BaseSignal
+from temp import TEMP
 from uis.rc_setting.background_color.backgroud_color import Ui_BackgroundColor
 
 
@@ -28,6 +32,7 @@ class UiBackgroundColorQWidget(QWidget, Ui_BackgroundColor):
     def get_palette(self):
         c = QColorDialog.getColor()
         self.pushButton_palette.setStyleSheet('background-color:{}'.format(c.name()))
+        self.user_data_save(c)
         self.base_signal.signal_background_color.emit(c)
 
     def background_color(self):
@@ -40,4 +45,13 @@ class UiBackgroundColorQWidget(QWidget, Ui_BackgroundColor):
             c = self.light_transparent
         if self.radioButton_2.isChecked() and self.checkBox.isChecked():
             c = self.dark_transparent
+        self.user_data_save(c)
         self.base_signal.signal_background_color.emit(c)
+
+    @staticmethod
+    def user_data_save(c: QColor):
+        """保存在用户数据"""
+        file_path = os.path.join(TEMP, "user_data.ini")
+        config = ConfigObj(file_path, encoding='UTF8')
+        config['background_color']['color'] = c.name()
+        config.write()
