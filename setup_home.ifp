@@ -3,7 +3,7 @@
 ProjectFileVersion = 1.1
 [General]
 Program name = RoCoaster
-Program version = 1.0.4.1
+Program version = 1.0.4.2
 Windows XP = 0
 Windows Server 2003 = 0
 Windows Vista = 0
@@ -81,6 +81,9 @@ F:\Projects\RollerCoaster\dist\RoCoaster\certifi\
 N/A
 [Folder]
 F:\Projects\RollerCoaster\dist\RoCoaster\charset_normalizer\
+N/A
+[Folder]
+F:\Projects\RollerCoaster\dist\RoCoaster\psutil\
 N/A
 [Folder]
 F:\Projects\RollerCoaster\dist\RoCoaster\PyQt5\

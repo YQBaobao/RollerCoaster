@@ -80,7 +80,7 @@ class Ui_Settiing(object):
 
     def retranslateUi(self, Settiing):
         _translate = QtCore.QCoreApplication.translate
-        Settiing.setWindowTitle(_translate("Settiing", "RollerCoaster"))
+        Settiing.setWindowTitle(_translate("Settiing", "RollerCoaster v1.0.4.2"))
         self.pushButton_home.setText(_translate("Settiing", "首页"))
         self.pushButton_base.setText(_translate("Settiing", "基础信息"))
         self.pushButton_shortcut_key.setText(_translate("Settiing", "快捷键设置"))
