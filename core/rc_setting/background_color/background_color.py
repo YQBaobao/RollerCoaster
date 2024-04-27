@@ -29,6 +29,25 @@ class UiBackgroundColorQWidget(QWidget, Ui_BackgroundColor):
         self.setupUi(self)
         self.base_signal = base_signal
 
+        self.init_ui()
+
+    def init_ui(self):
+        file_path = os.path.join(TEMP, "user_data.ini")
+        config = ConfigObj(file_path, encoding='UTF8')
+        color = config['background_color']['color']
+        if color == self.light.name():
+            self.radioButton.setChecked(True)
+        elif color == self.dark.name():
+            self.radioButton_2.setChecked(True)
+        elif color == self.light_transparent.name():
+            self.radioButton.setChecked(True)
+            self.checkBox.setChecked(True)
+        elif color == self.dark_transparent.name():
+            self.radioButton_2.setChecked(True)
+            self.checkBox.setChecked(True)
+        else:
+            self.pushButton_palette.setStyleSheet('background-color:{}'.format(color))
+
     def get_palette(self):
         c = QColorDialog.getColor()
         self.pushButton_palette.setStyleSheet('background-color:{}'.format(c.name()))
