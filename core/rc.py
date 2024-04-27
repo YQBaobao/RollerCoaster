@@ -48,6 +48,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.setWindowFlags(Qt.FramelessWindowHint)  # 窗口无边框
         self.init_attribute()
 
+        self.start_run()  # 重复启动检查
         self.timer()  # 请求定时
         self.timer_start()  # 收盘后定时
         self.timer_polling()  # 交替
@@ -319,6 +320,16 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         if self.start_status:  # 修复定时器 time 的重复启动
             self.time.start()  # 启动
         self.start_status = False
+
+    @staticmethod
+    def start_run():
+        """重复启动检查"""
+        try:
+            x = os.system('tasklist | findstr RoCoaster.exe')
+            if x != 1:
+                os.system('taskkill /f /t /im  RoCoaster.exe')  # 结束进程
+        except OSError as e:
+            print("Error ending existing process:", e)
 
     def closeEvent(self, event) -> None:
         try:
