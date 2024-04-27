@@ -11,6 +11,7 @@ import datetime
 import os
 import time
 
+import psutil
 import win32gui
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
@@ -322,12 +323,17 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.start_status = False
 
     @staticmethod
-    def start_run():
+    def start_run(name='RoCoaster.exe'):
         """重复启动检查"""
         try:
-            x = os.system('tasklist | findstr RoCoaster.exe')
-            if x != 1:
-                os.system('taskkill /f /t /im  RoCoaster.exe')  # 结束进程
+            pids = psutil.process_iter()
+            pids_ = []
+            for pid in pids:
+                if pid.name() == name:
+                    pids_.append(pid.pid)
+            if len(pids_) > 1:
+                for i in range(0, len(pids_) - 1):
+                    os.system('taskkill /f /PID {}'.format(pids_[i]))  # 结束进程
         except OSError as e:
             print("Error ending existing process:", e)
 
