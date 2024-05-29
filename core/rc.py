@@ -7,11 +7,16 @@
 @ Version     : V1.0.0
 @ Description :
 """
+import ctypes
+import ctypes.wintypes
 import datetime
 import os
 import time
 
 import psutil
+import win32api
+import win32con
+import win32event
 import win32gui
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
@@ -27,6 +32,46 @@ from uis.rc_ui import Ui_RollerCoaster
 from static.rc_rc import qInitResources
 
 qInitResources()
+
+EVENT_SYSTEM_DIALOGSTART = 0x0010
+EVENT_OBJECT_LOCATIONCHANGE = 0x800B
+WINEVENT_OUTOFCONTEXT = 0x0000
+
+user32 = ctypes.windll.user32
+ole32 = ctypes.windll.ole32
+
+ole32.CoInitialize(0)
+
+win_event_proc_type = ctypes.WINFUNCTYPE(
+    None,
+    ctypes.wintypes.HANDLE,
+    ctypes.wintypes.DWORD,
+    ctypes.wintypes.HWND,
+    ctypes.wintypes.LONG,
+    ctypes.wintypes.LONG,
+    ctypes.wintypes.DWORD,
+    ctypes.wintypes.DWORD
+)
+
+m_h_taskbar = win32gui.FindWindow("Shell_TrayWnd", None)  # 任务栏“Shell_TaryWnd”的窗口句柄
+
+
+def callback(hwnd, event, hwnd_omg, idObject, idChild, dwEventThread, dwmsEventTime):
+    """钩子函数"""
+    # if idObject == 0 and idChild == 0 and hwnd == m_h_taskbar and event == EVENT_OBJECT_LOCATIONCHANGE:
+    # 处理任务栏大小变化的逻辑
+    print("Taskbar size changed.")
+
+
+win_event_proc = win_event_proc_type(callback)
+user32.SetWinEventHook.restype = ctypes.wintypes.HANDLE
+hook = user32.SetWinEventHook(
+    EVENT_OBJECT_LOCATIONCHANGE, EVENT_OBJECT_LOCATIONCHANGE, 0, win_event_proc, 0, 0, WINEVENT_OUTOFCONTEXT)
+if hook == 0:
+    print('SetWinEventHook failed')
+
+user32.UnhookWinEvent(hook)
+ole32.CoUninitialize()
 
 
 class RollerCoasterApp(QWidget, Ui_RollerCoaster):
