@@ -2,45 +2,36 @@
 <ui version="4.0">
  <class>RollerCoaster</class>
  <widget class="QWidget" name="RollerCoaster">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>94</width>
-    <height>48</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>From</string>
-  </property>
-  <property name="windowIcon">
-   <iconset resource="../static/rc.qrc">
-    <normaloff>:/rc/images/lined_up_32px.png</normaloff>:/rc/images/lined_up_32px.png</iconset>
-  </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>3</number>
+   </property>
    <item row="0" column="0">
     <widget class="QLabel" name="label_value">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
      <property name="text">
-      <string>none</string>
+      <string>0000.00</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
    <item row="1" column="0">
     <widget class="QLabel" name="label_rate">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <property name="text">
-      <string>none%</string>
+      <string>-00.00%</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>

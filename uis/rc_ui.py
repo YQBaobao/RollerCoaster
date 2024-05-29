@@ -14,26 +14,20 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_RollerCoaster(object):
     def setupUi(self, RollerCoaster):
         RollerCoaster.setObjectName("RollerCoaster")
-        RollerCoaster.resize(94, 48)
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/rc/images/lined_up_32px.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        RollerCoaster.setWindowIcon(icon)
         self.gridLayout = QtWidgets.QGridLayout(RollerCoaster)
+        self.gridLayout.setContentsMargins(0, -1, 3, -1)
         self.gridLayout.setObjectName("gridLayout")
         self.label_value = QtWidgets.QLabel(RollerCoaster)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_value.sizePolicy().hasHeightForWidth())
         self.label_value.setSizePolicy(sizePolicy)
+        self.label_value.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_value.setObjectName("label_value")
         self.gridLayout.addWidget(self.label_value, 0, 0, 1, 1)
         self.label_rate = QtWidgets.QLabel(RollerCoaster)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_rate.sizePolicy().hasHeightForWidth())
-        self.label_rate.setSizePolicy(sizePolicy)
+        self.label_rate.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_rate.setObjectName("label_rate")
         self.gridLayout.addWidget(self.label_rate, 1, 0, 1, 1)
 
@@ -42,6 +36,5 @@ class Ui_RollerCoaster(object):
 
     def retranslateUi(self, RollerCoaster):
         _translate = QtCore.QCoreApplication.translate
-        RollerCoaster.setWindowTitle(_translate("RollerCoaster", "From"))
-        self.label_value.setText(_translate("RollerCoaster", "none"))
-        self.label_rate.setText(_translate("RollerCoaster", "none%"))
+        self.label_value.setText(_translate("RollerCoaster", "0000.00"))
+        self.label_rate.setText(_translate("RollerCoaster", "-00.00%"))
