@@ -53,7 +53,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.timer()  # 请求定时
         self.timer_start()  # 收盘后定时
         self.timer_polling()  # 交替
-        self.timer_set_taskbar()  # 定时设置任务栏
+        # self.timer_set_taskbar()  # 定时设置任务栏
         self.tray_icon()  # 托盘
         self.init_ui()  # 初始化UI
         self.init_action()  # 动作
