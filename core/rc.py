@@ -99,10 +99,10 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
     def timer_set_taskbar(self, interval: int = 5000):  # >3 秒。时间过短会导致推动图标异常
         """定时设置任务栏"""
-        self.time_find_taskbar = QTimer(self)
-        self.time_find_taskbar.setInterval(interval)
-        self.time_find_taskbar.timeout.connect(self.set_taskbar)
-        self.time_find_taskbar.start()  # 启动
+        self.time_set_taskbar = QTimer(self)
+        self.time_set_taskbar.setInterval(interval)
+        self.time_set_taskbar.timeout.connect(self.set_taskbar)
+        self.time_set_taskbar.start()  # 启动
 
     def set_taskbar(self):
         """设置任务栏"""
@@ -352,6 +352,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     def closeEvent(self, event) -> None:
         try:
             self.setting.close()
+            self.time_set_taskbar.stop()
             self.time_start.stop()
             self.time_polling.stop()
             self.time.stop()
