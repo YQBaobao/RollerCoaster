@@ -5,18 +5,13 @@
 @ File        : rc.py
 @ Author      : yqbao
 @ Version     : V1.0.0
-@ Description :
+@ Description : 主类 rc
 """
-import ctypes
-import ctypes.wintypes
 import datetime
 import os
 import time
 
 import psutil
-import win32api
-import win32con
-import win32event
 import win32gui
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
@@ -32,46 +27,6 @@ from uis.rc_ui import Ui_RollerCoaster
 from static.rc_rc import qInitResources
 
 qInitResources()
-
-EVENT_SYSTEM_DIALOGSTART = 0x0010
-EVENT_OBJECT_LOCATIONCHANGE = 0x800B
-WINEVENT_OUTOFCONTEXT = 0x0000
-
-user32 = ctypes.windll.user32
-ole32 = ctypes.windll.ole32
-
-ole32.CoInitialize(0)
-
-win_event_proc_type = ctypes.WINFUNCTYPE(
-    None,
-    ctypes.wintypes.HANDLE,
-    ctypes.wintypes.DWORD,
-    ctypes.wintypes.HWND,
-    ctypes.wintypes.LONG,
-    ctypes.wintypes.LONG,
-    ctypes.wintypes.DWORD,
-    ctypes.wintypes.DWORD
-)
-
-m_h_taskbar = win32gui.FindWindow("Shell_TrayWnd", None)  # 任务栏“Shell_TaryWnd”的窗口句柄
-
-
-def callback(hwnd, event, hwnd_omg, idObject, idChild, dwEventThread, dwmsEventTime):
-    """钩子函数"""
-    # if idObject == 0 and idChild == 0 and hwnd == m_h_taskbar and event == EVENT_OBJECT_LOCATIONCHANGE:
-    # 处理任务栏大小变化的逻辑
-    print("Taskbar size changed.")
-
-
-win_event_proc = win_event_proc_type(callback)
-user32.SetWinEventHook.restype = ctypes.wintypes.HANDLE
-hook = user32.SetWinEventHook(
-    EVENT_OBJECT_LOCATIONCHANGE, EVENT_OBJECT_LOCATIONCHANGE, 0, win_event_proc, 0, 0, WINEVENT_OUTOFCONTEXT)
-if hook == 0:
-    print('SetWinEventHook failed')
-
-user32.UnhookWinEvent(hook)
-ole32.CoUninitialize()
 
 
 class RollerCoasterApp(QWidget, Ui_RollerCoaster):
@@ -98,6 +53,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.timer()  # 请求定时
         self.timer_start()  # 收盘后定时
         self.timer_polling()  # 交替
+        self.timer_set_taskbar()  # 定时设置任务栏
         self.tray_icon()  # 托盘
         self.init_ui()  # 初始化UI
         self.init_action()  # 动作
@@ -131,14 +87,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
                 f.write(user_data)
 
     def init_ui(self):
-        m_h_taskbar = win32gui.FindWindow("Shell_TrayWnd", None)  # 任务栏“Shell_TaryWnd”的窗口句柄
-        m_h_bar = win32gui.FindWindowEx(m_h_taskbar, 0, "ReBarWindow32", None)  # 子窗口“ReBarWindow32”的窗口句柄
-        m_h_min = win32gui.FindWindowEx(m_h_bar, 0, "MSTaskSwWClass", None)  # 子窗口“MSTaskSwWClass”的窗口句柄
-        b = win32gui.GetWindowRect(m_h_bar)  # 获取m_hBar窗口尺寸b为[左，上，右，下]的数组
-        win32gui.MoveWindow(m_h_min, 0, 0, b[2] - b[0] - 75, b[3] - b[1], True)  # 调整m_hMin的窗口大小，为我们的程序预留出位置
-
-        self.setGeometry(b[2] - b[0] - 75, -5, 75, b[3] - b[1])  # 调整我们自己的窗口到预留位置的大小
-        win32gui.SetParent(int(self.winId()), m_h_bar)  # 将我们自己的窗口设置为m_hBar的子窗口
+        self.set_taskbar()  # 初始化
 
         config = ConfigObj(self.user_data_path, encoding='UTF8')
         color = QColor(config['background_color']['color'])
@@ -147,6 +96,24 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.setPalette(palette)
         self.label_value.setStyleSheet(self.light)
         self.label_rate.setStyleSheet(self.light)
+
+    def timer_set_taskbar(self, interval: int = 5000):  # >3 秒。时间过短会导致推动图标异常
+        """定时设置任务栏"""
+        self.time_find_taskbar = QTimer(self)
+        self.time_find_taskbar.setInterval(interval)
+        self.time_find_taskbar.timeout.connect(self.set_taskbar)
+        self.time_find_taskbar.start()  # 启动
+
+    def set_taskbar(self):
+        """设置任务栏"""
+        m_h_taskbar = win32gui.FindWindow("Shell_TrayWnd", None)  # 任务栏“Shell_TaryWnd”的窗口句柄
+        m_h_bar = win32gui.FindWindowEx(m_h_taskbar, 0, "ReBarWindow32", None)  # 子窗口“ReBarWindow32”的窗口句柄
+        m_h_min = win32gui.FindWindowEx(m_h_bar, 0, "MSTaskSwWClass", None)  # 子窗口“MSTaskSwWClass”的窗口句柄
+        b = win32gui.GetWindowRect(m_h_bar)  # 获取m_hBar窗口尺寸b为[左，上，右，下]的数组
+        win32gui.MoveWindow(m_h_min, 0, 0, b[2] - b[0] - 75, b[3] - b[1], True)  # 调整m_hMin的窗口大小，为我们的程序预留出位置
+
+        self.setGeometry(b[2] - b[0] - 75, -5, 75, b[3] - b[1])  # 调整我们自己的窗口到预留位置的大小
+        win32gui.SetParent(int(self.winId()), m_h_bar)  # 将我们自己的窗口设置为m_hBar的子窗口
 
     def init_action(self):
         """信号"""
