@@ -31,8 +31,8 @@ class UiBaseQWidget(QWidget, Ui_Base):
         self.init_ui()
 
     def init_ui(self):
-        file_path = os.path.join(TEMP, "user_data.ini")
-        self.config = ConfigObj(file_path, encoding='UTF8')
+        self.user_data_path = os.path.join(TEMP, "user_data.ini")
+        self.config = ConfigObj(self.user_data_path, encoding='UTF8')
         self.lineEdit.setText(self.config['base']['symbol'])
         self.lineEdit_2.setText(self.config['base']['symbol_2'])
         self.comboBox.setCurrentText(self.config['base']['interval'])
@@ -48,6 +48,14 @@ class UiBaseQWidget(QWidget, Ui_Base):
             self.message_box.info_message('“代码(1)”必须有值。', self)
             return
         if self.msg_status:
+            try:
+                self.config['config']['background_button']
+            except KeyError:
+                with open(self.user_data_path, "a") as f:
+                    user_data = (
+                        '\n\n[config]\nbackground_button = false')
+                    f.write(user_data)
+            self.config = ConfigObj(self.user_data_path, encoding='UTF8')
             background_button = self.config['config']['background_button']
             if background_button.lower() != 'true':
                 msg = '请确认任务栏中，“数据”背景色是否与系统任务栏颜色一致？\n“确认”后将无法再修改背景色！'

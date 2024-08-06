@@ -288,6 +288,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.time.start()  # 启动
         self.start()  # 首次
 
+        self.config = ConfigObj(self.user_data_path, encoding='UTF8')
         background_button = self.config['config']['background_button']
         if background_button.lower() != 'true':
             self.background_button = False  # 开启此行，则本次启动将再也不能修改背景色
