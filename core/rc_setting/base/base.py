@@ -24,6 +24,7 @@ class UiBaseQWidget(QWidget, Ui_Base):
         super().__init__(parent)
         self.setupUi(self)
         self.base_signal = base_signal
+        self.msg_status = True  # 是否提示消息
 
         self.comboBox.setView(QListView())
         self.message_box = MessageBox()
@@ -46,13 +47,23 @@ class UiBaseQWidget(QWidget, Ui_Base):
         if not symbol:
             self.message_box.info_message('“代码(1)”必须有值。', self)
             return
-        msg = '请确认任务栏中，“数据”背景色是否与系统任务栏颜色一致？\n“确认”后将无法再修改背景色！'
-        message = QMessageBox(QMessageBox.Information, '确认框', msg, QMessageBox.Yes | QMessageBox.No, parent=self)
-        message.button(QMessageBox.Yes).setText("确认")
-        message.button(QMessageBox.No).setText("取消")
-        message.exec()
-        if message.clickedButton() != message.button(QMessageBox.Yes):
-            return
+        if self.msg_status:
+            background_button = self.config['config']['background_button']
+            if background_button.lower() != 'true':
+                msg = '请确认任务栏中，“数据”背景色是否与系统任务栏颜色一致？\n“确认”后将无法再修改背景色！'
+            else:
+                msg = '请确认代码是否填写正确？'
+            message = QMessageBox(QMessageBox.Information, '确认框', msg,
+                                  QMessageBox.Yes | QMessageBox.No | QMessageBox.Close,
+                                  parent=self)
+            message.button(QMessageBox.Yes).setText("确认")
+            message.button(QMessageBox.No).setText("取消")
+            message.button(QMessageBox.Close).setText("不在提示")
+            message.exec()
+            if message.clickedButton() == message.button(QMessageBox.No):
+                return
+            if message.clickedButton() == message.button(QMessageBox.Close):
+                self.msg_status = False
         interval = self.comboBox.currentIndex()
         data = {'interval': self.interval_time[interval]}
         if not symbol_2:

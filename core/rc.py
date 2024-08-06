@@ -65,6 +65,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.default_style = self.light  # 默认白
         self.down_style = self.down  # 默认绿
         self.polling_status = 1
+        self.background_button = True  # 背景色按钮状态
 
         self.base_signal = BaseSignal()
         self.snowball = Snowball()
@@ -83,14 +84,15 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
                     '[base]\nsymbol = SZ002594\nsymbol_2=\ninterval = 2000\n\n'
                     '[background_color]\ncolor = "#101010"\n\n'
                     '[shortcut_key]\nopen_setting = control+up\nshow_data = control+down\n'
-                    'red_green_switch = control+left\nboss_key = control+right')
+                    'red_green_switch = control+left\nboss_key = control+right\n\n'
+                    '[config]\nbackground_button = false')
                 f.write(user_data)
 
     def init_ui(self):
         self.set_taskbar()  # 初始化
 
-        config = ConfigObj(self.user_data_path, encoding='UTF8')
-        color = QColor(config['background_color']['color'])
+        self.config = ConfigObj(self.user_data_path, encoding='UTF8')
+        color = QColor(self.config['background_color']['color'])
         palette = self.palette()
         palette.setColor(QPalette.Background, color)
         self.setPalette(palette)
@@ -255,7 +257,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             return
         from core.rc_setting.setting import UiSettingQWidget
 
-        self.setting = UiSettingQWidget(self.base_signal)
+        self.setting = UiSettingQWidget(self.base_signal, background_button=self.background_button)
         self.setting.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)  # 取消帮助按钮
 
         self.setting_is_active_window = True
@@ -285,7 +287,11 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.timer(data['interval'])
         self.time.start()  # 启动
         self.start()  # 首次
-        self.setting.pushButton_background_color.setEnabled(False)
+
+        background_button = self.config['config']['background_button']
+        if background_button.lower() != 'true':
+            self.background_button = False  # 开启此行，则本次启动将再也不能修改背景色
+        self.setting.pushButton_background_color.setEnabled(self.background_button)
 
         self.time_polling.stop()
         self.timer_polling(data['interval'] / 2)
