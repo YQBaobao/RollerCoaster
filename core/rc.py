@@ -141,10 +141,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         """动态设置任务栏"""
         if icon_count and self.icon_count != 0:
             x = self.icon_count - icon_count
-            print(x, self.icon_count, icon_count)
-            print(x * 24)
             self.b = (self.b[0], self.b[1], self.b[2] + (x * 24), self.b[3],)
-            print(self.b)
             self.icon_count = icon_count
         win32gui.MoveWindow(self.m_h_min, 0, 0, self.b[2] - self.b[0] - 75, self.b[3] - self.b[1], True)
 
