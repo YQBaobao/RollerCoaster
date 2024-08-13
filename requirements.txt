@@ -6,3 +6,4 @@ configobj
 system_hotkey
 psutil
 PyInstaller
+aiohttp
