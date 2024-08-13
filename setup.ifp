@@ -3,7 +3,7 @@
 ProjectFileVersion = 1.1
 [General]
 Program name = RoCoaster
-Program version = 1.0.4.4
+Program version = 1.0.4.5
 Windows XP = 0
 Windows Server 2003 = 0
 Windows Vista = 0
@@ -16,7 +16,7 @@ Windows Server 2019 = 0
 Windows Server 2022 = 0
 Windows 11 = 1
 DoNotCheckOS = 0
-Company name = 
+Company name = yqbaowo@foxmail.com
 Website = yqbaowo@foxmail.com
 SFA = 0
 DFA = 0
@@ -27,7 +27,7 @@ Header image = <main>
 Show Label = 1
 VisualStylesEnabled = 1
 [Files]
-Installation path = D:\Program Files (x86)<Company>\<AppName>\
+Installation path = D:\Program Files (x86)\<AppName>\
 Autcip = 1
 [Uninstall]
 Vwau = 1
