@@ -71,6 +71,7 @@ class UiBaseQWidget(QWidget, Ui_Base):
             if message.clickedButton() == message.button(QMessageBox.No):
                 return
             if message.clickedButton() == message.button(QMessageBox.Close):
+                self.msg_status = False
                 self.base_signal.signal_msg_status.emit()
         interval = self.comboBox.currentIndex()
         data = {'interval': self.interval_time[interval]}
