@@ -20,11 +20,11 @@ from uis.rc_setting.base.base import Ui_Base
 class UiBaseQWidget(QWidget, Ui_Base):
     interval_time = [2000, 3000, 5000, 10000]  # 延迟
 
-    def __init__(self, base_signal, parent=None):
+    def __init__(self, base_signal, parent=None, msg_status=True):
         super().__init__(parent)
         self.setupUi(self)
         self.base_signal = base_signal
-        self.msg_status = True  # 是否提示消息
+        self.msg_status = msg_status  # 是否提示消息
 
         self.comboBox.setView(QListView())
         self.message_box = MessageBox()
@@ -71,7 +71,7 @@ class UiBaseQWidget(QWidget, Ui_Base):
             if message.clickedButton() == message.button(QMessageBox.No):
                 return
             if message.clickedButton() == message.button(QMessageBox.Close):
-                self.msg_status = False
+                self.base_signal.signal_msg_status.emit()
         interval = self.comboBox.currentIndex()
         data = {'interval': self.interval_time[interval]}
         if not symbol_2:

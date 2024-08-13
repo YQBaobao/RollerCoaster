@@ -21,12 +21,13 @@ from uis.rc_setting.setting_ui import Ui_Settiing
 class UiSettingQWidget(QDialog, Ui_Settiing):
     type = Qt.UniqueConnection
 
-    def __init__(self, base_signal, parent=None, background_button=True):
+    def __init__(self, base_signal, parent=None, background_button=True, msg_status=True):
         super().__init__(parent)
         self.setupUi(self)
         self.init_style()
         self.base_signal = base_signal
         self.background_button = background_button  # 背景色按钮状态
+        self.msg_status = msg_status
 
         self.stackedWidget.setCurrentIndex(0)
         self.init_ui()
@@ -49,7 +50,7 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         grid_layout.setObjectName("gridLayout_5")
         self.stackedWidget.addWidget(self.ui_home)  # 0
         # 1
-        self.ui_base = UiBaseQWidget(self.base_signal, self)
+        self.ui_base = UiBaseQWidget(self.base_signal, parent=self, msg_status=self.msg_status)
         grid_layout = QGridLayout(self.ui_base)
         grid_layout.setObjectName("gridLayout_6")
         self.stackedWidget.addWidget(self.ui_base)  # 1

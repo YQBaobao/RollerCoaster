@@ -11,6 +11,7 @@ import datetime
 import os
 import time
 
+import commctrl
 import psutil
 import win32gui
 from PyQt5.QtCore import Qt, QTimer
@@ -53,7 +54,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.timer()  # 请求定时
         self.timer_start()  # 收盘后定时
         self.timer_polling()  # 交替
-        # self.timer_set_taskbar()  # 定时设置任务栏
+        self.timer_set_taskbar()  # 定时设置任务栏
         self.tray_icon()  # 托盘
         self.init_ui()  # 初始化UI
         self.init_action()  # 动作
@@ -66,6 +67,9 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.down_style = self.down  # 默认绿
         self.polling_status = 1
         self.background_button = True  # 背景色按钮状态
+        self.msg_status = True  # 消息提醒状态
+        self.icon_count = 0  # 默认图标数量
+        self.icon_status = True
 
         self.base_signal = BaseSignal()
         self.snowball = Snowball()
@@ -99,23 +103,53 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.label_value.setStyleSheet(self.light)
         self.label_rate.setStyleSheet(self.light)
 
-    def timer_set_taskbar(self, interval: int = 5000):  # >3 秒。时间过短会导致推动图标异常
-        """定时设置任务栏"""
-        self.time_set_taskbar = QTimer(self)
-        self.time_set_taskbar.setInterval(interval)
-        self.time_set_taskbar.timeout.connect(self.set_taskbar)
-        self.time_set_taskbar.start()  # 启动
-
     def set_taskbar(self):
         """设置任务栏"""
-        m_h_taskbar = win32gui.FindWindow("Shell_TrayWnd", None)  # 任务栏“Shell_TaryWnd”的窗口句柄
-        m_h_bar = win32gui.FindWindowEx(m_h_taskbar, 0, "ReBarWindow32", None)  # 子窗口“ReBarWindow32”的窗口句柄
-        m_h_min = win32gui.FindWindowEx(m_h_bar, 0, "MSTaskSwWClass", None)  # 子窗口“MSTaskSwWClass”的窗口句柄
-        b = win32gui.GetWindowRect(m_h_bar)  # 获取m_hBar窗口尺寸b为[左，上，右，下]的数组
+        self.m_h_taskbar = win32gui.FindWindow("Shell_TrayWnd", None)  # 任务栏“Shell_TaryWnd”的窗口句柄
+        self.m_h_bar = m_h_bar = win32gui.FindWindowEx(self.m_h_taskbar, 0, "ReBarWindow32",
+                                                       None)  # 子窗口“ReBarWindow32”的窗口句柄
+        self.m_h_min = m_h_min = win32gui.FindWindowEx(m_h_bar, 0, "MSTaskSwWClass", None)  # 子窗口“MSTaskSwWClass”的窗口句柄
+        self.b = b = win32gui.GetWindowRect(m_h_bar)  # 获取m_hBar窗口尺寸b为[左，上，右，下]的数组
         win32gui.MoveWindow(m_h_min, 0, 0, b[2] - b[0] - 75, b[3] - b[1], True)  # 调整m_hMin的窗口大小，为我们的程序预留出位置
 
         self.setGeometry(b[2] - b[0] - 75, -5, 75, b[3] - b[1])  # 调整我们自己的窗口到预留位置的大小
         win32gui.SetParent(int(self.winId()), m_h_bar)  # 将我们自己的窗口设置为m_hBar的子窗口
+
+    def timer_set_taskbar(self, interval: int = 500):  # 500ms
+        """定时设置任务栏"""
+        self.time_set_taskbar = QTimer(self)
+        self.time_set_taskbar.setInterval(interval)
+        self.time_set_taskbar.timeout.connect(self.get_tray_icon_count)
+        self.time_set_taskbar.start()  # 启动
+
+    def get_tray_icon_count(self) -> int:
+        # 获取托盘区域的窗口句柄
+        tray_notify_handle = win32gui.FindWindowEx(self.m_h_taskbar, 0, "TrayNotifyWnd", None)
+        sys_pager_handle = win32gui.FindWindowEx(tray_notify_handle, 0, "SysPager", None)
+        notification_area_handle = win32gui.FindWindowEx(sys_pager_handle, 0, "ToolbarWindow32", None)
+        # 获取托盘图标的数量
+        count = win32gui.SendMessage(notification_area_handle, commctrl.TB_BUTTONCOUNT, 0, 0)
+        if self.icon_status:
+            self.icon_count = count  # 初始化
+            self.icon_status = False
+        if self.icon_count != count:
+            self.dynamic_set_taskbar(icon_count=count)
+        else:
+            return 0
+
+    def dynamic_set_taskbar(self, icon_count=0):
+        """动态设置任务栏"""
+        if icon_count and self.icon_count != 0:
+            x = self.icon_count - icon_count
+            print(x, self.icon_count, icon_count)
+            print(x * 24)
+            self.b = (self.b[0], self.b[1], self.b[2] + (x * 24), self.b[3],)
+            print(self.b)
+            self.icon_count = icon_count
+        win32gui.MoveWindow(self.m_h_min, 0, 0, self.b[2] - self.b[0] - 75, self.b[3] - self.b[1], True)
+
+        self.setGeometry(self.b[2] - self.b[0] - 75, -5, 75, self.b[3] - self.b[1])
+        win32gui.SetParent(int(self.winId()), self.m_h_bar)
 
     def init_action(self):
         """信号"""
@@ -124,6 +158,11 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.base_signal.signal_setting_close.connect(self.close_setting)
         self.base_signal.signal_shortcut_key.connect(self.set_shortcut_key)
         self.base_signal.signal_shortcut_key_update.connect(self.init_shortcut_key)  # 更新快捷键
+
+        self.base_signal.signal_msg_status.connect(self.msg_status_f)
+
+    def msg_status_f(self):
+        self.msg_status = False
 
     def init_shortcut_key(self):
         # 获取用户数据
@@ -257,7 +296,8 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             return
         from core.rc_setting.setting import UiSettingQWidget
 
-        self.setting = UiSettingQWidget(self.base_signal, background_button=self.background_button)
+        self.setting = UiSettingQWidget(self.base_signal, background_button=self.background_button,
+                                        msg_status=self.msg_status)
         self.setting.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)  # 取消帮助按钮
 
         self.setting_is_active_window = True

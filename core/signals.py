@@ -17,3 +17,4 @@ class BaseSignal(QObject):
     signal_shortcut_key_update = pyqtSignal()
 
     signal_setting_close = pyqtSignal()  # 设置页面关闭信号
+    signal_msg_status = pyqtSignal()
