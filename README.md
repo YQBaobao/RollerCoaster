@@ -4,17 +4,16 @@
 
 ### What's this?
 
-Monitor real-time price changes through the stock code and place it on the desktop taskbar, a must-have for fishing
+Monitor real-time price changes through the stock code and place it on the desktop taskbar, a must-have for fishing. Supports global shortcut key hiding and global callout settings page.
 
 ### What can you do?
 
 - Use the stock code to monitor real-time price changes, and monitor one quantity (the code must be entered completely,
   such as: SZ002594)
-- Monitoring interval, minimum 2 seconds
+- Monitoring interval, minimum 2 seconds,Default 3 seconds
 - The number of monitors, before version `v1.0.3`, can only support one, after `v1.0.3`, it can support up to two.
 - If it rises, the font will be `red`. If it falls, the font will be `green`
-- Added the option to no longer obtain prices after the market closes, but to obtain prices half an hour in advance
-  before the market opens, time period (9:00-15:00)
+- Added that the price will no longer be obtained after the market closes (15:00). Before the market opens, the time will be checked every 1 minute and the price will be obtained at the set time (9:00). \[Note: This item relies heavily on the local time of the computer, please ensure that the time is accurate\]
 
 ### How to use it?
 
@@ -23,7 +22,7 @@ Monitor real-time price changes through the stock code and place it on the deskt
   click OK
 - In the system tray, right-click the icon and exit, the program will exit.
 - Double-click the icon in the system tray to switch between hiding/showing data
-- Other settings: background color, boss key
+- Other settings: background color, shortcut keys
 
 ### Some screenshots
 
