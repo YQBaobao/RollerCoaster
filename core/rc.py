@@ -52,7 +52,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
         self.start_run()  # 重复启动检查
         self.timer()  # 请求定时
-        self.timer_start()  # 收盘后定时
+        self.timer_start(interval=1 * 60 * 1000)  # 收盘后定时,1分钟
         self.timer_polling()  # 交替
         self.timer_set_taskbar()  # 定时设置任务栏
         self.tray_icon()  # 托盘
@@ -372,7 +372,11 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     def start(self):
         self.get_trade_status = self.gu_shi_tong.get_trade_status(symbol=self.symbol[-1])
         hour = datetime.datetime.now().hour
-        if self.get_trade_status == '已收盘' and (hour < 9 or 15 <= hour):
+        if self.get_trade_status == '已收盘':
+            return
+        if hour < 9 or 15 < hour:
+            self.start_status = True  # 重置启动状态
+            self.time.stop()  # 停止
             return
         if self.start_status:  # 修复定时器 time 的重复启动
             self.time.start()  # 启动
@@ -382,19 +386,17 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     def start_run(name='RoCoaster.exe'):
         """重复启动检查"""
         try:
-            pids = psutil.process_iter()
-            pids_ = []
-            for pid in pids:
-                if pid.name() == name:
-                    pids_.append(pid.pid)
-            if len(pids_) > 1:
-                for i in range(0, len(pids_) - 1):
-                    os.system('taskkill /f /PID {}'.format(pids_[i]))  # 结束进程
-        except OSError as e:
+            # 找到所有同名进程的PID
+            pids = [pid.pid for pid in psutil.process_iter() if pid.name() == name]
+            if len(pids) > 1:
+                for pid in pids[:-1]:  # 结束除了最后一个之外的所有进程
+                    psutil.Process(pid).terminate()  # 结束进程
+        except (OSError, psutil.NoSuchProcess) as e:
             print("Error ending existing process:", e)
 
     def closeEvent(self, event) -> None:
         try:
+            print('close event')
             self.setting.close()
             self.time_set_taskbar.stop()
             self.time_start.stop()
@@ -402,6 +404,6 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             self.time.stop()
             self.tray.hide()
             self.tray = None  # 清空托盘对象内存
-        except Exception:
-            pass
+        except Exception as e:
+            print('close error: ', e)
         super(RollerCoasterApp, self).closeEvent(event)
