@@ -7,6 +7,7 @@
 @ Version     : V1.0.0
 @ Description : 主类 rc
 """
+import asyncio
 import datetime
 import os
 import time
@@ -296,6 +297,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.setting = UiSettingQWidget(self.base_signal, background_button=self.background_button,
                                         msg_status=self.msg_status)
         self.setting.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)  # 取消帮助按钮
+        asyncio.create_task(self.setting.fetch_data())  # 检查新版本，在事件循环中运行异步函数
 
         self.setting_is_active_window = True
         self.setting.exec()
@@ -396,14 +398,15 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
     def closeEvent(self, event) -> None:
         try:
-            print('close event')
-            self.setting.close()
+            print('Close Event')
+            if hasattr(self, "setting"):
+                self.setting.close()
+            if hasattr(self, "tray"):
+                self.tray = None  # 清空托盘对象内存
             self.time_set_taskbar.stop()
             self.time_start.stop()
             self.time_polling.stop()
             self.time.stop()
-            self.tray.hide()
-            self.tray = None  # 清空托盘对象内存
         except Exception as e:
-            print('close error: ', e)
+            print('Close Error: ', e)
         super(RollerCoasterApp, self).closeEvent(event)

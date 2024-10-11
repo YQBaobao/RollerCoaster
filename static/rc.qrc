@@ -6,6 +6,7 @@
         <file>./images/open_license.png</file>
         <file>./images/about_qt.png</file>
         <file>./images/quit.png</file>
+        <file>./images/little_red_dot.png</file>
     </qresource>
     <qresource prefix="qss">
         <file>./qss/rc.qss</file>

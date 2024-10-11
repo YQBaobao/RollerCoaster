@@ -7,3 +7,4 @@ system_hotkey
 psutil
 PyInstaller
 aiohttp
+asyncqt

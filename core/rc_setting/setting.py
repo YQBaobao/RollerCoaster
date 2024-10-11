@@ -7,9 +7,12 @@
 @ Version     : V1.0.0
 @ Description : 
 """
+import aiohttp
 from PyQt5.QtCore import Qt, QFile
+from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QDialog, QGridLayout
 
+from core import version
 from core.rc_setting.background_color.background_color import UiBackgroundColorQWidget
 from core.rc_setting.base.base import UiBaseQWidget
 from core.rc_setting.home.home import UiHomeQWidget
@@ -20,6 +23,7 @@ from uis.rc_setting.setting_ui import Ui_Settiing
 
 class UiSettingQWidget(QDialog, Ui_Settiing):
     type = Qt.UniqueConnection
+    url = 'https://gitee.com/api/v5/repos/yqbao/roller-coaster/tags?sort=name&direction=desc&page=1&per_page=5'
 
     def __init__(self, base_signal, parent=None, background_button=True, msg_status=True):
         super().__init__(parent)
@@ -90,6 +94,19 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         self.ui_shortcut_key.pb_red_green_switch.clicked.connect(self.ui_shortcut_key.key_red_green_switch, self.type)
         self.ui_shortcut_key.pb_boss_key.clicked.connect(self.ui_shortcut_key.key_boss_key, self.type)
         self.ui_shortcut_key.pb_accepted_3.clicked.connect(self.ui_shortcut_key.shortcut_key_save, self.type)
+
+    async def fetch_data(self):
+        tags = ['0']
+        async with aiohttp.ClientSession() as session:
+            async with session.get(self.url) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    tags = [tag['name'] for tag in data]
+        if tags[0] <= version:
+            return
+        icon = QIcon()  # 小红点
+        icon.addPixmap(QPixmap(":/rc/images/little_red_dot.png"), QIcon.Normal, QIcon.Off)
+        self.pushButton_what_new.setIcon(icon)
 
     def closeEvent(self, a0):
         self.base_signal.signal_setting_close.emit()
