@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>关于Qt</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../../static/rc.qrc">
+    <normaloff>:/rc/images/lined_up_32px.png</normaloff>:/rc/images/lined_up_32px.png</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true">background-color: rgb(255, 255, 255);</string>
   </property>

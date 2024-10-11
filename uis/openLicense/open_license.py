@@ -15,6 +15,9 @@ class Ui_OpenLicense(object):
     def setupUi(self, OpenLicense):
         OpenLicense.setObjectName("OpenLicense")
         OpenLicense.resize(667, 548)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/rc/images/lined_up_32px.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        OpenLicense.setWindowIcon(icon)
         self.gridLayout = QtWidgets.QGridLayout(OpenLicense)
         self.gridLayout.setObjectName("gridLayout")
         self.pushButtonAbout = QtWidgets.QPushButton(OpenLicense)

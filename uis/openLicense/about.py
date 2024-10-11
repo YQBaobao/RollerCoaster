@@ -15,6 +15,9 @@ class Ui_AboutQt(object):
     def setupUi(self, AboutQt):
         AboutQt.setObjectName("AboutQt")
         AboutQt.resize(601, 553)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/rc/images/lined_up_32px.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        AboutQt.setWindowIcon(icon)
         AboutQt.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.gridLayout = QtWidgets.QGridLayout(AboutQt)
         self.gridLayout.setContentsMargins(0, -1, 0, 0)

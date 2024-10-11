@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>开源许可</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../../static/rc.qrc">
+    <normaloff>:/rc/images/lined_up_32px.png</normaloff>:/rc/images/lined_up_32px.png</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="2">
     <widget class="QPushButton" name="pushButtonAbout">
@@ -1644,6 +1648,8 @@ p, li { white-space: pre-wrap; }
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../static/rc.qrc"/>
+ </resources>
  <connections/>
 </ui>
