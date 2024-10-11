@@ -41,20 +41,6 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="3">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>备：&lt;a href=&quot;https://gitee.com/yqbao/roller-coaster/releases&quot;&gt;前往 Gitee 查看更加详细的更新说明&lt;/a&gt;</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0" colspan="3">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>主：&lt;a href=&quot;https://github.com/YQBaobao/RollerCoaster/releases&quot;&gt;前往 GitHub 查看详细的更新说明&lt;/a&gt;</string>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="0" colspan="3">
     <widget class="QLabel" name="label_4">
      <property name="text">
@@ -73,6 +59,37 @@
     <widget class="QLabel" name="label_9">
      <property name="text">
       <string>-RollerCoaster</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>主：&lt;a href=&quot;https://github.com/YQBaobao/RollerCoaster/releases&quot;&gt;前往 GitHub 查看详细的更新说明&lt;/a&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="2">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;备：&lt;a href=&quot;https://gitee.com/yqbao/roller-coaster/releases&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;前往 Gitee 查看详细的更新说明&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QRadioButton" name="radioButton">
+     <property name="text">
+      <string>设置 Github 检查</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QRadioButton" name="radioButton_2">
+     <property name="text">
+      <string>设置 Gitee 检查</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

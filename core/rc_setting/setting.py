@@ -23,7 +23,6 @@ from uis.rc_setting.setting_ui import Ui_Settiing
 
 class UiSettingQWidget(QDialog, Ui_Settiing):
     type = Qt.UniqueConnection
-    url = 'https://gitee.com/api/v5/repos/yqbao/roller-coaster/tags?sort=name&direction=desc&page=1&per_page=5'
 
     def __init__(self, base_signal, parent=None, background_button=True, msg_status=True):
         super().__init__(parent)
@@ -32,6 +31,7 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         self.base_signal = base_signal
         self.background_button = background_button  # 背景色按钮状态
         self.msg_status = msg_status
+        self.tags = ['0']  # 默认 0 版本
 
         self.stackedWidget.setCurrentIndex(0)
         self.init_ui()
@@ -95,13 +95,21 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         self.ui_shortcut_key.pb_boss_key.clicked.connect(self.ui_shortcut_key.key_boss_key, self.type)
         self.ui_shortcut_key.pb_accepted_3.clicked.connect(self.ui_shortcut_key.shortcut_key_save, self.type)
 
-    async def fetch_data(self):
-        tags = ['0']
+    async def check_update(self):
+        url = self.ui_what_new.url
+        print("Check: ", url)
         async with aiohttp.ClientSession() as session:
-            async with session.get(self.url) as response:
+            async with session.get(url) as response:
                 if response.status == 200:
                     data = await response.json()
-                    tags = [tag['name'] for tag in data]
+                    self.tags = [tag['name'] for tag in data]
+                else:
+                    print("Check Update Request: ", await response.text())
+        self.base_signal.signal_check_tags.emit(self.tags)
+        self.set_check_update(self.tags)
+
+    def set_check_update(self, tags):
+        """判断，设置小红点"""
         if tags[0] <= version:
             return
         icon = QIcon()  # 小红点

@@ -71,6 +71,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.msg_status = True  # 消息提醒状态
         self.icon_count = 0  # 默认图标数量
         self.icon_status = True
+        self.check_update_status = False  # 未检查更新的标志
 
         self.base_signal = BaseSignal()
         self.snowball = Snowball()
@@ -90,7 +91,8 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
                     '[background_color]\ncolor = "#101010"\n\n'
                     '[shortcut_key]\nopen_setting = control+up\nshow_data = control+down\n'
                     'red_green_switch = control+left\nboss_key = control+right\n\n'
-                    '[config]\nbackground_button = false')
+                    '[config]\nbackground_button = false\n\n'
+                    '[update]\ncheck = gitee')
                 f.write(user_data)
 
     def init_ui(self):
@@ -158,6 +160,8 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.base_signal.signal_shortcut_key_update.connect(self.init_shortcut_key)  # 更新快捷键
 
         self.base_signal.signal_msg_status.connect(self.msg_status_f)
+
+        self.base_signal.signal_check_tags.connect(self.check_update_tags)  # 更新标签
 
     def msg_status_f(self):
         self.msg_status = False
@@ -297,8 +301,11 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.setting = UiSettingQWidget(self.base_signal, background_button=self.background_button,
                                         msg_status=self.msg_status)
         self.setting.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)  # 取消帮助按钮
-        asyncio.create_task(self.setting.fetch_data())  # 检查新版本，在事件循环中运行异步函数
-
+        if hasattr(self, 'tags'):
+            self.setting.set_check_update(self.tags)
+        if not self.check_update_status:  # 只用请求一次
+            asyncio.create_task(self.setting.check_update())  # 检查新版本，在事件循环中运行异步函数
+            self.check_update_status = True  # 已经检查更新的标志
         self.setting_is_active_window = True
         self.setting.exec()
 
@@ -383,6 +390,9 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         if self.start_status:  # 修复定时器 time 的重复启动
             self.time.start()  # 启动
         self.start_status = False
+
+    def check_update_tags(self, tags):
+        self.tags = tags  # 保存下来
 
     @staticmethod
     def start_run(name='RoCoaster.exe'):

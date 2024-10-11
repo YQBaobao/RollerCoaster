@@ -18,3 +18,5 @@ class BaseSignal(QObject):
 
     signal_setting_close = pyqtSignal()  # 设置页面关闭信号
     signal_msg_status = pyqtSignal()
+
+    signal_check_tags = pyqtSignal(list)  # 标签版本信息
