@@ -14,6 +14,7 @@ Monitor real-time price changes through the stock code and place it on the deskt
 - The number of monitors, before version `v1.0.3`, can only support one, after `v1.0.3`, it can support up to two.
 - If it rises, the font will be `red`. If it falls, the font will be `green`
 - Added that the price will no longer be obtained after the market closes (15:00). Before the market opens, the time will be checked every 1 minute and the price will be obtained at the set time (9:00). \[Note: This item relies heavily on the local time of the computer, please ensure that the time is accurate\]
+- Added version update prompt (requires version greater than `1.0.4.5`). If there is a new version, you will see a `little red dot` prompt after opening the settings page.
 
 ### How to use it?
 
