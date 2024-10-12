@@ -45,7 +45,7 @@ Monitor real-time price changes through the stock code and place it on the deskt
 
 5. New features?
 
-    ![05.png](./readme/05.png)
+   ![05-1.png](./readme/05-1.png)
 
 ### License
 
