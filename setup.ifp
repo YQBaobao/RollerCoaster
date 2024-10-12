@@ -3,7 +3,7 @@
 ProjectFileVersion = 1.1
 [General]
 Program name = RoCoaster
-Program version = 1.0.4.5
+Program version = 1.0.5.0
 Windows XP = 0
 Windows Server 2003 = 0
 Windows Vista = 0
@@ -77,10 +77,25 @@ Execdlls = 0
 [Languages]
 19
 [Files/Dirs]
+F:\Projects\QtRollerCoaster\dist\RoCoaster\aiohttp\
+N/A
+[Folder]
+F:\Projects\QtRollerCoaster\dist\RoCoaster\attrs-24.2.0.dist-info\
+N/A
+[Folder]
 F:\Projects\QtRollerCoaster\dist\RoCoaster\certifi\
 N/A
 [Folder]
 F:\Projects\QtRollerCoaster\dist\RoCoaster\charset_normalizer\
+N/A
+[Folder]
+F:\Projects\QtRollerCoaster\dist\RoCoaster\frozenlist\
+N/A
+[Folder]
+F:\Projects\QtRollerCoaster\dist\RoCoaster\importlib_metadata-6.7.0.dist-info\
+N/A
+[Folder]
+F:\Projects\QtRollerCoaster\dist\RoCoaster\multidict\
 N/A
 [Folder]
 F:\Projects\QtRollerCoaster\dist\RoCoaster\psutil\
@@ -98,17 +113,32 @@ N/A
 F:\Projects\QtRollerCoaster\dist\RoCoaster\win32\
 N/A
 [Folder]
+F:\Projects\QtRollerCoaster\dist\RoCoaster\yarl\
+N/A
+[Folder]
+F:\Projects\QtRollerCoaster\dist\RoCoaster\_asyncio.pyd
+28 KB
+pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_bz2.pyd
 40 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_ctypes.pyd
 47 KB
 pyd
+F:\Projects\QtRollerCoaster\dist\RoCoaster\_decimal.pyd
+78 KB
+pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_hashlib.pyd
 21.5 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_lzma.pyd
 75 KB
+pyd
+F:\Projects\QtRollerCoaster\dist\RoCoaster\_multiprocessing.pyd
+20 KB
+pyd
+F:\Projects\QtRollerCoaster\dist\RoCoaster\_overlapped.pyd
+22.5 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_queue.pyd
 19.5 KB
@@ -242,6 +272,9 @@ dll
 F:\Projects\QtRollerCoaster\dist\RoCoaster\libssl-1_1.dll
 166 KB
 dll
+F:\Projects\QtRollerCoaster\dist\RoCoaster\pyexpat.pyd
+63.5 KB
+pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\python3.dll
 57.5 KB
 dll
@@ -249,7 +282,7 @@ F:\Projects\QtRollerCoaster\dist\RoCoaster\python37.dll
 1 MB
 dll
 F:\Projects\QtRollerCoaster\dist\RoCoaster\RoCoaster.exe
-1.9 MB
+2.6 MB
 exe
 F:\Projects\QtRollerCoaster\dist\RoCoaster\select.pyd
 19.5 KB
