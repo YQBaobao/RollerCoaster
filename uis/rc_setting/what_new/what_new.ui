@@ -79,14 +79,14 @@
    <item row="3" column="2">
     <widget class="QRadioButton" name="radioButton">
      <property name="text">
-      <string>设置 Github 检查</string>
+      <string>Github检查</string>
      </property>
     </widget>
    </item>
    <item row="4" column="2">
     <widget class="QRadioButton" name="radioButton_2">
      <property name="text">
-      <string>设置 Gitee 检查</string>
+      <string>Gitee 检查</string>
      </property>
      <property name="checked">
       <bool>true</bool>

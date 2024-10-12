@@ -68,5 +68,5 @@ class Ui_WhatNew(object):
         self.label_9.setText(_translate("WhatNew", "-RollerCoaster"))
         self.label.setText(_translate("WhatNew", "主：<a href=\"https://github.com/YQBaobao/RollerCoaster/releases\">前往 GitHub 查看详细的更新说明</a>"))
         self.label_2.setText(_translate("WhatNew", "<html><head/><body><p>备：<a href=\"https://gitee.com/yqbao/roller-coaster/releases\"><span style=\" text-decoration: underline; color:#0000ff;\">前往 Gitee 查看详细的更新说明</span></a></p></body></html>"))
-        self.radioButton.setText(_translate("WhatNew", "设置 Github 检查"))
-        self.radioButton_2.setText(_translate("WhatNew", "设置 Gitee 检查"))
+        self.radioButton.setText(_translate("WhatNew", "Github检查"))
+        self.radioButton_2.setText(_translate("WhatNew", "Gitee 检查"))
