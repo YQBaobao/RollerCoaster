@@ -17,6 +17,9 @@
    <property name="rightMargin">
     <number>3</number>
    </property>
+   <property name="bottomMargin">
+    <number>8</number>
+   </property>
    <property name="verticalSpacing">
     <number>1</number>
    </property>

@@ -15,7 +15,7 @@ import time
 import psutil
 import win32gui
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor
+from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor, QFont
 from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction
 from configobj import ConfigObj
 from system_hotkey import SystemHotkey
@@ -93,6 +93,10 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
                 f.write(user_data)
 
     def init_ui(self):
+        font = QFont()
+        font.setPointSize(10)
+        self.label_value.setFont(font)
+        self.label_rate.setFont(font)
         self.set_taskbar()  # 初始化
 
         self.config = ConfigObj(self.user_data_path, encoding='UTF8')
