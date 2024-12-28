@@ -10,15 +10,13 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from core import version
-
 
 class Ui_Settiing(object):
     def setupUi(self, Settiing):
         Settiing.setObjectName("Settiing")
-        Settiing.resize(490, 194)
-        Settiing.setMinimumSize(QtCore.QSize(490, 194))
-        Settiing.setMaximumSize(QtCore.QSize(490, 194))
+        Settiing.resize(490, 210)
+        Settiing.setMinimumSize(QtCore.QSize(490, 210))
+        Settiing.setMaximumSize(QtCore.QSize(490, 210))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/rc/images/microscope.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Settiing.setWindowIcon(icon)
@@ -26,6 +24,7 @@ class Ui_Settiing(object):
         self._2.setObjectName("_2")
         self.stackedWidget = QtWidgets.QStackedWidget(Settiing)
         self.stackedWidget.setMinimumSize(QtCore.QSize(345, 0))
+        self.stackedWidget.setMaximumSize(QtCore.QSize(345, 16777215))
         self.stackedWidget.setObjectName("stackedWidget")
         self._2.addWidget(self.stackedWidget, 0, 1, 2, 1)
         self.scrollArea = QtWidgets.QScrollArea(Settiing)
@@ -33,7 +32,7 @@ class Ui_Settiing(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 121, 129))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 121, 145))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_3.setObjectName("gridLayout_3")
@@ -83,7 +82,7 @@ class Ui_Settiing(object):
 
     def retranslateUi(self, Settiing):
         _translate = QtCore.QCoreApplication.translate
-        Settiing.setWindowTitle(_translate("Settiing", f"RollerCoaster v{version}"))
+        Settiing.setWindowTitle(_translate("Settiing", "RollerCoaster"))
         self.pushButton_home.setText(_translate("Settiing", "首页"))
         self.pushButton_base.setText(_translate("Settiing", "基础信息"))
         self.pushButton_shortcut_key.setText(_translate("Settiing", "快捷键设置"))

@@ -7,26 +7,26 @@
     <x>0</x>
     <y>0</y>
     <width>490</width>
-    <height>194</height>
+    <height>210</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>490</width>
-    <height>194</height>
+    <height>210</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>490</width>
-    <height>194</height>
+    <height>210</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>RollerCoaster</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../static/rc.qrc">
+   <iconset>
     <normaloff>:/rc/images/microscope.ico</normaloff>:/rc/images/microscope.ico</iconset>
   </property>
   <layout class="QGridLayout" name="_2">
@@ -36,6 +36,12 @@
       <size>
        <width>345</width>
        <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>345</width>
+       <height>16777215</height>
       </size>
      </property>
     </widget>
@@ -54,7 +60,7 @@
         <x>0</x>
         <y>0</y>
         <width>121</width>
-        <height>129</height>
+        <height>145</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
@@ -153,9 +159,7 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../static/rc.qrc"/>
- </resources>
+ <resources/>
  <connections/>
  <buttongroups>
   <buttongroup name="buttonGroup"/>

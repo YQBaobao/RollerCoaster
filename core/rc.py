@@ -84,7 +84,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
                 pass
             with open(self.user_data_path, "w") as f:
                 user_data = (
-                    '[base]\nsymbol = SZ002594\nsymbol_2=\ninterval = 2000\n\n'
+                    '[base]\nsymbol = SZ002594\nsymbol_2=\nsymbol_3=\nsymbol_4=\nmode = 1\ninterval = 2000\n\n'
                     '[background_color]\ncolor = "#101010"\n\n'
                     '[shortcut_key]\nopen_setting = control+up\nshow_data = control+down\n'
                     'red_green_switch = control+left\nboss_key = control+right\n\n'
@@ -216,18 +216,85 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     def show_value_polling(self, symbols, down_style, default_style):
         """交替显示"""
         try:
-            if len(symbols) == 1:  # 不交替
-                current, percent = self.current[-1], self.percent[-1]
-                self.set_color(current, percent, down_style, default_style)
+            if len(symbols) == 1:  # 仅一只，则不做任何处理
+                self.set_color(self.current[-1], self.percent[-1], down_style, default_style)
                 return
-            if len(symbols) == 2 and self.polling_status % 2 != 0:
-                current, percent = self.current[0], self.percent[0]
-                self.set_color(current, percent, down_style, default_style)
-                self.polling_status = 2
+            if self.mode == 1:
+                if len(symbols) == 2:
+                    if self.polling_status == 1:
+                        self.set_color(self.current[0], self.percent[0], down_style, default_style)
+                        self.polling_status = 2
+                    else:
+                        self.set_color(self.current[-1], self.percent[-1], down_style, default_style)
+                        self.polling_status = 1
+                    return
+                if len(symbols) == 3:
+                    if self.polling_status == 1:
+                        self.set_color(self.current[0], self.percent[0], down_style, default_style)
+                        self.polling_status = 2
+                    elif self.polling_status == 2:
+                        self.set_color(self.current[1], self.percent[1], down_style, default_style)
+                        self.polling_status = 3
+                    else:
+                        self.set_color(self.current[2], self.percent[2], down_style, default_style)
+                        self.polling_status = 1
+                    return
+                if len(symbols) == 4:
+                    if self.polling_status == 1:
+                        self.set_color(self.current[0], self.percent[0], down_style, default_style)
+                        self.polling_status = 2
+                    elif self.polling_status == 2:
+                        self.set_color(self.current[1], self.percent[1], down_style, default_style)
+                        self.polling_status = 3
+                    elif self.polling_status == 3:
+                        self.set_color(self.current[2], self.percent[2], down_style, default_style)
+                        self.polling_status = 4
+                    else:
+                        self.set_color(self.current[3], self.percent[3], down_style, default_style)
+                        self.polling_status = 1
+            elif self.mode == 2:
+                if len(symbols) == 2:
+                    self.set_color_mode_2(
+                        self.current[0], self.current[1], self.percent[0], self.percent[1], down_style, default_style)
+                    return
+                if len(symbols) == 3:
+                    if self.polling_status == 1:
+                        self.set_color_mode_2(
+                            self.current[0], self.current[1], self.percent[0], self.percent[1], down_style,
+                            default_style)
+                        self.polling_status = 2
+                    else:
+                        self.set_color_mode_2(self.current[2], '', self.percent[2], 0, down_style, default_style)
+                        self.polling_status = 1
+                if len(symbols) == 4:
+                    if self.polling_status == 1:
+                        self.set_color_mode_2(
+                            self.current[0], self.current[1], self.percent[0], self.percent[1], down_style,
+                            default_style)
+                        self.polling_status = 2
+                    else:
+                        self.set_color_mode_2(
+                            self.current[2], self.current[3], self.percent[2], self.percent[3], down_style,
+                            default_style)
+                        self.polling_status = 1
             else:
-                current, percent = self.current[-1], self.percent[-1]
-                self.set_color(current, percent, down_style, default_style)
-                self.polling_status = 1
+                if len(symbols) == 2:
+                    self.set_color_mode_3(self.percent[0], self.percent[1], down_style, default_style)
+                    return
+                if len(symbols) == 3:
+                    if self.polling_status == 1:
+                        self.set_color_mode_3(self.percent[0], self.percent[1], down_style, default_style)
+                        self.polling_status = 2
+                    else:
+                        self.set_color_mode_3(self.percent[2], 0, down_style, default_style)
+                        self.polling_status = 1
+                if len(symbols) == 4:
+                    if self.polling_status == 1:
+                        self.set_color_mode_3(self.percent[0], self.percent[1], down_style, default_style)
+                        self.polling_status = 2
+                    else:
+                        self.set_color_mode_3(self.percent[2], self.percent[3], down_style, default_style)
+                        self.polling_status = 1
         except Exception:
             pass
 
@@ -243,6 +310,33 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             self.label_rate.setStyleSheet(default_style)
         self.label_value.setText(str(current))
         self.label_rate.setText(str(percent) + '%')
+
+    def set_color_mode(self, percent_1, percent_2, down_style, default_style):
+        if percent_1 > 0:
+            self.label_value.setStyleSheet(self.up)
+        elif percent_1 < 0:
+            self.label_value.setStyleSheet(down_style)
+        else:
+            self.label_value.setStyleSheet(default_style)
+
+        if percent_2 > 0:
+            self.label_rate.setStyleSheet(self.up)
+        elif percent_2 < 0:
+            self.label_rate.setStyleSheet(down_style)
+        else:
+            self.label_rate.setStyleSheet(default_style)
+
+    def set_color_mode_2(self, current_1, current_2, percent_1, percent_2, down_style, default_style):
+        """显示模式2"""
+        self.set_color_mode(percent_1, percent_2, down_style, default_style)
+        self.label_value.setText(str(current_1))
+        self.label_rate.setText(str(current_2))
+
+    def set_color_mode_3(self, percent_1, percent_2, down_style, default_style):
+        """显示模式3"""
+        self.set_color_mode(percent_1, percent_2, down_style, default_style)
+        self.label_value.setText(str(percent_1) + '%')
+        self.label_rate.setText(str(percent_2) + '%')
 
     def tray_icon(self):
         """系统托盘"""
@@ -319,6 +413,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
         self.symbol = data['symbol']
         self.timer(data['interval'])
+        self.mode = data['mode']
         self.time.start()  # 启动
         self.start()  # 首次
 
@@ -329,7 +424,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.setting.pushButton_background_color.setEnabled(self.background_button)
 
         self.time_polling.stop()
-        self.timer_polling(data['interval'] / 2)
+        self.timer_polling(1200)  # 固定间隔
         self.time_polling.start()
 
     def set_background_color(self, data: QColor):
