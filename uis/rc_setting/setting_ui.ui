@@ -6,19 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>478</width>
+    <width>490</width>
     <height>194</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>478</width>
+    <width>490</width>
     <height>194</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>478</width>
+    <width>490</width>
     <height>194</height>
    </size>
   </property>
@@ -31,7 +31,14 @@
   </property>
   <layout class="QGridLayout" name="_2">
    <item row="0" column="1" rowspan="2">
-    <widget class="QStackedWidget" name="stackedWidget"/>
+    <widget class="QStackedWidget" name="stackedWidget">
+     <property name="minimumSize">
+      <size>
+       <width>345</width>
+       <height>0</height>
+      </size>
+     </property>
+    </widget>
    </item>
    <item row="0" column="0">
     <widget class="QScrollArea" name="scrollArea">
@@ -46,7 +53,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>227</width>
+        <width>121</width>
         <height>129</height>
        </rect>
       </property>
