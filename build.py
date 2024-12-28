@@ -23,6 +23,7 @@ if __name__ == '__main__':
         '-p .',
         '--clean',
         '--add-data=static/images;static/images',
+        '--contents-directory=.'
     ]
 
     run(opts)

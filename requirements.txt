@@ -1,10 +1,10 @@
-# Python 3.7.9 x32bit
+# Python 3.9.12 x32bit
 PyQt5==5.15.10
 pywin32==306
-requests==2.31.0
-configobj==5.0.9
-system_hotkey==1.0.3
-psutil==5.9.8
-PyInstaller==5.13.2
-aiohttp==3.8.6
-asyncqt==0.8.0
+requests
+configobj
+system_hotkey
+psutil
+PyInstaller
+aiohttp
+asyncqt

@@ -12,7 +12,6 @@ import datetime
 import os
 import time
 
-import commctrl
 import psutil
 import win32gui
 from PyQt5.QtCore import Qt, QTimer

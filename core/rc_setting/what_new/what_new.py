@@ -55,7 +55,6 @@ class UiWhatNewQWidget(QWidget, Ui_WhatNew):
             self.url = github_url
         if self.radioButton_2.isChecked():
             self.url = gitee_url
-        print("Get Check Url: ", self.url)
 
     def set_check_server(self):
         if self.radioButton.isChecked():
@@ -66,4 +65,3 @@ class UiWhatNewQWidget(QWidget, Ui_WhatNew):
             self.url = gitee_url
             self.config['update']['check'] = 'gitee'
             self.config.write()
-        print("Set Check Url: ", self.url)
