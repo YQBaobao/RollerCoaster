@@ -115,9 +115,9 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
     def move_window(self):
         # 调整m_hMin的窗口大小，为我们的程序预留出位置
-        win32gui.MoveWindow(self.m_h_min, 0, 0, self.b[2] - self.b[0] - 75, self.b[3] - self.b[1], True)
+        win32gui.MoveWindow(self.m_h_min, 0, 0, self.b[2] - self.b[0] - 55, self.b[3] - self.b[1], True)
 
-        self.setGeometry(self.b[2] - self.b[0] - 75, -5, 75, self.b[3] - self.b[1])  # 调整我们自己的窗口到预留位置的大小
+        self.setGeometry(self.b[2] - self.b[0] - 55, -6, 55, self.b[3] - self.b[1])  # 调整我们自己的窗口到预留位置的大小
         win32gui.SetParent(int(self.winId()), self.m_h_bar)  # 将我们自己的窗口设置为m_hBar的子窗口
 
     def timer_set_taskbar(self, interval: int = 200):  # 500ms
