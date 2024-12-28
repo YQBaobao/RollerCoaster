@@ -16,6 +16,7 @@ from core import version
 from core.rc_setting.background_color.background_color import UiBackgroundColorQWidget
 from core.rc_setting.base.base import UiBaseQWidget
 from core.rc_setting.home.home import UiHomeQWidget
+from core.rc_setting.monitor_setting.monitor_setting import UiMonitorQWidget
 from core.rc_setting.shortcut_key.shortcut_key import UiShortcutKeyQWidget
 from core.rc_setting.what_new.what_new import UiWhatNewQWidget
 from uis.rc_setting.setting_ui import Ui_Settiing
@@ -73,6 +74,11 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         grid_layout = QGridLayout(self.ui_what_new)
         grid_layout.setObjectName("gridLayout_9")
         self.stackedWidget.addWidget(self.ui_what_new)  # 4
+        # 5
+        self.ui_monitor = UiMonitorQWidget(self)
+        grid_layout = QGridLayout(self.ui_monitor)
+        grid_layout.setObjectName("gridLayout_10")
+        self.stackedWidget.addWidget(self.ui_monitor)  # 5
 
     def init_action_left_menu(self):
         """菜单动作"""
@@ -81,6 +87,7 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         self.pushButton_background_color.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(2), self.type)
         self.pushButton_shortcut_key.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(3), self.type)
         self.pushButton_what_new.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(4), self.type)
+        self.pushButton_monitor.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(5), self.type)
 
     def init_action_widget(self):
         """部件动作"""
