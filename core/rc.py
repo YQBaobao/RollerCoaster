@@ -55,6 +55,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.timer_start(interval=1 * 60 * 1000)  # 收盘后定时,1分钟
         self.timer_polling()  # 交替
         self.timer_set_taskbar()  # 定时设置任务栏
+        self.timer_monitor()  # 盯盘
         self.tray_icon()  # 托盘
         self.init_ui()  # 初始化UI
         self.init_action()  # 动作
@@ -150,6 +151,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.base_signal.signal_msg_status.connect(self.msg_status_f)
 
         self.base_signal.signal_check_tags.connect(self.check_update_tags)  # 更新标签
+        self.base_signal.signal_monitor_data.connect(self.get_monitor_data)
 
     def msg_status_f(self):
         self.msg_status = False
@@ -197,6 +199,12 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.time_polling.setInterval(interval)
         self.time_polling.timeout.connect(
             lambda: self.show_value_polling(self.symbol, self.down_style, self.default_style))
+
+    def timer_monitor(self, interval: int = 1000):
+        """盯盘，默认1秒"""
+        self.time_monitor = QTimer(self)
+        self.time_monitor.setInterval(interval)
+        self.time_monitor.timeout.connect(self.on_monitor_data)
 
     def get_value(self, symbols: list):
         try:
@@ -422,6 +430,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         if background_button.lower() != 'true':
             self.background_button = False  # 开启此行，则本次启动将再也不能修改背景色
         self.setting.pushButton_background_color.setEnabled(self.background_button)
+        self.setting.pushButton_monitor.setEnabled(True)  # 启动后，才能设置监控
 
         self.time_polling.stop()
         self.timer_polling(1200)  # 固定间隔
@@ -476,6 +485,32 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
     def check_update_tags(self, tags):
         self.tags = tags  # 保存下来
+
+    def get_monitor_data(self, monitor_data):
+        """监控数据"""
+        self.time_monitor.stop()  # 停止
+        self.monitor_data = monitor_data
+        self.time_monitor.start()  # 启动
+
+    def on_monitor_data(self):
+        """盯盘"""
+        for index, monitor in enumerate(self.monitor_data):
+            if monitor['trigger']:  # 已经触发
+                continue
+            if monitor['price']:
+                if monitor['up'] == self.current[index]:
+                    self.base_signal.signal_monitor_msg.emit([index, "PRICE_UP"])
+                    self.monitor_data[index]['trigger'] = True
+                if monitor['down'] == self.current[index]:
+                    self.base_signal.signal_monitor_msg.emit([index, "PRICE_DOWN"])
+                    self.monitor_data[index]['trigger'] = True
+            else:
+                if monitor['up'] == self.percent[index]:
+                    self.base_signal.signal_monitor_msg.emit([index, "UP"])
+                    self.monitor_data[index]['trigger'] = True
+                if monitor['down'] == self.percent[index]:
+                    self.base_signal.signal_monitor_msg.emit([index, "DOWN"])
+                    self.monitor_data[index]['trigger'] = True
 
     @staticmethod
     def start_run(name='RoCoaster.exe'):

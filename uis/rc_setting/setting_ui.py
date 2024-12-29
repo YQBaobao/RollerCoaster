@@ -10,6 +10,8 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from core import version
+
 
 class Ui_Settiing(object):
     def setupUi(self, Settiing):
@@ -51,6 +53,7 @@ class Ui_Settiing(object):
         self.buttonGroup.addButton(self.pushButton_shortcut_key)
         self.gridLayout_3.addWidget(self.pushButton_shortcut_key, 4, 0, 1, 1)
         self.pushButton_monitor = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
+        self.pushButton_monitor.setEnabled(False)
         self.pushButton_monitor.setCheckable(True)
         self.pushButton_monitor.setAutoExclusive(True)
         self.pushButton_monitor.setObjectName("pushButton_monitor")
@@ -90,7 +93,7 @@ class Ui_Settiing(object):
 
     def retranslateUi(self, Settiing):
         _translate = QtCore.QCoreApplication.translate
-        Settiing.setWindowTitle(_translate("Settiing", "RollerCoaster"))
+        Settiing.setWindowTitle(_translate("Settiing", f"RollerCoaster v{version}"))
         self.pushButton_base.setText(_translate("Settiing", "基础信息"))
         self.pushButton_shortcut_key.setText(_translate("Settiing", "快捷键设置"))
         self.pushButton_monitor.setText(_translate("Settiing", "监控与提醒"))

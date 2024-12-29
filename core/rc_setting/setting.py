@@ -75,7 +75,7 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         grid_layout.setObjectName("gridLayout_9")
         self.stackedWidget.addWidget(self.ui_what_new)  # 4
         # 5
-        self.ui_monitor = UiMonitorQWidget(self)
+        self.ui_monitor = UiMonitorQWidget(self.base_signal, self)
         grid_layout = QGridLayout(self.ui_monitor)
         grid_layout.setObjectName("gridLayout_10")
         self.stackedWidget.addWidget(self.ui_monitor)  # 5
