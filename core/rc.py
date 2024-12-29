@@ -204,11 +204,10 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             timestamp = int(time.time() * 1000)
             symbol = ','.join(symbols)
             quotes = self.snowball.quote(symbol, timestamp)
-            for quote in quotes['data']:
-                current = quote['current']  # 当前价格
-                percent = quote['percent']  # 跌涨幅度 %
-                self.current.append(current)
-                self.percent.append(percent)
+            quotes_dict = {item['symbol']: item for item in quotes['data']}
+            for symbol in symbols:
+                self.current.append(quotes_dict[symbol]['current'])  # 当前价格
+                self.percent.append(quotes_dict[symbol]['percent'])  # 跌涨幅度 %
             if self.get_trade_status == "已收盘":
                 self.time.stop()
         except Exception:
