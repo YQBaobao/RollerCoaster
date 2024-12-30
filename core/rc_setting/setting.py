@@ -51,33 +51,21 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         self.pushButton_background_color.setEnabled(self.background_button)
         # 0
         self.ui_home = UiHomeQWidget(self)
-        grid_layout = QGridLayout(self.ui_home)
-        grid_layout.setObjectName("gridLayout_5")
         self.stackedWidget.addWidget(self.ui_home)  # 0
         # 1
         self.ui_base = UiBaseQWidget(self.base_signal, parent=self, msg_status=self.msg_status)
-        grid_layout = QGridLayout(self.ui_base)
-        grid_layout.setObjectName("gridLayout_6")
         self.stackedWidget.addWidget(self.ui_base)  # 1
         # 2
         self.ui_back_color = UiBackgroundColorQWidget(self.base_signal, self)
-        grid_layout = QGridLayout(self.ui_back_color)
-        grid_layout.setObjectName("gridLayout_7")
         self.stackedWidget.addWidget(self.ui_back_color)  # 2
         # 3
         self.ui_shortcut_key = UiShortcutKeyQWidget(self.base_signal, self)
-        grid_layout = QGridLayout(self.ui_shortcut_key)
-        grid_layout.setObjectName("gridLayout_8")
         self.stackedWidget.addWidget(self.ui_shortcut_key)  # 3
         # 4
         self.ui_what_new = UiWhatNewQWidget(self)
-        grid_layout = QGridLayout(self.ui_what_new)
-        grid_layout.setObjectName("gridLayout_9")
         self.stackedWidget.addWidget(self.ui_what_new)  # 4
         # 5
         self.ui_monitor = UiMonitorQWidget(self.base_signal, self)
-        grid_layout = QGridLayout(self.ui_monitor)
-        grid_layout.setObjectName("gridLayout_10")
         self.stackedWidget.addWidget(self.ui_monitor)  # 5
 
     def init_action_left_menu(self):
