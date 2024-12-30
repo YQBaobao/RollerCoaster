@@ -133,8 +133,8 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         """定时设置任务栏"""
         self.time_set_taskbar = QTimer(self)
         self.time_set_taskbar.setInterval(interval)
-        # self.time_set_taskbar.timeout.connect(self.get_taskbar_size) # 方案1
-        self.time_set_taskbar.timeout.connect(self.get_tray_icon_count)  # 方案2
+        self.time_set_taskbar.timeout.connect(self.get_taskbar_size)  # 方案1，兼容 win11
+        # self.time_set_taskbar.timeout.connect(self.get_tray_icon_count)  # 方案2
         self.time_set_taskbar.start()  # 启动
 
     def get_taskbar_size(self):
