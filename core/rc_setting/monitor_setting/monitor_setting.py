@@ -63,7 +63,7 @@ class UiMonitorQWidget(QWidget, Ui_Monitor):
                     'symbol_1_up = \nsymbol_1_down = \nsymbol_1_price = True\n'
                     'symbol_2_up = \nsymbol_2_down = \nsymbol_2_price = True\n'
                     'symbol_3_up = \nsymbol_3_down = \nsymbol_3_price = True\n'
-                    'symbol_4_up = \nsymbol_4_down = \nsymbol_4_price = True\n')
+                    'symbol_4_up = \nsymbol_4_down = \nsymbol_4_price = True')
                 f.write(user_data)
             self.config = ConfigObj(self.user_data_path, encoding='UTF8')
 

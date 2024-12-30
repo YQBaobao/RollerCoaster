@@ -93,7 +93,13 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
                     '[shortcut_key]\nopen_setting = control+up\nshow_data = control+down\n'
                     'red_green_switch = control+left\nboss_key = control+right\n\n'
                     '[config]\nbackground_button = false\n\n'
-                    '[update]\ncheck = gitee')
+                    '[update]\ncheck = gitee\n\n'
+                    '[monitor]\ntitle = 快递到咯！\nmsg = 您的快递已经送到驿站啦，快抽空签收一下哟~\n'
+                    'timeout = 3\nmsg_status = True\nmonitor_status = True\n'
+                    'symbol_1_up = \nsymbol_1_down = \nsymbol_1_price = True\n'
+                    'symbol_2_up = \nsymbol_2_down = \nsymbol_2_price = True\n'
+                    'symbol_3_up = \nsymbol_3_down = \nsymbol_3_price = True\n'
+                    'symbol_4_up = \nsymbol_4_down = \nsymbol_4_price = True')
                 f.write(user_data)
 
     def init_ui(self):
