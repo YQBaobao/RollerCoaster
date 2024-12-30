@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Home(object):
     def setupUi(self, Home):
         Home.setObjectName("Home")
-        Home.resize(328, 191)
+        Home.resize(354, 234)
         self.gridLayout = QtWidgets.QGridLayout(Home)
         self.gridLayout.setObjectName("gridLayout")
         self.label_5 = QtWidgets.QLabel(Home)
@@ -33,8 +33,10 @@ class Ui_Home(object):
     def retranslateUi(self, Home):
         _translate = QtCore.QCoreApplication.translate
         Home.setWindowTitle(_translate("Home", "Form"))
-        self.label_5.setText(_translate("Home", "<html><head/><body><p><span style=\" font-size:16pt; font-weight:600;\">welcome</span></p></body></html>"))
-        self.label_6.setText(_translate("Home", "Monitor real-time price changes through the\n"
-"stock code and place it on the desktop\n"
-"taskbar"))
-        self.label_7.setText(_translate("Home", "a must-have for fishing"))
+        self.label_5.setText(_translate("Home", "<html><head/><body><p><span style=\" font-size:16pt; font-weight:600;\">Welcome To RC</span></p></body></html>"))
+        self.label_6.setText(_translate("Home", "Monitor real-time price changes through the stock code\n"
+"and place it on the desktop taskbar. It is essential\n"
+"for fishing. The monitoring interval is as short as 2\n"
+"seconds. The color distinguishes the rise and fall.\n"
+"It has global shortcut keys for the system."))
+        self.label_7.setText(_translate("Home", "A must-have for fishing"))

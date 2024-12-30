@@ -6,48 +6,70 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>367</width>
-    <height>187</height>
+    <width>356</width>
+    <height>237</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="1" colspan="2">
+   <item row="4" column="1" colspan="2">
     <widget class="QPushButton" name="pb_show_data"/>
    </item>
-   <item row="0" column="1" colspan="2">
+   <item row="3" column="1" colspan="2">
     <widget class="QPushButton" name="pb_open_setting"/>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_10">
+   <item row="5" column="1" colspan="2">
+    <widget class="QPushButton" name="pb_red_green_switch"/>
+   </item>
+   <item row="8" column="1">
+    <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>显示/隐藏任务栏数据</string>
+      <string/>
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="label_11">
+   <item row="8" column="0">
+    <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>老板键</string>
+      <string/>
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item row="0" column="0" colspan="3">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>系统快捷键自定义。
+
+若修改组合键，需要单键依次录入,而不是一次性录入。</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1" colspan="2">
+    <widget class="QPushButton" name="pb_boss_key"/>
+   </item>
+   <item row="5" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
       <string>绿变红（滑稽）</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="1" colspan="2">
-    <widget class="QPushButton" name="pb_boss_key"/>
-   </item>
-   <item row="2" column="1" colspan="2">
-    <widget class="QPushButton" name="pb_red_green_switch"/>
-   </item>
-   <item row="0" column="0">
+   <item row="3" column="0">
     <widget class="QLabel" name="label_9">
      <property name="text">
       <string>打开/关闭设置</string>
@@ -55,25 +77,51 @@
     </widget>
    </item>
    <item row="4" column="0">
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="label_10">
      <property name="text">
-      <string/>
+      <string>显示/隐藏任务栏数据</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
-    <widget class="QLabel" name="label_3">
+   <item row="6" column="0">
+    <widget class="QLabel" name="label_11">
      <property name="text">
-      <string/>
+      <string>老板键</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="2">
+   <item row="7" column="0" colspan="3">
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="8" column="2">
     <widget class="QPushButton" name="pb_accepted_3">
      <property name="text">
       <string>确认</string>
      </property>
     </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <spacer name="verticalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
