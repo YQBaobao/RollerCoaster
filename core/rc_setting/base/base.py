@@ -74,6 +74,13 @@ class UiBaseQWidget(QWidget, Ui_Base):
             if not self.msg():
                 return
         interval = self.comboBox.currentIndex()
+
+        if self.radioButton.isChecked():
+            self.mode = 1
+        elif self.radioButton_2.isChecked():
+            self.mode = 2
+        elif self.radioButton_3.isChecked():
+            self.mode = 3
         data = {'interval': self.interval_time[interval], 'symbol': symbol_list, 'mode': self.mode}
         self.user_data_save(symbol_1, symbol_2, symbol_3, symbol_4)
         self.base_signal.signal_symbol.emit(data)
