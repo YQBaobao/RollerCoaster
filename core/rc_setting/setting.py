@@ -10,7 +10,7 @@
 import aiohttp
 from PyQt5.QtCore import Qt, QFile
 from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QDialog, QGridLayout
+from PyQt5.QtWidgets import QDialog
 
 from core import version
 from core.rc_setting.background_color.background_color import UiBackgroundColorQWidget
