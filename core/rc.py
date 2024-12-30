@@ -483,6 +483,9 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     def set_shortcut_key(self, data):
         if data == 1:
             try:
+                if not hasattr(self, 'setting'):  # 兼容 win 11
+                    self.tray_menu_setting()
+                    return
                 self.setting.close() if self.setting.isActiveWindow() else self.tray_menu_setting()
             except Exception:
                 self.tray_menu_setting()  # 显示设置

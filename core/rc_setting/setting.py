@@ -7,6 +7,8 @@
 @ Version     : V1.0.0
 @ Description : 
 """
+import sys
+
 import aiohttp
 from PyQt5.QtCore import Qt, QFile
 from PyQt5.QtGui import QIcon, QPixmap
@@ -20,6 +22,12 @@ from core.rc_setting.monitor_setting.monitor_setting import UiMonitorQWidget
 from core.rc_setting.shortcut_key.shortcut_key import UiShortcutKeyQWidget
 from core.rc_setting.what_new.what_new import UiWhatNewQWidget
 from uis.rc_setting.setting_ui import Ui_Settiing
+
+
+def get_windows_version():
+    version_info = sys.getwindowsversion()
+    build = version_info.build
+    return True if build >= 22000 else False
 
 
 class UiSettingQWidget(QDialog, Ui_Settiing):
@@ -96,12 +104,21 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         url = self.ui_what_new.url
         print("Check: ", url)
         async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    self.tags = [tag['name'] for tag in data]
-                else:
-                    print("Check Update Request: ", await response.text())
+            if get_windows_version():
+                # 兼容 win 11 或解决 aiohttp.client_exceptions.ClientConnectorCertificateError
+                async with session.get(url, ssl=False) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        self.tags = [tag['name'] for tag in data]
+                    else:
+                        print("Check Update Request: ", await response.text())
+            else:
+                async with session.get(url) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        self.tags = [tag['name'] for tag in data]
+                    else:
+                        print("Check Update Request: ", await response.text())
         self.base_signal.signal_check_tags.emit(self.tags)
         self.set_check_update(self.tags)
 
