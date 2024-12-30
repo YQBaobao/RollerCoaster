@@ -122,25 +122,33 @@ class UiMonitorQWidget(QWidget, Ui_Monitor):
     def trigger_clear(self, status):
         """触发清理"""
         if status[0] == 0:  # 清空数据
-            self.config['monitor']['symbol_1_up'] = ''
-            self.config['monitor']['symbol_1_down'] = ''
-            self.lineEdit_3.clear()
-            self.lineEdit_4.clear()
+            if status[1] == "UP":
+                self.config['monitor']['symbol_1_up'] = ''
+                self.lineEdit_3.clear()
+            else:
+                self.config['monitor']['symbol_1_down'] = ''
+                self.lineEdit_4.clear()
         elif status[0] == 1:
-            self.config['monitor']['symbol_2_up'] = ''
-            self.config['monitor']['symbol_2_down'] = ''
-            self.lineEdit_5.clear()
-            self.lineEdit_6.clear()
+            if status[1] == "UP":
+                self.config['monitor']['symbol_2_up'] = ''
+                self.lineEdit_5.clear()
+            else:
+                self.config['monitor']['symbol_2_down'] = ''
+                self.lineEdit_6.clear()
         elif status[0] == 2:
-            self.config['monitor']['symbol_3_up'] = ''
-            self.config['monitor']['symbol_3_down'] = ''
-            self.lineEdit_7.clear()
-            self.lineEdit_8.clear()
+            if status[1] == "UP":
+                self.config['monitor']['symbol_3_up'] = ''
+                self.lineEdit_7.clear()
+            else:
+                self.config['monitor']['symbol_3_down'] = ''
+                self.lineEdit_8.clear()
         else:
-            self.config['monitor']['symbol_4_up'] = ''
-            self.config['monitor']['symbol_4_down'] = ''
-            self.lineEdit_9.clear()
-            self.lineEdit_10.clear()
+            if status[1] == "UP":
+                self.config['monitor']['symbol_4_up'] = ''
+                self.lineEdit_9.clear()
+            else:
+                self.config['monitor']['symbol_4_down'] = ''
+                self.lineEdit_10.clear()
         self.config.write()
 
     def user_data_save(self):

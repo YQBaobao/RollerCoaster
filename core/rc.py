@@ -540,10 +540,10 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
                 continue
             if monitor['price']:
                 if monitor['up'] and self.current[index] >= monitor['up']:
-                    self.base_signal.signal_monitor_msg.emit([index, "PRICE_UP"])
+                    self.base_signal.signal_monitor_msg.emit([index, "UP"])
                     self.monitor_data[index]['trigger'] = True
                 if monitor['down'] and self.current[index] <= monitor['down']:
-                    self.base_signal.signal_monitor_msg.emit([index, "PRICE_DOWN"])
+                    self.base_signal.signal_monitor_msg.emit([index, "DOWN"])
                     self.monitor_data[index]['trigger'] = True
             else:
                 if monitor['up'] and self.percent[index] >= monitor['up']:
