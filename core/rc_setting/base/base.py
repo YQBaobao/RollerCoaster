@@ -35,9 +35,11 @@ class UiBaseQWidget(QWidget, Ui_Base):
 
     def on_button_clicked(self, button):
         """显示模式"""
-        if button.objectName() == self.radioButton_2.objectName():
+        if button.objectName() == self.radioButton.objectName():
+            self.mode = 1
+        elif button.objectName() == self.radioButton_2.objectName():
             self.mode = 2
-        elif button.objectName() == self.radioButton_3.objectName():
+        else:
             self.mode = 3
 
     def init_ui(self):

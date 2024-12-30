@@ -12,6 +12,7 @@ import datetime
 import os
 import time
 
+import commctrl
 import psutil
 import win32gui
 from PyQt5.QtCore import Qt, QTimer
@@ -525,17 +526,17 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             if monitor['trigger']:  # 已经触发
                 continue
             if monitor['price']:
-                if monitor['up'] == self.current[index]:
+                if self.current[index] >= monitor['up']:
                     self.base_signal.signal_monitor_msg.emit([index, "PRICE_UP"])
                     self.monitor_data[index]['trigger'] = True
-                if monitor['down'] == self.current[index]:
+                if self.current[index] <= monitor['down']:
                     self.base_signal.signal_monitor_msg.emit([index, "PRICE_DOWN"])
                     self.monitor_data[index]['trigger'] = True
             else:
-                if monitor['up'] == self.percent[index]:
+                if self.percent[index] >= monitor['up']:
                     self.base_signal.signal_monitor_msg.emit([index, "UP"])
                     self.monitor_data[index]['trigger'] = True
-                if monitor['down'] == self.percent[index]:
+                if self.percent[index] <= monitor['down']:
                     self.base_signal.signal_monitor_msg.emit([index, "DOWN"])
                     self.monitor_data[index]['trigger'] = True
 
