@@ -22,7 +22,7 @@ if __name__ == '__main__':
         '-y',
         '-p .',
         '--clean',
-        '--noupx',
+        # '--noupx',
         '--upx-exclude=api-ms-win-core*.dll',  # 忽略压缩 NotCompressibleException
         '--upx-exclude=api-ms-win-crt*.dll',
         '--upx-exclude=python3.dll',
