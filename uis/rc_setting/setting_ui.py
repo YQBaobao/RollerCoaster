@@ -53,7 +53,6 @@ class Ui_Settiing(object):
         self.buttonGroup.addButton(self.pushButton_shortcut_key)
         self.gridLayout_3.addWidget(self.pushButton_shortcut_key, 4, 0, 1, 1)
         self.pushButton_monitor = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
-        self.pushButton_monitor.setEnabled(False)
         self.pushButton_monitor.setCheckable(True)
         self.pushButton_monitor.setAutoExclusive(True)
         self.pushButton_monitor.setObjectName("pushButton_monitor")

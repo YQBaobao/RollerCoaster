@@ -25,12 +25,13 @@ from uis.rc_setting.setting_ui import Ui_Settiing
 class UiSettingQWidget(QDialog, Ui_Settiing):
     type = Qt.UniqueConnection
 
-    def __init__(self, base_signal, parent=None, background_button=True, msg_status=True):
+    def __init__(self, base_signal, parent=None, background_button=True, monitor_button=False, msg_status=True):
         super().__init__(parent)
         self.setupUi(self)
         self.init_style()
         self.base_signal = base_signal
         self.background_button = background_button  # 背景色按钮状态
+        self.monitor_button = monitor_button
         self.msg_status = msg_status
         self.tags = ['0']  # 默认 0 版本
 
@@ -49,6 +50,7 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
 
     def init_ui(self):
         self.pushButton_background_color.setEnabled(self.background_button)
+        self.pushButton_monitor.setEnabled(self.monitor_button)
         # 0
         self.ui_home = UiHomeQWidget(self)
         self.stackedWidget.addWidget(self.ui_home)  # 0

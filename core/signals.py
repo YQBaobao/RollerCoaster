@@ -21,5 +21,5 @@ class BaseSignal(QObject):
 
     signal_check_tags = pyqtSignal(list)  # 标签版本信息
 
-    signal_monitor_data = pyqtSignal(list)  # 监控数据
+    signal_monitor_data = pyqtSignal(dict)  # 监控数据
     signal_monitor_msg = pyqtSignal(list)

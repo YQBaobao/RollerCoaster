@@ -11,7 +11,7 @@ import os
 
 from PyQt5.QtWidgets import QWidget, QLineEdit, QLabel
 from configobj import ConfigObj
-from plyer import notification
+import plyer
 
 from core.message_box import MessageBox
 from temp import TEMP
@@ -69,28 +69,27 @@ class UiMonitorQWidget(QWidget, Ui_Monitor):
 
     def on_monitor_data_check(self):
         """监控数据处理"""
-        self.monitor_data = []
-        if not self.checkBox_6.isChecked():  # 不启用直接返回
-            return
+        monitor_data = []  # 启动状态
         symbol_1 = {"up": None, "down": None, "price": True, "trigger": False}
         symbol_2 = {"up": None, "down": None, "price": True, "trigger": False}
         symbol_3 = {"up": None, "down": None, "price": True, "trigger": False}
         symbol_4 = {"up": None, "down": None, "price": True, "trigger": False}
         symbol_1["up"], symbol_1["down"] = self.__data_check(self.lineEdit_3, self.lineEdit_4, self.label_3)
         symbol_1['price'] = self.checkBox_2.isChecked()
-        self.monitor_data.append(symbol_1)
+        monitor_data.append(symbol_1)
         symbol_2["up"], symbol_2["down"] = self.__data_check(self.lineEdit_5, self.lineEdit_6, self.label_4)
         symbol_2['price'] = self.checkBox_3.isChecked()
-        self.monitor_data.append(symbol_2)
+        monitor_data.append(symbol_2)
         symbol_3["up"], symbol_3["down"] = self.__data_check(self.lineEdit_7, self.lineEdit_8, self.label_5)
         symbol_3['price'] = self.checkBox_4.isChecked()
-        self.monitor_data.append(symbol_3)
+        monitor_data.append(symbol_3)
         symbol_4["up"], symbol_4["down"] = self.__data_check(self.lineEdit_9, self.lineEdit_10, self.label_6)
         symbol_4['price'] = self.checkBox_5.isChecked()
-        self.monitor_data.append(symbol_4)
+        monitor_data.append(symbol_4)
 
         self.user_data_save()
-        self.base_signal.signal_monitor_data.emit(self.monitor_data)
+        data = {'enable': self.checkBox_6.isChecked(), 'monitor_data': monitor_data}
+        self.base_signal.signal_monitor_data.emit(data)
 
     def __data_check(self, up_obj: QLineEdit, down_obj: QLineEdit, label_obj: QLabel):
         """数据规范检查"""
@@ -112,7 +111,7 @@ class UiMonitorQWidget(QWidget, Ui_Monitor):
         title = self.lineEdit.text().rstrip()
         msg = self.lineEdit_2.text().rstrip()
         timeout = self.spinBox.value()
-        notification.notify(
+        plyer.notification.notify(
             app_name='RollerCoaster',
             app_icon=f"{TEMP}/../static/images/microscope.ico",
             title=title,

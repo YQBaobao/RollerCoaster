@@ -69,6 +69,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.down_style = self.down  # 默认绿
         self.polling_status = 1
         self.background_button = True  # 背景色按钮状态
+        self.monitor_button = False  # 监控按钮状态
         self.icon_count = 0  # 默认图标数量
         self.icon_status = True
         self.msg_status = True  # 消息提醒状态
@@ -423,7 +424,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         from core.rc_setting.setting import UiSettingQWidget
 
         self.setting = UiSettingQWidget(self.base_signal, background_button=self.background_button,
-                                        msg_status=self.msg_status)
+                                        monitor_button=self.monitor_button, msg_status=self.msg_status)
         self.setting.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)  # 取消帮助按钮
         if hasattr(self, 'tags'):
             self.setting.set_check_update(self.tags)
@@ -451,7 +452,8 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
     def set_base(self, data):
         """基础"""
-        self.time.stop()  # 停止
+        if self.time.isActive():
+            self.time.stop()  # 停止
 
         self.symbol = data['symbol']
         self.timer(data['interval'])
@@ -464,6 +466,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         if background_button.lower() != 'true':
             self.background_button = False  # 开启此行，则本次启动将再也不能修改背景色
         self.setting.pushButton_background_color.setEnabled(self.background_button)
+        self.monitor_button = True
         self.setting.pushButton_monitor.setEnabled(True)  # 启动后，才能设置监控
 
         self.time_polling.stop()
@@ -522,9 +525,13 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
     def get_monitor_data(self, monitor_data):
         """监控数据"""
-        self.time_monitor.stop()  # 停止
-        self.monitor_data = monitor_data
-        self.time_monitor.start()  # 启动
+        if monitor_data['enable']:
+            if not self.time_monitor.isActive():
+                self.time_monitor.start()  # 启动
+        else:
+            if self.time_monitor.isActive():
+                self.time_monitor.stop()  # 停止
+        self.monitor_data = monitor_data['monitor_data']
 
     def on_monitor_data(self):
         """盯盘"""
@@ -532,17 +539,17 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             if monitor['trigger']:  # 已经触发
                 continue
             if monitor['price']:
-                if self.current[index] >= monitor['up']:
+                if monitor['up'] and self.current[index] >= monitor['up']:
                     self.base_signal.signal_monitor_msg.emit([index, "PRICE_UP"])
                     self.monitor_data[index]['trigger'] = True
-                if self.current[index] <= monitor['down']:
+                if monitor['down'] and self.current[index] <= monitor['down']:
                     self.base_signal.signal_monitor_msg.emit([index, "PRICE_DOWN"])
                     self.monitor_data[index]['trigger'] = True
             else:
-                if self.percent[index] >= monitor['up']:
+                if monitor['up'] and self.percent[index] >= monitor['up']:
                     self.base_signal.signal_monitor_msg.emit([index, "UP"])
                     self.monitor_data[index]['trigger'] = True
-                if self.percent[index] <= monitor['down']:
+                if monitor['down'] and self.percent[index] <= monitor['down']:
                     self.base_signal.signal_monitor_msg.emit([index, "DOWN"])
                     self.monitor_data[index]['trigger'] = True
 
