@@ -429,7 +429,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         if hasattr(self, 'tags'):
             self.setting.set_check_update(self.tags)
         if not self.check_update_status:  # 只用请求一次
-            asyncio.create_task(self.setting.check_update())  # 检查新版本，在事件循环中运行异步函数
+            # asyncio.create_task(self.setting.check_update())  # 检查新版本，在事件循环中运行异步函数
             self.check_update_status = True  # 已经检查更新的标志
         self.setting_is_active_window = True
         self.setting.exec()
@@ -512,13 +512,13 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         hour = datetime.datetime.now().hour
         if self.get_trade_status == '已收盘':
             return
-        if hour < 9 or 15 < hour:
-            self.start_status = True  # 重置启动状态
-            self.time.stop()  # 停止
-            return
-        if self.start_status:  # 修复定时器 time 的重复启动
-            self.time.start()  # 启动
-        self.start_status = False
+        # if hour < 9 or 15 < hour:
+        #     self.start_status = True  # 重置启动状态
+        #     self.time.stop()  # 停止
+        #     return
+        # if self.start_status:  # 修复定时器 time 的重复启动
+        #     self.time.start()  # 启动
+        # self.start_status = False
 
     def check_update_tags(self, tags):
         self.tags = tags  # 保存下来

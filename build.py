@@ -31,7 +31,7 @@ if __name__ == '__main__':
         '--upx-exclude=WinDivert32.sys',
         '--upx-exclude=WinDivert64.sys',
         '--add-data=static/images;static/images',
-        '--hidden-import=plyer.platforms.win.notification',
+        # '--hidden-import=plyer.platforms.win.notification',
         '--contents-directory=.'
     ]
 

@@ -8,14 +8,28 @@
 @ Description : 
 """
 import os
+from win32gui import NIM_DELETE
+from win32api import PostQuitMessage
+from win32gui import Shell_NotifyIcon
 
 from PyQt5.QtWidgets import QWidget, QLineEdit, QLabel
 from configobj import ConfigObj
-import plyer
+from win10toast import ToastNotifier
 
 from core.message_box import MessageBox
 from temp import TEMP
 from uis.rc_setting.monitor_setting.monitor_setting import Ui_Monitor
+
+
+class MyToastNotifier(ToastNotifier):
+    def on_destroy(self, hwnd, msg, wparam, lparam):
+        """Clean after notification ended."""
+        nid = (self.hwnd, 0)
+        Shell_NotifyIcon(NIM_DELETE, nid)
+        PostQuitMessage(0)
+        # WNDPROC return value cannot be converted to LRESULT
+        # TypeError: WPARAM is simple, so must be an int object (got NoneType)
+        return 0
 
 
 class UiMonitorQWidget(QWidget, Ui_Monitor):
@@ -26,9 +40,10 @@ class UiMonitorQWidget(QWidget, Ui_Monitor):
 
         self.init_ui()
         self.message_box = MessageBox()
+        self.toaster = MyToastNotifier()
         self.pushButton_accepted_monitor.clicked.connect(self.on_monitor_data_check)
 
-        self.base_signal.signal_monitor_msg.connect(self.on_message)
+        self.base_signal.signal_monitor_msg.connect(self.on_notification)
 
     def init_ui(self):
         self.user_data_path = os.path.join(TEMP, "user_data.ini")
@@ -102,21 +117,39 @@ class UiMonitorQWidget(QWidget, Ui_Monitor):
             self.message_box.info_message(f'请在“{label_obj.text()}”中输入正确的参数。', self)
         return up, down
 
-    def on_message(self, status: list):
-        """消息提醒"""
-        if not self.checkBox.isChecked():  # 不启用直接返回
-            return
+    # def on_message(self, status: list):
+    #     """显示 Toast 通知"""
+    #     # pip install plyer
+    #     import plyer
+    #
+    #     if not self.checkBox.isChecked():  # 不启用直接返回
+    #         return
+    #     self.trigger_clear(status)
+    #
+    #     title = self.lineEdit.text().rstrip()
+    #     msg = self.lineEdit_2.text().rstrip()
+    #     timeout = self.spinBox.value()
+    #     plyer.notification.notify(
+    #         app_name='RollerCoaster',
+    #         app_icon=f"{TEMP}/../static/images/microscope.ico",
+    #         title=title,
+    #         message=msg,
+    #         timeout=timeout
+    #     )
+
+    def on_notification(self, status: list):
+        """在 Windows 10/11 上显示 Toast 通知"""
         self.trigger_clear(status)
 
         title = self.lineEdit.text().rstrip()
         msg = self.lineEdit_2.text().rstrip()
         timeout = self.spinBox.value()
-        plyer.notification.notify(
-            app_name='RollerCoaster',
-            app_icon=f"{TEMP}/../static/images/microscope.ico",
-            title=title,
-            message=msg,
-            timeout=timeout
+        self.toaster.show_toast(
+            title,
+            msg,
+            duration=timeout,  # 单位 s
+            icon_path=f"{TEMP}/../static/images/microscope.ico",
+            threaded=True
         )
 
     def trigger_clear(self, status):
