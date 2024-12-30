@@ -109,7 +109,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.label_value.setFont(font)
         self.label_rate.setFont(font)
         self.set_taskbar()  # 初始化
-        self.init_tray_icon_count()  # 初始化托盘句柄
+        # self.init_tray_icon_count()  # 初始化托盘句柄
 
         self.config = ConfigObj(self.user_data_path, encoding='UTF8')
         color = QColor(self.config['background_color']['color'])

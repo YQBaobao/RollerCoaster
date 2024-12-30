@@ -117,28 +117,10 @@ class UiMonitorQWidget(QWidget, Ui_Monitor):
             self.message_box.info_message(f'请在“{label_obj.text()}”中输入正确的参数。', self)
         return up, down
 
-    # def on_message(self, status: list):
-    #     """显示 Toast 通知"""
-    #     # pip install plyer
-    #     import plyer
-    #
-    #     if not self.checkBox.isChecked():  # 不启用直接返回
-    #         return
-    #     self.trigger_clear(status)
-    #
-    #     title = self.lineEdit.text().rstrip()
-    #     msg = self.lineEdit_2.text().rstrip()
-    #     timeout = self.spinBox.value()
-    #     plyer.notification.notify(
-    #         app_name='RollerCoaster',
-    #         app_icon=f"{TEMP}/../static/images/microscope.ico",
-    #         title=title,
-    #         message=msg,
-    #         timeout=timeout
-    #     )
-
     def on_notification(self, status: list):
         """在 Windows 10/11 上显示 Toast 通知"""
+        if not self.checkBox.isChecked():  # 不启用直接返回
+            return
         self.trigger_clear(status)
 
         title = self.lineEdit.text().rstrip()
