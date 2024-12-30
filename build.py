@@ -22,6 +22,14 @@ if __name__ == '__main__':
         '-y',
         '-p .',
         '--clean',
+        '--noupx',
+        '--upx-exclude=api-ms-win-core*.dll',  # 忽略压缩 NotCompressibleException
+        '--upx-exclude=api-ms-win-crt*.dll',
+        '--upx-exclude=python3.dll',
+        '--upx-exclude=_uuid.pyd',
+        '--upx-exclude=md.cp39-win32.pyd',
+        '--upx-exclude=WinDivert32.sys',
+        '--upx-exclude=WinDivert64.sys',
         '--add-data=static/images;static/images',
         '--contents-directory=.'
     ]
