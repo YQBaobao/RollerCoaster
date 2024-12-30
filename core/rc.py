@@ -86,7 +86,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
                 os.mkdir(os.path.dirname(self.user_data_path))
             except Exception:
                 pass
-            with open(self.user_data_path, "w") as f:
+            with open(self.user_data_path, "w", encoding='utf-8') as f:
                 user_data = (
                     '[base]\nsymbol = SZ002594\nsymbol_2=\nsymbol_3=\nsymbol_4=\nmode = 1\ninterval = 2000\n\n'
                     '[background_color]\ncolor = "#101010"\n\n'
