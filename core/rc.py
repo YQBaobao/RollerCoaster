@@ -194,27 +194,17 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     def init_shortcut_key(self):
         # 获取用户数据
         config = ConfigObj(self.user_data_path, encoding='UTF8')
-        self.open_setting = self.shortcut_key_format(config['shortcut_key']['open_setting'])
-        self.show_data = self.shortcut_key_format(config['shortcut_key']['show_data'])
-        self.red_green_switch = self.shortcut_key_format(config['shortcut_key']['red_green_switch'])
-        self.boss_key = self.shortcut_key_format(config['shortcut_key']['boss_key'])
+        self.open_setting = config['shortcut_key']['open_setting'].split('+')
+        self.show_data = config['shortcut_key']['show_data'].split('+')
+        self.red_green_switch = config['shortcut_key']['red_green_switch'].split('+')
+        self.boss_key = config['shortcut_key']['boss_key'].split('+')
 
         # 初始化快捷键
-        self._init_shortcut_key(SystemHotkey(), self.open_setting, 1)
-        self._init_shortcut_key(SystemHotkey(), self.show_data, 2)
-        self._init_shortcut_key(SystemHotkey(), self.red_green_switch, 3)
-        self._init_shortcut_key(SystemHotkey(), self.boss_key, 4)
-
-    def _init_shortcut_key(self, key: SystemHotkey, button, v):
-        try:
-            key.register(button, callback=lambda x: self.keypress_callback(v))
-        except Exception:
-            pass
-
-    @staticmethod
-    def shortcut_key_format(shortcut_key=''):
-        key = shortcut_key.split('+')
-        return key
+        hk = SystemHotkey()
+        hk.register(self.open_setting, callback=lambda x: self.keypress_callback(1))
+        hk.register(self.show_data, callback=lambda x: self.keypress_callback(2))
+        hk.register(self.red_green_switch, callback=lambda x: self.keypress_callback(3))
+        hk.register(self.boss_key, callback=lambda x: self.keypress_callback(4))
 
     def timer(self, interval: int = 5000):
         self.time = QTimer(self)
@@ -429,7 +419,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         if hasattr(self, 'tags'):
             self.setting.set_check_update(self.tags)
         if not self.check_update_status:  # 只用请求一次
-            asyncio.create_task(self.setting.check_update())  # 检查新版本，在事件循环中运行异步函数
+            # asyncio.create_task(self.setting.check_update())  # 检查新版本，在事件循环中运行异步函数
             self.check_update_status = True  # 已经检查更新的标志
         self.setting_is_active_window = True
         self.setting.exec()
@@ -561,12 +551,15 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         """重复启动检查"""
         try:
             # 找到所有同名进程的PID
-            pids = [pid.pid for pid in psutil.process_iter() if pid.name() == name]
-            if len(pids) > 1:
-                for pid in pids[:-1]:  # 结束除了最后一个之外的所有进程
+            pid_s = [pid.pid for pid in psutil.process_iter() if pid.name() == name]
+            if len(pid_s) > 1:
+                for pid in pid_s[:-1]:  # 结束除了最后一个之外的所有进程
                     psutil.Process(pid).terminate()  # 结束进程
         except (OSError, psutil.NoSuchProcess) as e:
             print("Error ending existing process:", e)
+        except KeyboardInterrupt:
+            print("Exiting...")
+            exit(0)
 
     def closeEvent(self, event) -> None:
         try:
