@@ -8,7 +8,7 @@ Monitor real-time price changes through the stock code and place it on the deskt
 
 ### What can you do?
 
-- Use the stock code to monitor real-time price changes, and monitor one quantity (the code must be entered completely, such as: SZ002594)
+- Use the stock code to monitor real-time price changes, and monitor one quantity (the code must be entered completely, such as: SZ002594)`**Note: Hong Kong stocks do not need to add HK, just directly have a stock code**`
 - Monitoring interval, minimum 2 seconds, default 3 seconds
 - The number of monitors, before version `v1.0.3`, can only support one, `v1.0.3` and after is a maximum of two, `v1.1.0.0` and after is a maximum of four.
 - If it rises, the font will be `red`. If it falls, the font will be `green`
