@@ -3,7 +3,7 @@
 ProjectFileVersion = 1.1
 [General]
 Program name = RoCoaster
-Program version = 1.0.5.1
+Program version = 1.1.0.3
 Windows XP = 0
 Windows Server 2003 = 0
 Windows Vista = 0
@@ -30,7 +30,7 @@ VisualStylesEnabled = 1
 Installation path = D:\Program Files (x86)\<AppName>\
 Autcip = 1
 [Uninstall]
-Vwau = 1
+Vwau = 0
 Website = https://github.com/YQBaobao/RollerCoaster/releases
 Include uninstaller = 1
 Uninstaller filename = Uninstall
@@ -80,7 +80,7 @@ Execdlls = 0
 F:\Projects\QtRollerCoaster\dist\RoCoaster\aiohttp\
 N/A
 [Folder]
-F:\Projects\QtRollerCoaster\dist\RoCoaster\attrs-24.2.0.dist-info\
+F:\Projects\QtRollerCoaster\dist\RoCoaster\attrs-24.3.0.dist-info\
 N/A
 [Folder]
 F:\Projects\QtRollerCoaster\dist\RoCoaster\certifi\
@@ -92,10 +92,10 @@ N/A
 F:\Projects\QtRollerCoaster\dist\RoCoaster\frozenlist\
 N/A
 [Folder]
-F:\Projects\QtRollerCoaster\dist\RoCoaster\importlib_metadata-6.7.0.dist-info\
+F:\Projects\QtRollerCoaster\dist\RoCoaster\multidict\
 N/A
 [Folder]
-F:\Projects\QtRollerCoaster\dist\RoCoaster\multidict\
+F:\Projects\QtRollerCoaster\dist\RoCoaster\propcache\
 N/A
 [Folder]
 F:\Projects\QtRollerCoaster\dist\RoCoaster\psutil\
@@ -117,37 +117,40 @@ F:\Projects\QtRollerCoaster\dist\RoCoaster\yarl\
 N/A
 [Folder]
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_asyncio.pyd
-28 KB
+58.4 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_bz2.pyd
-40 KB
+77.4 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_ctypes.pyd
-47 KB
+114.9 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_decimal.pyd
-78 KB
+225.9 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_hashlib.pyd
-21.5 KB
+52.4 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_lzma.pyd
-75 KB
+159.4 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_multiprocessing.pyd
-20 KB
+27.4 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_overlapped.pyd
-22.5 KB
+38.9 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_queue.pyd
-19.5 KB
+26.4 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_socket.pyd
-33 KB
+70.4 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\_ssl.pyd
-43 KB
+140.4 KB
+pyd
+F:\Projects\QtRollerCoaster\dist\RoCoaster\_uuid.pyd
+20.9 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\api-ms-win-core-console-l1-1-0.dll
 19.4 KB
@@ -224,9 +227,6 @@ dll
 F:\Projects\QtRollerCoaster\dist\RoCoaster\api-ms-win-core-util-l1-1-0.dll
 18.9 KB
 dll
-F:\Projects\QtRollerCoaster\dist\RoCoaster\api-ms-win-crt-conio-l1-1-0.dll
-19.9 KB
-dll
 F:\Projects\QtRollerCoaster\dist\RoCoaster\api-ms-win-crt-convert-l1-1-0.dll
 22.9 KB
 dll
@@ -245,9 +245,6 @@ dll
 F:\Projects\QtRollerCoaster\dist\RoCoaster\api-ms-win-crt-math-l1-1-0.dll
 29.4 KB
 dll
-F:\Projects\QtRollerCoaster\dist\RoCoaster\api-ms-win-crt-process-l1-1-0.dll
-19.9 KB
-dll
 F:\Projects\QtRollerCoaster\dist\RoCoaster\api-ms-win-crt-runtime-l1-1-0.dll
 23.4 KB
 dll
@@ -264,37 +261,40 @@ F:\Projects\QtRollerCoaster\dist\RoCoaster\api-ms-win-crt-utility-l1-1-0.dll
 19.4 KB
 dll
 F:\Projects\QtRollerCoaster\dist\RoCoaster\base_library.zip
-1000.3 KB
+829 KB
 zip
 F:\Projects\QtRollerCoaster\dist\RoCoaster\libcrypto-1_1.dll
-735.5 KB
+2.2 MB
+dll
+F:\Projects\QtRollerCoaster\dist\RoCoaster\libffi-7.dll
+28.5 KB
 dll
 F:\Projects\QtRollerCoaster\dist\RoCoaster\libssl-1_1.dll
-166 KB
+533.4 KB
 dll
 F:\Projects\QtRollerCoaster\dist\RoCoaster\pyexpat.pyd
-63.5 KB
+178.9 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\python3.dll
-57.5 KB
+58.9 KB
 dll
-F:\Projects\QtRollerCoaster\dist\RoCoaster\python37.dll
-1 MB
+F:\Projects\QtRollerCoaster\dist\RoCoaster\python39.dll
+4.3 MB
 dll
 F:\Projects\QtRollerCoaster\dist\RoCoaster\RoCoaster.exe
-2.6 MB
+3.2 MB
 exe
 F:\Projects\QtRollerCoaster\dist\RoCoaster\select.pyd
-19.5 KB
+25.4 KB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\ucrtbase.dll
 1.1 MB
 dll
 F:\Projects\QtRollerCoaster\dist\RoCoaster\unicodedata.pyd
-271 KB
+1.1 MB
 pyd
 F:\Projects\QtRollerCoaster\dist\RoCoaster\VCRUNTIME140.dll
-81.8 KB
+74.4 KB
 dll
 [Licence_Begin]
 5349
