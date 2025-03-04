@@ -96,7 +96,7 @@ class Ui_Base(object):
         self.gridLayout.addWidget(self.pushButton_accepted, 10, 3, 1, 2)
 
         self.retranslateUi(Base)
-        self.comboBox.setCurrentIndex(0)
+        self.comboBox.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(Base)
 
     def retranslateUi(self, Base):

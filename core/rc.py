@@ -241,9 +241,10 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             for symbol in symbols:
                 self.current.append(quotes_dict[symbol]['current'])  # 当前价格
                 self.percent.append(quotes_dict[symbol]['percent'])  # 跌涨幅度 %
-            if self.get_trade_status == "已收盘":
-                self.time.stop()
-        except Exception:
+            # if self.get_trade_status == "已收盘":
+            #     self.time.stop()
+        except Exception as e:
+            print(e)
             self.label_value.setText('错误')
 
     def show_value_polling(self, symbols, down_style, default_style):
@@ -419,7 +420,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         if hasattr(self, 'tags'):
             self.setting.set_check_update(self.tags)
         if not self.check_update_status:  # 只用请求一次
-            # asyncio.create_task(self.setting.check_update())  # 检查新版本，在事件循环中运行异步函数
+            asyncio.create_task(self.setting.check_update())  # 检查新版本，在事件循环中运行异步函数
             self.check_update_status = True  # 已经检查更新的标志
         self.setting_is_active_window = True
         self.setting.exec()
@@ -460,7 +461,8 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.setting.pushButton_monitor.setEnabled(True)  # 启动后，才能设置监控
 
         self.time_polling.stop()
-        self.timer_polling(1200)  # 固定间隔
+        # self.timer_polling()  # 固定间隔
+        self.timer_polling(data['interval'] / len(data['symbol']))
         self.time_polling.start()
 
     def set_background_color(self, data: QColor):
