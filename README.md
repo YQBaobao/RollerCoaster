@@ -8,22 +8,28 @@ Monitor real-time price changes through the stock code and place it on the deskt
 
 ### What can you do?
 
-- Use the stock code to monitor real-time price changes, and monitor one quantity (the code must be entered completely, such as: SZ002594)`**Note: Hong Kong stocks do not need to add HK, just directly have a stock code**`
-- Monitoring interval, minimum 2 seconds, default 3 seconds
-- The number of monitors, before version `v1.0.3`, can only support one, `v1.0.3` and after is a maximum of two, `v1.1.0.0` and after is a maximum of four.
-- If it rises, the font will be `red`. If it falls, the font will be `green`
-- Added that the price will no longer be obtained after the market closes (15:00). Before the market opens, the time will be checked every 1 minute and the price will be obtained at the set time (9:00). [Note: This item relies heavily on the local time of the computer, please ensure that the time is accurate]
-- Added version update prompt (requires version greater than or equal to `1.0.4.5`). If there is a new version, you will see a `little red dot` prompt after opening the settings page.
-- Added disk tracking reminder (requires version greater than or equal to `v1.1.0.0`), you can choose to turn it on or off
-- Added display mode selection (requires version greater than or equal to `v1.1.0.0`), you can choose `full carousel, only price, only increase and decrease`, among which `only price, only increase and decrease` is more timely
+- Use the stock code to monitor real-time price changes, listen for 4 numbers, and enter the following rules:
+  - **`Note: The mainland exchange must enter complete, Shanghai Stock Exchange (SH), Shenzhen Stock Exchange (SZ), and Beijing Stock Exchange (BJ). For example: SZ002594`**
+  - **`Note: The Hong Kong Stock Exchange does not need to add HK, just directly have a stock code`**
+- Listening interval, minimum 2 seconds, default 3 seconds;
+- If it rises, the font is `red`. If it falls, the font is `green` (can be reversed);
+- After closing (16:00), you do not get the price. Before opening, check the time every 1 minute to get the price at the set time (9:00). [Note: This depends heavily on the computer local time, please make sure the time is accurate]
+  - **`Note: In order to adapt to Hong Kong stocks, the closing time here is set to 16:00`**
 
 ### How to use it?
 
-- Download the distribution version `exe` installation program (may report viruses), and install and start it
-- Right-click the icon in the system tray>Settings>Basic Settings> and select the delay interval. After entering it, click OK
-- In the system tray, right-click the icon and exit, the program will exit.
-- Double-click the icon in the system tray to switch between hiding/showing data
+- Download the release version `exe` installer (may cause poison) and install it and start it. The default installation of `D disk`
+- Right-click icon in the system pallet》Settings》Basic settings》 and select the delay interval. After entering, click OK
+- Right-click the icon in the system tray to exit, then the program exits
+- Double-click the icon in the system tray to switch to hide/show data
 - Other settings: background color, shortcut keys, monitoring and reminder settings, update source selection
+
+### What should I pay attention to?
+
+- Increase the number of listeners. Before the version `v1.0.3`, only 1 can be supported, 2 can be supported, and `v1.0.3` and after, `v1.1.0.0` and after, up to 4 can be supported
+- Added a new version update prompt (need to be greater than or equal to `1.0.4.5` version). If a new version exists, you will see a `Little Red Dot` prompt after opening the settings page.
+- Added a new reminder for watching the disk (need to be greater than or equal to `v1.1.0.0` version), you can choose to turn on or off
+- Added display mode selection (need to be greater than or equal to `v1.1.0.0` version), you can choose `full carousel, only price, only increase or decrease, where `` only price, only increase or decrease` has better timeliness
 
 ### Some screenshots
 
