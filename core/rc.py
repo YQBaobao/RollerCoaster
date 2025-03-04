@@ -501,11 +501,11 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.base_signal.signal_shortcut_key.emit(v)
 
     def start(self):
-        self.get_trade_status = self.gu_shi_tong.get_trade_status(symbol=self.symbol[-1])
+        # self.get_trade_status = self.gu_shi_tong.get_trade_status(symbol=self.symbol[-1])
+        # if self.get_trade_status == '已收盘':
+        #     return
         hour = datetime.datetime.now().hour
-        if self.get_trade_status == '已收盘':
-            return
-        if hour < 9 or 15 < hour:
+        if hour < 9 or 16 < hour:  # 港股16点收市
             self.start_status = True  # 重置启动状态
             self.time.stop()  # 停止
             return
