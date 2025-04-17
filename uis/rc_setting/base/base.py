@@ -96,7 +96,7 @@ class Ui_Base(object):
         self.gridLayout.addWidget(self.pushButton_accepted, 10, 3, 1, 2)
 
         self.retranslateUi(Base)
-        self.comboBox.setCurrentIndex(1)
+        self.comboBox.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Base)
 
     def retranslateUi(self, Base):
@@ -110,7 +110,7 @@ class Ui_Base(object):
         self.label_3.setText(_translate("Base", "间隔；“仅价格”与“仅涨/跌幅”模式的时效性更好。"))
         self.label_6.setText(_translate("Base", "完整代码(3"))
         self.label_2.setText(_translate("Base", "获取延迟"))
-        self.label_4.setText(_translate("Base", "代码必须是带交易所编号的完整代码，获取延迟表示更新数据的"))
+        self.label_4.setText(_translate("Base", "代码必需带交易所编号（港股除外），获取延迟表示更新数据的"))
         self.label_5.setText(_translate("Base", "完整代码(2"))
         self.label.setText(_translate("Base", "完整代码(1"))
         self.lineEdit.setPlaceholderText(_translate("Base", "如：SZ002594"))
