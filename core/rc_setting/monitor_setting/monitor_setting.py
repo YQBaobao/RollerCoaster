@@ -9,7 +9,7 @@
 """
 import os
 
-from PyQt5.QtWidgets import QWidget, QLineEdit, QLabel, QSystemTrayIcon
+from PyQt5.QtWidgets import QWidget, QLineEdit, QLabel, QSystemTrayIcon, QMessageBox
 from configobj import ConfigObj
 
 from core.message_box import MessageBox
@@ -86,6 +86,11 @@ class UiMonitorQWidget(QWidget, Ui_Monitor):
         symbol_4["up"], symbol_4["down"] = self.__data_check(self.lineEdit_9, self.lineEdit_10, self.label_6)
         symbol_4['price'] = self.checkBox_5.isChecked()
         monitor_data.append(symbol_4)
+
+        msg = '设置成功。'
+        message = QMessageBox(QMessageBox.Information, '确认框', msg, QMessageBox.Yes, parent=self)
+        message.button(QMessageBox.Yes).setText("确认")
+        message.exec()
 
         self.user_data_save()
         data = {'enable': self.checkBox_6.isChecked(), 'monitor_data': monitor_data}
