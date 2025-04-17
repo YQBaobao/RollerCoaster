@@ -414,12 +414,13 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             return
         from core.rc_setting.setting import UiSettingQWidget
 
-        self.setting = UiSettingQWidget(self.base_signal, background_button=self.background_button,
+        self.setting = UiSettingQWidget(self.base_signal, self.tray, background_button=self.background_button,
                                         monitor_button=self.monitor_button, msg_status=self.msg_status)
         self.setting.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)  # 取消帮助按钮
         if hasattr(self, 'tags'):
             self.setting.set_check_update(self.tags)
         if not self.check_update_status:  # 只用请求一次
+            # TODO DEV CLOSE
             asyncio.create_task(self.setting.check_update())  # 检查新版本，在事件循环中运行异步函数
             self.check_update_status = True  # 已经检查更新的标志
         self.setting_is_active_window = True

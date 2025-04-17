@@ -12,7 +12,7 @@ import sys
 import aiohttp
 from PyQt5.QtCore import Qt, QFile
 from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWidgets import QDialog, QSystemTrayIcon
 
 from core import version
 from core.rc_setting.background_color.background_color import UiBackgroundColorQWidget
@@ -33,11 +33,12 @@ def get_windows_version():
 class UiSettingQWidget(QDialog, Ui_Settiing):
     type = Qt.UniqueConnection
 
-    def __init__(self, base_signal, parent=None, background_button=True, monitor_button=False, msg_status=True):
+    def __init__(self, base_signal, *args, parent=None, background_button=True, monitor_button=False, msg_status=True):
         super().__init__(parent)
         self.setupUi(self)
         self.init_style()
         self.base_signal = base_signal
+        self.base_tray: QSystemTrayIcon = args[0]
         self.background_button = background_button  # 背景色按钮状态
         self.monitor_button = monitor_button
         self.msg_status = msg_status
@@ -75,7 +76,7 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         self.ui_what_new = UiWhatNewQWidget(self)
         self.stackedWidget.addWidget(self.ui_what_new)  # 4
         # 5
-        self.ui_monitor = UiMonitorQWidget(self.base_signal, self)
+        self.ui_monitor = UiMonitorQWidget(self.base_signal, self.base_tray, self)
         self.stackedWidget.addWidget(self.ui_monitor)  # 5
 
     def init_action_left_menu(self):
