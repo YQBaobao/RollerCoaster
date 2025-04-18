@@ -99,7 +99,7 @@ class UiBaseQWidget(QWidget, Ui_Base):
             symbol_list.append(symbol_4)
         symbol_set = set(symbol_list)
         if len(symbol_set) != len(symbol_list):
-            self.message_box.info_message('请确保已经已经输入的“代码”互不相同。', self)
+            self.message_box.info_message('请确保已经输入的“代码”互不相同。', self)
             return False
         return symbol_list
 
