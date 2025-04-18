@@ -55,8 +55,8 @@ QPushButton:checked{
 
 
 /* 特定按钮样式 */
-QPushButton#pushButton_home,#pushButton_base,#pushButton_monitor,#pushButton_shortcut_key,#pushButton_background_color,#pushButton_what_new{
-    min-height: 25px;
+QPushButton#pushButton_home,#pushButton_base,#pushButton_futures,#pushButton_monitor,#pushButton_shortcut_key,#pushButton_background_color,#pushButton_what_new{
+    min-height: 20px;
 }
 QPushButton#pushButton_accepted,#pushButton_accepted_2,#pb_accepted_3,#pushButton_palette,#pushButton_accepted_monitor{
     border: 1px solid;

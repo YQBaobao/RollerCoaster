@@ -17,6 +17,7 @@ from PyQt5.QtWidgets import QDialog, QSystemTrayIcon
 from core import version
 from core.rc_setting.background_color.background_color import UiBackgroundColorQWidget
 from core.rc_setting.base.base import UiBaseQWidget
+from core.rc_setting.futures.futures import UiFuturesQWidget
 from core.rc_setting.home.home import UiHomeQWidget
 from core.rc_setting.monitor_setting.monitor_setting import UiMonitorQWidget
 from core.rc_setting.shortcut_key.shortcut_key import UiShortcutKeyQWidget
@@ -33,7 +34,16 @@ def get_windows_version():
 class UiSettingQWidget(QDialog, Ui_Settiing):
     type = Qt.UniqueConnection
 
-    def __init__(self, base_signal, *args, parent=None, background_button=True, monitor_button=False, msg_status=True):
+    def __init__(
+            self,
+            base_signal,
+            *args,
+            parent=None,
+            background_button=True,
+            monitor_button=False,
+            msg_status=True,
+            msg_futures_status=True
+    ):
         super().__init__(parent)
         self.setupUi(self)
         self.init_style()
@@ -42,6 +52,7 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         self.background_button = background_button  # 背景色按钮状态
         self.monitor_button = monitor_button
         self.msg_status = msg_status
+        self.msg_futures_status = msg_futures_status
         self.tags = ['0']  # 默认 0 版本
 
         self.stackedWidget.setCurrentIndex(0)
@@ -79,6 +90,10 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         self.ui_monitor = UiMonitorQWidget(self.base_signal, self.base_tray, self)
         self.stackedWidget.addWidget(self.ui_monitor)  # 5
 
+        # 6
+        self.ui_futures = UiFuturesQWidget(self.base_signal, parent=self, msg_status=self.msg_futures_status)
+        self.stackedWidget.addWidget(self.ui_futures)  # 6
+
     def init_action_left_menu(self):
         """菜单动作"""
         self.pushButton_home.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(0), self.type)
@@ -87,10 +102,12 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         self.pushButton_shortcut_key.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(3), self.type)
         self.pushButton_what_new.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(4), self.type)
         self.pushButton_monitor.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(5), self.type)
+        self.pushButton_futures.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(6), self.type)
 
     def init_action_widget(self):
         """部件动作"""
         self.ui_base.pushButton_accepted.clicked.connect(self.ui_base.setting_base, self.type)
+        self.ui_futures.pushButton_accepted.clicked.connect(self.ui_futures.setting_futures, self.type)
 
         self.ui_back_color.pushButton_palette.clicked.connect(self.ui_back_color.get_palette, self.type)
         self.ui_back_color.pushButton_accepted_2.clicked.connect(self.ui_back_color.background_color, self.type)
