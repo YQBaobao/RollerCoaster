@@ -24,7 +24,7 @@ from system_hotkey import SystemHotkey
 from core.message_box import MessageBox
 from core.signals import BaseSignal
 from core.sina_js import SinaJs
-from core.snowball import Snowball, GuShiTong
+from core.snowball import Snowball
 from temp import TEMP
 from uis.rc_ui import Ui_RollerCoaster
 from static.rc_rc import qInitResources
@@ -88,7 +88,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.base_signal = BaseSignal()
         self.snowball = Snowball()
         self.sina_js = SinaJs()
-        self.gu_shi_tong = GuShiTong()
+        # self.gu_shi_tong = GuShiTong()
         self.message_box = MessageBox()
 
         self.user_data_path = os.path.join(TEMP, "user_data.ini")
