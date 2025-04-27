@@ -122,7 +122,6 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.label_value.setFont(font)
         self.label_rate.setFont(font)
         self.set_taskbar()  # 初始化
-        # self.init_tray_icon_count()  # 初始化托盘句柄
 
         self.config = ConfigObj(self.user_data_path, encoding='UTF8')
         color = QColor(self.config['background_color']['color'])
@@ -158,8 +157,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         """定时设置任务栏"""
         self.time_set_taskbar = QTimer(self)
         self.time_set_taskbar.setInterval(interval)
-        self.time_set_taskbar.timeout.connect(self.get_taskbar_size)  # 方案1，兼容 win11
-        # self.time_set_taskbar.timeout.connect(self.get_tray_icon_count)  # 方案2
+        self.time_set_taskbar.timeout.connect(self.get_taskbar_size)  # 兼容 win11
         self.time_set_taskbar.start()  # 启动
 
     def get_taskbar_size(self):
@@ -168,29 +166,6 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         if self.b_new == self.b:  # 尺寸没变化，则直接返回
             return
         self.b = self.b_new
-        self.move_window()
-
-    def init_tray_icon_count(self):
-        # 获取托盘区域的窗口句柄
-        tray_notify_handle = win32gui.FindWindowEx(self.m_h_taskbar, 0, "TrayNotifyWnd", None)
-        sys_pager_handle = win32gui.FindWindowEx(tray_notify_handle, 0, "SysPager", None)
-        self.notification_area_handle = win32gui.FindWindowEx(sys_pager_handle, 0, "ToolbarWindow32", None)
-
-    def get_tray_icon_count(self):
-        # 获取托盘图标的数量
-        count = win32gui.SendMessage(self.notification_area_handle, commctrl.TB_BUTTONCOUNT, 0, 0)
-        if self.icon_status:
-            self.icon_count = count  # 初始化
-            self.icon_status = False
-        if self.icon_count != count:
-            self.dynamic_set_taskbar(icon_count=count)
-
-    def dynamic_set_taskbar(self, icon_count=0):
-        """动态设置任务栏"""
-        if icon_count and self.icon_count != 0:
-            x = self.icon_count - icon_count
-            self.b = (self.b[0], self.b[1], self.b[2] + (x * 24), self.b[3],)
-            self.icon_count = icon_count
         self.move_window()
 
     def init_action(self):
