@@ -56,7 +56,7 @@ class Win11FloatingRollerCoasterApp(RollerCoasterApp):
 
         # 完全重叠在任务栏上方
         x = screen_width - self.sections_width - self.width()
-        y = screen_height - self.height() + self.taskbar_height + 5
+        y = screen_height - self.height() + self.taskbar_height + 3
         self.move(x, y)
 
     def timer_set_taskbar(self, interval: int = 200):  # 500ms
