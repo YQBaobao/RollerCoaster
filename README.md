@@ -4,7 +4,7 @@
 
 ### What's this?
 
-Monitor real-time price changes through the stock code and place it on the desktop taskbar, a must-have for fishing. The shortest monitoring interval is 2 seconds; the maximum number of monitoring is 4; the color distinguishes the rise and fall; with system global shortcut keys; with market tracking reminder.
+Through stocks and futures codes, monitor real-time price changes and place them on the desktop taskbar, which is a must-have for fishing. The monitoring interval is at least 2 seconds; the number of monitoring is at most 4; the colors distinguish between rise and fall; the system is global shortcut keys; and the disk is monitored.
 
 ### What can you do?
 
@@ -35,7 +35,7 @@ Monitor real-time price changes through the stock code and place it on the deskt
 
 ### What problems may be encountered?
 - Show the word "错误":
-  - Solution: Add `stock.xueqiu.com`,`finance.pae.baidu.com`,`hq.sinajs.cn` to the proxy whitelist to prevent it from traversing proxy traffic
+  - Solution: Add `stock.xueqiu.com`,`hq.sinajs.cn` to the proxy whitelist to prevent it from traversing proxy traffic
 - Windows 11 does not display:
   - There is no solution yet. The reason is that after the 22H2 version of Windows 11, Microsoft updated the taskbar implementation method, which caused the original implementation method to be incompatible.
 
