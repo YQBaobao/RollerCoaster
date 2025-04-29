@@ -14,6 +14,7 @@ import win32con
 import win32gui
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QFont, QColor, QPalette
+from PyQt5.QtWidgets import QApplication
 from configobj import ConfigObj
 
 from core.rc import RollerCoasterApp
@@ -38,9 +39,8 @@ class Win11FloatingRollerCoasterApp(RollerCoasterApp):
         self.label_rate.setFont(font)
 
         # 初始化
-        self.sections_width, self.taskbar_height = get_taskbar_sections_width()
-        screen = self.screen()  # 当前所在屏幕
-        self.screen_rect = screen.availableGeometry()
+        self.sections_width, _ = get_taskbar_sections_width()
+        self.screen_rect = QApplication.desktop().screenGeometry(0)  # 固定用主屏幕坐标基准
 
         self.config = ConfigObj(self.user_data_path, encoding='UTF8')
         color = QColor(self.config['background_color']['color'])
@@ -56,7 +56,7 @@ class Win11FloatingRollerCoasterApp(RollerCoasterApp):
 
         # 完全重叠在任务栏上方
         x = screen_width - self.sections_width - self.width()
-        y = screen_height - self.height() + self.taskbar_height + 3
+        y = screen_height - self.height() + 3
         self.move(x, y)
 
     def timer_set_taskbar(self, interval: int = 200):  # 500ms
@@ -68,11 +68,21 @@ class Win11FloatingRollerCoasterApp(RollerCoasterApp):
 
     def get_taskbar_size(self):
         """获取任务栏尺寸"""
-        sections_width, self.taskbar_height = get_taskbar_sections_width()
+        sections_width, _ = get_taskbar_sections_width()
         if sections_width == self.sections_width:
             return
         self.sections_width = sections_width
         self.move_window()
+
+    def init_action(self):
+        super(Win11FloatingRollerCoasterApp, self).init_action()
+        # 监听屏幕插拔，自动调整位置
+        QApplication.instance().screenAdded.connect(self.on_screen_changed)
+        QApplication.instance().screenRemoved.connect(self.on_screen_changed)
+
+    def on_screen_changed(self, *args):
+        """当屏幕插拔变化时，重新定位"""
+        QTimer.singleShot(500, self.move_window)  # 延迟，等待系统完成更新
 
     def set_click_through(self):
         hwnd = int(self.winId())
