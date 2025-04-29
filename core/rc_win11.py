@@ -41,6 +41,7 @@ class Win11FloatingRollerCoasterApp(RollerCoasterApp):
         # 初始化
         self.sections_width, _ = get_taskbar_sections_width()
         self.screen_rect = QApplication.desktop().screenGeometry(0)  # 固定用主屏幕坐标基准
+        QTimer.singleShot(500, self.move_window)  # 单次定时
 
         self.config = ConfigObj(self.user_data_path, encoding='UTF8')
         color = QColor(self.config['background_color']['color'])
