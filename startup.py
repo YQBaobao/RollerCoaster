@@ -10,7 +10,7 @@
 import asyncio
 import sys
 
-from PyQt5.QtCore import QObject
+from PyQt5.QtCore import QObject, Qt
 from PyQt5.QtWidgets import QApplication
 from asyncqt import QEventLoop
 
@@ -22,6 +22,10 @@ from core.rc_win11 import Win11FloatingRollerCoasterApp
 class StartWindow(QObject):
     def __init__(self):
         super().__init__()
+        # 启用 Qt 的高DPI支持
+        QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)  # 自动 DPI 缩放
+        QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)  # 使用高分辨率图像资源
+
         self.app = QApplication(sys.argv)
         loop = QEventLoop(self.app)  # 创建 asyncio 事件循环
         asyncio.set_event_loop(loop)
