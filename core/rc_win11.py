@@ -48,8 +48,9 @@ class Win11FloatingRollerCoasterApp(RollerCoasterApp):
         palette = self.palette()
         palette.setColor(QPalette.Background, color)
         self.setPalette(palette)
-        self.label_value.setStyleSheet(self.light)
-        self.label_rate.setStyleSheet(self.light)
+        self.default_style = self.dark if '#eeeeee' == color.name() or '#c7c8c7' == color.name() else self.light
+        self.label_value.setStyleSheet(self.default_style)
+        self.label_rate.setStyleSheet(self.default_style)
 
     def move_window(self):
         screen_height = self.screen_rect.height()
