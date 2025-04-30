@@ -128,8 +128,9 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         palette = self.palette()
         palette.setColor(QPalette.Background, color)
         self.setPalette(palette)
-        self.label_value.setStyleSheet(self.light)
-        self.label_rate.setStyleSheet(self.light)
+        self.default_style = self.dark if '#eeeeee' == color.name() or '#c7c8c7' == color.name() else self.light
+        self.label_value.setStyleSheet(self.default_style)
+        self.label_rate.setStyleSheet(self.default_style)
 
     def set_taskbar(self):
         """设置任务栏"""
@@ -479,7 +480,9 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         palette = self.palette()
         palette.setColor(QPalette.Background, data)
         self.setPalette(palette)
-        self.default_style = self.dark if '#eeeeee' == data.name() else self.light
+        self.default_style = self.dark if '#eeeeee' == data.name() or '#c7c8c7' == data.name() else self.light
+        self.label_value.setStyleSheet(self.default_style)
+        self.label_rate.setStyleSheet(self.default_style)
 
     def set_shortcut_key(self, data):
         if data == 1:
