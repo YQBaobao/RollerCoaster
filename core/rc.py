@@ -935,6 +935,5 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             print('Close End')
         except Exception as e:
             print('Close Error: ', e)
-        if len(QApplication.topLevelWidgets()) == 1:  # 最后一个窗口
-            QApplication.quit()
-        super(RollerCoasterApp, self).closeEvent(event)
+        event.accept()
+        QApplication.quit()
