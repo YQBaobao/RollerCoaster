@@ -17,7 +17,7 @@ import psutil
 import win32gui
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor, QFont
-from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction, QLabel, QSizePolicy
+from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction, QLabel, QSizePolicy, QApplication
 from configobj import ConfigObj
 from system_hotkey import SystemHotkey
 
@@ -438,7 +438,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         open_license_dialog.exec()
 
     def tray_menu_quit(self):
-        self.tray.hide()
+        self.tray.deleteLater()  # 标记为待删除
         self.tray = None  # 清空托盘对象内存
         self.close()
 
@@ -935,4 +935,6 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             print('Close End')
         except Exception as e:
             print('Close Error: ', e)
+        if len(QApplication.topLevelWidgets()) == 1:  # 最后一个窗口
+            QApplication.quit()
         super(RollerCoasterApp, self).closeEvent(event)
