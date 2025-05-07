@@ -20,6 +20,7 @@ from core.rc_setting.base.base import UiBaseQWidget
 from core.rc_setting.futures.futures import UiFuturesQWidget
 from core.rc_setting.home.home import UiHomeQWidget
 from core.rc_setting.monitor_setting.monitor_setting import UiMonitorQWidget
+from core.rc_setting.other.other import UiOtherQWidget
 from core.rc_setting.shortcut_key.shortcut_key import UiShortcutKeyQWidget
 from core.rc_setting.what_new.what_new import UiWhatNewQWidget
 from uis.rc_setting.setting_ui import Ui_Settiing
@@ -94,6 +95,9 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         self.ui_futures = UiFuturesQWidget(self.base_signal, parent=self, msg_status=self.msg_futures_status)
         self.stackedWidget.addWidget(self.ui_futures)  # 6
 
+        self.ui_other = UiOtherQWidget(self.base_signal, parent=self)
+        self.stackedWidget.addWidget(self.ui_other)  # 7
+
     def init_action_left_menu(self):
         """菜单动作"""
         self.pushButton_home.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(0), self.type)
@@ -103,6 +107,7 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
         self.pushButton_what_new.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(4), self.type)
         self.pushButton_monitor.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(5), self.type)
         self.pushButton_futures.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(6), self.type)
+        self.pushButton_other.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(7), self.type)
 
     def init_action_widget(self):
         """部件动作"""
@@ -151,3 +156,8 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
     def closeEvent(self, a0):
         self.base_signal.signal_setting_close.emit()
         super(UiSettingQWidget, self).closeEvent(a0)
+
+""""
+1.若开启了“基础信息、FC 信息”自启动，此时“背景色”将无法再改变。需要你先关闭对应功能的自启动，并重启软件方可修改“背景色”。
+2.需要先开启“基础信息、FC 信息”中的任意一个后，才能开启“监控与提醒”的自启动。
+"""

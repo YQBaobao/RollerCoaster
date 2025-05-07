@@ -12,7 +12,6 @@ import datetime
 import os
 import time
 
-import commctrl
 import psutil
 import win32gui
 from PyQt5.QtCore import Qt, QTimer
@@ -65,6 +64,9 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.tray_icon()  # 托盘
         self.init_action()  # 动作
         self.init_shortcut_key()  # 快捷键
+        # 自动启动
+        # self.auto_start_polling()
+        # self.auto_start_futures()
 
     def init_attribute(self):
         self.setting_is_active_window = False
@@ -903,6 +905,59 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         if self.start_status_futures:  # 修复定时器 time_futures 的重复启动
             self.time_futures.start()  # 启动
         self.start_status_futures = False
+
+    def auto_start_polling(self):
+        """自动启动基础信息显示"""
+        from core.rc_setting.setting import UiSettingQWidget
+
+        self.setting = UiSettingQWidget(
+            self.base_signal,
+            self.tray,
+            background_button=self.background_button,
+            monitor_button=self.monitor_button,
+            msg_status=self.msg_status,
+            msg_futures_status=self.msg_futures_status
+        )
+        base = self.config['base']
+        symbol_list = self.setting.ui_base.data_verification(
+            base['symbol'], base['symbol_2'], base['symbol_3'], base['symbol_4'])
+        interval = int(base['interval'].strip()[0])
+        data = {'interval': interval, 'symbol': symbol_list, 'mode': int(base['mode'])}
+        self.set_base(data)
+
+    def auto_start_futures(self):
+        """自动启动FC信息显示"""
+        futures = self.config['futures']
+        symbol_list = self.setting.ui_futures.data_verification(
+            futures['symbol'], futures['symbol_2'], futures['symbol_3'], futures['symbol_4'])
+        interval = int(futures['interval'].strip()[0])
+        data = {'interval': interval, 'symbol': symbol_list, 'mode': int(futures['mode'])}
+        self.set_futures(data)
+
+    def auto_start_monitor(self):
+        """自动启动监控提醒"""
+        monitor = self.config['monitor']
+        title = monitor['title']
+        msg = monitor['msg']
+        timeout = monitor['timeout']
+        msg_status = monitor['msg_status']
+
+        monitor_status = monitor['monitor_status']
+        symbol_1_up = monitor['symbol_1_up']
+        symbol_1_down = monitor['symbol_1_down']
+        symbol_1_price = monitor['symbol_1_price']
+
+        symbol_2_up = monitor['symbol_2_up']
+        symbol_2_down = monitor['symbol_2_down']
+        symbol_2_price = monitor['symbol_2_price']
+
+        symbol_3_up = monitor['symbol_3_up']
+        symbol_3_down = monitor['symbol_3_down']
+        symbol_3_price = monitor['symbol_3_price']
+
+        symbol_4_up = monitor['symbol_4_up']
+        symbol_4_down = monitor['symbol_4_down']
+        symbol_4_price = monitor['symbol_4_price']
 
     @staticmethod
     def start_run(name='RoCoaster.exe'):
