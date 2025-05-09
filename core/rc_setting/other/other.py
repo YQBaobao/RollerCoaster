@@ -67,6 +67,7 @@ class UiOtherQWidget(QWidget, Ui_Other):
         if self.checkBox_polling.isChecked():
             self.checkBox_monitor.setEnabled(True)
         else:
+            self.checkBox_monitor.setChecked(False)
             self.checkBox_monitor.setEnabled(False)
 
     def user_data_save(self, key, value):
