@@ -949,7 +949,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         base = self.config['base']
         symbol_list = self.setting.ui_base.data_verification(
             base['symbol'], base['symbol_2'], base['symbol_3'], base['symbol_4'])
-        interval = int(base['interval'].strip()[0])
+        interval = int(base['interval'].strip()[0]) * 1000
         data = {'interval': interval, 'symbol': symbol_list, 'mode': int(base['mode'])}
         self.set_base(data)
 
@@ -958,7 +958,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         futures = self.config['futures']
         symbol_list = self.setting.ui_futures.data_verification(
             futures['symbol'], futures['symbol_2'], futures['symbol_3'], futures['symbol_4'])
-        interval = int(futures['interval'].strip()[0])
+        interval = int(futures['interval'].strip()[0]) * 1000
         data = {'interval': interval, 'symbol': symbol_list, 'mode': int(futures['mode'])}
         self.set_futures(data)
 

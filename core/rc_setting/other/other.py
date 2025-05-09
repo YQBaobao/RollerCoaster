@@ -34,6 +34,7 @@ class UiOtherQWidget(QWidget, Ui_Other):
     def init_ui(self):
         """状态初始化"""
         self.checkBox_sys.setChecked(is_auto_start_enabled(APP_NAME))  # 检查状态初始化
+        self.checkBox_monitor.setEnabled(False)
 
         self.user_data_path = os.path.join(TEMP, "user_data.ini")
         self.config = ConfigObj(self.user_data_path, encoding='UTF8')
@@ -41,6 +42,9 @@ class UiOtherQWidget(QWidget, Ui_Other):
         self.checkBox_polling.setChecked(True if setting['polling'].lower() == 'true' else False)
         self.checkBox_futures.setChecked(True if setting['futures'].lower() == 'true' else False)
         self.checkBox_monitor.setChecked(True if setting['monitor'].lower() == 'true' else False)
+
+        self.checkBox_polling.toggled.connect(self.checkbox_toggled)
+        # self.checkBox_futures.toggled.connect(self.checkbox_toggled)
 
     def sys_toggled(self, checked):
         """软件开机自启"""
@@ -58,6 +62,12 @@ class UiOtherQWidget(QWidget, Ui_Other):
 
     def monitor_toggled(self, checked):
         self.user_data_save('monitor', checked)
+
+    def checkbox_toggled(self):
+        if self.checkBox_polling.isChecked():
+            self.checkBox_monitor.setEnabled(True)
+        else:
+            self.checkBox_monitor.setEnabled(False)
 
     def user_data_save(self, key, value):
         """保存在用户数据"""
