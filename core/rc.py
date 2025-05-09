@@ -64,9 +64,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.tray_icon()  # 托盘
         self.init_action()  # 动作
         self.init_shortcut_key()  # 快捷键
-        # 自动启动
-        # self.auto_start_polling()
-        # self.auto_start_futures()
+        self.init_auto_run()  # 自动启动
 
     def init_attribute(self):
         self.setting_is_active_window = False
@@ -411,17 +409,18 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         if self.setting_is_active_window:  # 避免重复New
             self.setting.activateWindow()  # 激活
             return
-        from core.rc_setting.setting import UiSettingQWidget
+        if not (self.run_status_polling or self.run_status_futures or self.run_status_monitor):
+            from core.rc_setting.setting import UiSettingQWidget
 
-        self.setting = UiSettingQWidget(
-            self.base_signal,
-            self.tray,
-            background_button=self.background_button,
-            monitor_button=self.monitor_button,
-            msg_status=self.msg_status,
-            msg_futures_status=self.msg_futures_status
-        )
-        self.setting.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)  # 取消帮助按钮
+            self.setting = UiSettingQWidget(
+                self.base_signal,
+                self.tray,
+                background_button=self.background_button,
+                monitor_button=self.monitor_button,
+                msg_status=self.msg_status,
+                msg_futures_status=self.msg_futures_status
+            )
+            self.setting.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)  # 取消帮助按钮
         if hasattr(self, 'tags'):
             self.setting.set_check_update(self.tags)
         if not self.check_update_status:  # 只用请求一次
@@ -906,18 +905,46 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             self.time_futures.start()  # 启动
         self.start_status_futures = False
 
-    def auto_start_polling(self):
-        """自动启动基础信息显示"""
-        from core.rc_setting.setting import UiSettingQWidget
+    def init_auto_run(self):
+        """初始化"""
+        try:
+            setting = self.config['setting']
+            self.run_status_polling = True if setting['polling'].lower() == 'true' else False
+            self.run_status_futures = True if setting['futures'].lower() == 'true' else False
+            self.run_status_monitor = True if setting['monitor'].lower() == 'true' else False
+        except KeyError:
+            with open(self.user_data_path, "a") as f:
+                user_data = (
+                    '\n\n[setting]\nsystem = False\npolling = False\nfutures = False\nmonitor = False')
+                f.write(user_data)
+            self.config = ConfigObj(self.user_data_path, encoding='UTF8')
+            setting = self.config['setting']
+            self.run_status_polling = True if setting['polling'].lower() == 'true' else False
+            self.run_status_futures = True if setting['futures'].lower() == 'true' else False
+            self.run_status_monitor = True if setting['monitor'].lower() == 'true' else False
 
-        self.setting = UiSettingQWidget(
-            self.base_signal,
-            self.tray,
-            background_button=self.background_button,
-            monitor_button=self.monitor_button,
-            msg_status=self.msg_status,
-            msg_futures_status=self.msg_futures_status
-        )
+        if self.run_status_polling or self.run_status_futures or self.run_status_monitor:
+            from core.rc_setting.setting import UiSettingQWidget
+
+            self.setting = UiSettingQWidget(
+                self.base_signal,
+                self.tray,
+                background_button=self.background_button,
+                monitor_button=self.monitor_button,
+                msg_status=self.msg_status,
+                msg_futures_status=self.msg_futures_status
+            )
+            self.setting.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)  # 取消帮助按钮
+
+        if self.run_status_polling:
+            self.auto_run_polling()
+        if self.run_status_futures:
+            self.auto_run_futures()
+        if self.run_status_polling and self.run_status_monitor:
+            self.auto_run_monitor()
+
+    def auto_run_polling(self):
+        """自动启动基础信息显示"""
         base = self.config['base']
         symbol_list = self.setting.ui_base.data_verification(
             base['symbol'], base['symbol_2'], base['symbol_3'], base['symbol_4'])
@@ -925,7 +952,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         data = {'interval': interval, 'symbol': symbol_list, 'mode': int(base['mode'])}
         self.set_base(data)
 
-    def auto_start_futures(self):
+    def auto_run_futures(self):
         """自动启动FC信息显示"""
         futures = self.config['futures']
         symbol_list = self.setting.ui_futures.data_verification(
@@ -934,30 +961,46 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         data = {'interval': interval, 'symbol': symbol_list, 'mode': int(futures['mode'])}
         self.set_futures(data)
 
-    def auto_start_monitor(self):
+    def auto_run_monitor(self):
         """自动启动监控提醒"""
         monitor = self.config['monitor']
-        title = monitor['title']
-        msg = monitor['msg']
-        timeout = monitor['timeout']
-        msg_status = monitor['msg_status']
+        monitor_data = [
+            {
+                "up": self.__data_check(monitor['symbol_1_up']),
+                "down": self.__data_check(monitor['symbol_1_down']),
+                "price": True if monitor['symbol_1_price'].lower() == 'true' else False,
+                "trigger": False
+            },
+            {
+                "up": self.__data_check(monitor['symbol_2_up']),
+                "down": self.__data_check(monitor['symbol_2_down']),
+                "price": True if monitor['symbol_2_price'].lower() == 'true' else False,
+                "trigger": False
+            },
+            {
+                "up": self.__data_check(monitor['symbol_3_up']),
+                "down": self.__data_check(monitor['symbol_3_down']),
+                "price": True if monitor['symbol_3_price'].lower() == 'true' else False,
+                "trigger": False
+            },
+            {
+                "up": self.__data_check(monitor['symbol_4_up']),
+                "down": self.__data_check(monitor['symbol_4_down']),
+                "price": True if monitor['symbol_4_price'].lower() == 'true' else False,
+                "trigger": False
+            }
+        ]
+        data = {'enable': True if monitor['monitor_status'].lower() == 'true' else False, 'monitor_data': monitor_data}
+        self.get_monitor_data(data)
 
-        monitor_status = monitor['monitor_status']
-        symbol_1_up = monitor['symbol_1_up']
-        symbol_1_down = monitor['symbol_1_down']
-        symbol_1_price = monitor['symbol_1_price']
-
-        symbol_2_up = monitor['symbol_2_up']
-        symbol_2_down = monitor['symbol_2_down']
-        symbol_2_price = monitor['symbol_2_price']
-
-        symbol_3_up = monitor['symbol_3_up']
-        symbol_3_down = monitor['symbol_3_down']
-        symbol_3_price = monitor['symbol_3_price']
-
-        symbol_4_up = monitor['symbol_4_up']
-        symbol_4_down = monitor['symbol_4_down']
-        symbol_4_price = monitor['symbol_4_price']
+    @staticmethod
+    def __data_check(value):
+        """数据规范检查"""
+        try:
+            value = float(value) if value else None
+        except ValueError:
+            pass
+        return value
 
     @staticmethod
     def start_run(name='RoCoaster.exe'):

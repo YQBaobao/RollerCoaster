@@ -10,6 +10,8 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+from core import VERSION
+
 
 class Ui_Settiing(object):
     def setupUi(self, Settiing):
@@ -102,7 +104,7 @@ class Ui_Settiing(object):
 
     def retranslateUi(self, Settiing):
         _translate = QtCore.QCoreApplication.translate
-        Settiing.setWindowTitle(_translate("Settiing", "RollerCoaster"))
+        Settiing.setWindowTitle(_translate("Settiing", f"RollerCoaster v{VERSION}"))
         self.pushButton_monitor.setText(_translate("Settiing", "监控与提醒"))
         self.pushButton_shortcut_key.setText(_translate("Settiing", "快捷键设置"))
         self.pushButton_home.setText(_translate("Settiing", "首页"))

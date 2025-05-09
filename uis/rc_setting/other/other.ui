@@ -54,7 +54,7 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QCheckBox" name="checkBox">
+       <widget class="QCheckBox" name="checkBox_sys">
         <property name="text">
          <string>软件开机自启</string>
         </property>
@@ -70,21 +70,21 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QCheckBox" name="checkBox_2">
+       <widget class="QCheckBox" name="checkBox_polling">
         <property name="text">
          <string>基础信息</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_3">
+       <widget class="QCheckBox" name="checkBox_futures">
         <property name="text">
          <string>F C 信息</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_4">
+       <widget class="QCheckBox" name="checkBox_monitor">
         <property name="text">
          <string>监控与提醒</string>
         </property>

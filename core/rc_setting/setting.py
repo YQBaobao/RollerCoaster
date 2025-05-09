@@ -14,7 +14,7 @@ from PyQt5.QtCore import Qt, QFile
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import QDialog, QSystemTrayIcon
 
-from core import version
+from core import VERSION
 from core.rc_setting.background_color.background_color import UiBackgroundColorQWidget
 from core.rc_setting.base.base import UiBaseQWidget
 from core.rc_setting.futures.futures import UiFuturesQWidget
@@ -47,6 +47,7 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
     ):
         super().__init__(parent)
         self.setupUi(self)
+        self.setWindowFlag(Qt.WindowContextHelpButtonHint, on=False)
         self.init_style()
         self.base_signal = base_signal
         self.base_tray: QSystemTrayIcon = args[0]
@@ -147,7 +148,7 @@ class UiSettingQWidget(QDialog, Ui_Settiing):
 
     def set_check_update(self, tags):
         """判断，设置小红点"""
-        if tags[0] <= version:
+        if tags[0] <= VERSION:
             return
         icon = QIcon()  # 小红点
         icon.addPixmap(QPixmap(":/rc/images/little_red_dot.png"), QIcon.Normal, QIcon.Off)
