@@ -65,7 +65,11 @@ Through stocks and futures codes, monitor real-time price changes and place them
 
     ![04.png](./readme/04.png)
 
-7. New features?
+7. Other settings
+
+    ![08.png](./readme/08.png)
+
+8. New features?
 
    ![05.png](./readme/05.png)
 

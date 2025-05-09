@@ -64,7 +64,11 @@
 
    ![04.png](./readme/04.png)
 
-7. 新功能？
+7. 其他设置
+
+   ![08.png](./readme/08.png)
+
+8. 新功能？
 
    ![05.png](./readme/05.png)
 
