@@ -42,7 +42,6 @@ class UiOtherQWidget(QWidget, Ui_Other):
         self.checkBox_futures.setChecked(True if setting['futures'].lower() == 'true' else False)
         self.checkBox_monitor.setChecked(True if setting['monitor'].lower() == 'true' else False)
 
-
     def sys_toggled(self, checked):
         """软件开机自启"""
         if checked:

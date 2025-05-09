@@ -103,6 +103,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
                 user_data = (
                     '[base]\nsymbol = SZ002594\nsymbol_2=\nsymbol_3=\nsymbol_4=\nmode = 1\ninterval = 2000\n\n'
                     '[futures]\nsymbol = AU0\nsymbol_2=\nsymbol_3=\nsymbol_4=\nmode = 1\ninterval = 2000\n\n'
+                    '[setting]\nsystem = False\npolling = False\nfutures = False\nmonitor = False\n\n'
                     '[background_color]\ncolor = "#101010"\n\n'
                     '[shortcut_key]\nopen_setting = control+up\nshow_data = control+down\n'
                     'red_green_switch = control+left\nboss_key = control+right\n\n'
