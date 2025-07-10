@@ -483,7 +483,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             self.setting.set_check_update(self.tags)
         if not self.check_update_status:  # 只用请求一次
             # TODO DEV CLOSE
-            # asyncio.create_task(self.setting.check_update())  # 检查新版本，在事件循环中运行异步函数
+            asyncio.create_task(self.setting.check_update())  # 检查新版本，在事件循环中运行异步函数
             self.check_update_status = True  # 已经检查更新的标志
         self.setting_is_active_window = True
         self.setting.exec()
