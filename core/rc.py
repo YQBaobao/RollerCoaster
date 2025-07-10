@@ -24,6 +24,7 @@ from core.message_box import MessageBox
 from core.signals import BaseSignal
 from core.sina_js import SinaJs
 from core.snowball import Snowball
+from lib.config import ConfigManager
 from temp import TEMP
 from uis.rc_ui import Ui_RollerCoaster
 from static.rc_rc import qInitResources
@@ -106,7 +107,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
                     '[futures]\nsymbol = AU0\nsymbol_2=\nsymbol_3=\nsymbol_4=\nmode = 1\ninterval = 2000\n\n'
                     '[setting]\nsystem = False\npolling = False\nfutures = False\nmonitor = False\n\n'
                     '[background_color]\ncolor = "#101010"\n\n'
-                    '[data_source]\ndata_source = "SNOWBALL"\n\n'
+                    '[data_source]\nsource = "SNOWBALL"\n\n'
                     '[shortcut_key]\nopen_setting = control+up\nshow_data = control+down\n'
                     'red_green_switch = control+left\nboss_key = control+right\n\n'
                     '[config]\nbackground_button = false\n\n'
@@ -134,6 +135,8 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.default_style = self.dark if '#eeeeee' == color.name() or '#c7c8c7' == color.name() else self.light
         self.label_value.setStyleSheet(self.default_style)
         self.label_rate.setStyleSheet(self.default_style)
+        # 读取数据源
+        self.data_source = self.config['data_source']['source']
 
     def set_taskbar(self):
         """设置任务栏"""
@@ -241,7 +244,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
                 symbols = [symbol.upper() for symbol in symbols]  # 全大写
                 symbol = ','.join(symbols)
                 quotes = self.snowball.quote(symbol, timestamp)
-            elif self.data_source =="SINA1":
+            elif self.data_source == "SINA1":
                 symbols = [symbol.lower() for symbol in symbols]  # 全小写
                 symbol = ','.join(symbols)
                 quotes = self.sina_js.gu_quote_hq(symbol, timestamp)
@@ -412,7 +415,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         switch_menu.setIcon(icon)
         snowball = QAction(u'雪球', self)  # 添加二级菜单动作选项
         snowball.setCheckable(True)  # 设置为可勾选
-        snowball.setChecked(True)  # 默认选中
+        snowball.setChecked(True if self.data_source == "SNOWBALL" else False)  # 是否默认选中
         icon = QIcon()
         icon.addPixmap(QPixmap(":/rc/images/snowball.png"), QIcon.Normal, QIcon.Off)
         snowball.setIcon(icon)
@@ -420,6 +423,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         switch_menu_group.addAction(snowball)
         sina = QAction(u'新浪(线路1)', self)  # 添加二级菜单动作选项
         sina.setCheckable(True)  # 设置为可勾选
+        sina.setChecked(True if self.data_source == "SINA1" else False)  # 是否默认选中
         icon = QIcon()
         icon.addPixmap(QPixmap(":/rc/images/sina.png"), QIcon.Normal, QIcon.Off)
         sina.setIcon(icon)
@@ -427,6 +431,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         switch_menu_group.addAction(sina)  # 添加到 QActionGroup
         sina_2 = QAction(u'新浪(线路2)', self)  # 添加二级菜单动作选项
         sina_2.setCheckable(True)  # 设置为可勾选
+        sina_2.setChecked(True if self.data_source == "SINA2" else False)  # 是否默认选中
         icon = QIcon()
         icon.addPixmap(QPixmap(":/rc/images/sina.png"), QIcon.Normal, QIcon.Off)
         sina_2.setIcon(icon)
@@ -478,19 +483,29 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             self.setting.set_check_update(self.tags)
         if not self.check_update_status:  # 只用请求一次
             # TODO DEV CLOSE
-            asyncio.create_task(self.setting.check_update())  # 检查新版本，在事件循环中运行异步函数
+            # asyncio.create_task(self.setting.check_update())  # 检查新版本，在事件循环中运行异步函数
             self.check_update_status = True  # 已经检查更新的标志
         self.setting_is_active_window = True
         self.setting.exec()
 
     def switch_menu_sina(self):
         self.data_source = "SINA1"  # 数据源
+        # 读取配置并更新新配置
+        self.config = ConfigManager(self.user_data_path, new_config={"data_source": {"source": "SNOWBALL"}}).config
+        self.config['data_source']['source'] = self.data_source  # 更新配置
+        self.config.write()
 
     def switch_menu_sina_2(self):
         self.data_source = "SINA2"  # 数据源
+        self.config = ConfigManager(self.user_data_path, new_config={"data_source": {"source": "SNOWBALL"}}).config
+        self.config['data_source']['source'] = self.data_source  # 更新配置
+        self.config.write()
 
     def switch_menu_snowball(self):
         self.data_source = "SNOWBALL"  # 数据源
+        self.config = ConfigManager(self.user_data_path, new_config={"data_source": {"source": "SNOWBALL"}}).config
+        self.config['data_source']['source'] = self.data_source  # 更新配置
+        self.config.write()
 
     def tray_menu_license(self):
         """开源协议"""
@@ -668,7 +683,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             symbol = ','.join(symbols)
             # print("Futures:", quotes)
             print("Date Source: ", self.data_source)
-            if self.data_source =="SINA1" or self.data_source =="SNOWBALL": # 不支持雪球期货数据源，使用新浪线路1
+            if self.data_source == "SINA1" or self.data_source == "SNOWBALL":  # 不支持雪球期货数据源，使用新浪线路1
                 quotes = self.sina_js.qh_quote_hq(symbol, timestamp)
             else:
                 rn = self.sina_js.rn()
