@@ -3,7 +3,7 @@
 ProjectFileVersion = 1.1
 [General]
 Program name = RoCoaster
-Program version = 2.0.1.0
+Program version = 2.0.2.0
 Windows XP = 0
 Windows Server 2003 = 0
 Windows Vista = 0
@@ -321,6 +321,11 @@ WIN32 RoCoaster \f0\'b0\'b2\'d7\'b0\'d0\'ed\'bf\'c9\'d6\'a4\f1\par
 }
  [Licence_End]
 [Registry]
+HKEY_CURRENT_USER
+SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+RollerCoaster
+<InstallPath>\RoCoaster.exe
+1
 [Variables]
 [SCs]
 Desktop
