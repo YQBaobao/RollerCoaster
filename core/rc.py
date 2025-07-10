@@ -16,7 +16,7 @@ import psutil
 import win32gui
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor, QFont
-from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction, QLabel, QSizePolicy, QApplication
+from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction, QLabel, QSizePolicy, QApplication, QActionGroup
 from configobj import ConfigObj
 from system_hotkey import SystemHotkey
 
@@ -67,6 +67,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.init_auto_run()  # 自动启动
 
     def init_attribute(self):
+        self.data_source = "SNOWBALL"  # 数据源
         self.setting_is_active_window = False
         self.start_status = True
         self.start_status_futures = True  # FC
@@ -230,11 +231,19 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.time_monitor.timeout.connect(self.on_monitor_data)
 
     def get_value(self, symbols: list):
+        """获取股票数据"""
         try:
             self.current, self.percent = [], []
             timestamp = int(time.time() * 1000)
-            symbol = ','.join(symbols)
-            quotes = self.snowball.quote(symbol, timestamp)
+            # print("Date Source: ", self.data_source)
+            if self.data_source == "SNOWBALL":
+                symbols = [symbol.upper() for symbol in symbols]  # 全大写
+                symbol = ','.join(symbols)
+                quotes = self.snowball.quote(symbol, timestamp)
+            else:
+                symbols = [symbol.lower() for symbol in symbols]  # 全小写
+                symbol = ','.join(symbols)
+                quotes = self.sina_js.gu_quote_hq(symbol, timestamp)
             quotes_dict = {item['symbol']: item for item in quotes['data']}
             for symbol in symbols:
                 self.current.append(quotes_dict[symbol]['current'])  # 当前价格
@@ -378,20 +387,49 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.tray.setIcon(icon)
         self.tray.activated.connect(self.tray_icon_activated)
 
-        tray_menu = QMenu()
-        setting = QAction(QIcon('exit.png'), u'设置', self)  # 添加一级菜单动作选项
-        open_license = QAction(QIcon('exit.png'), u'开源许可', self)
-        quit_ = QAction(QIcon('exit.png'), u'退出', self)
+        # 添加一级菜单
+        tray_menu = QMenu(parent=self)
+        setting = QAction(u'设置', self)  # 添加一级菜单动作选项
         icon = QIcon()
         icon.addPixmap(QPixmap(":/rc/images/setting.png"), QIcon.Normal, QIcon.Off)
         setting.setIcon(icon)
+        tray_menu.addAction(setting)
+
+        # 添加二级菜单
+        switch_menu = QMenu(u"切换数据源", parent=self)
+        tray_menu.addMenu(switch_menu)
+        # 创建 QActionGroup 确保二级菜单项互斥
+        switch_menu_group = QActionGroup(self)
+        switch_menu_group.setExclusive(True)  # 设置为互斥，只能选中一个
+        icon = QIcon()
+        icon.addPixmap(QPixmap(":/rc/images/switch_source.png"), QIcon.Normal, QIcon.Off)
+        switch_menu.setIcon(icon)
+        sina = QAction(u'新浪', self)  # 添加二级菜单动作选项
+        sina.setCheckable(True)  # 设置为可勾选
+        sina.setChecked(True)  # 默认选中 sina
+        icon = QIcon()
+        icon.addPixmap(QPixmap(":/rc/images/sina.png"), QIcon.Normal, QIcon.Off)
+        sina.setIcon(icon)
+        switch_menu.addAction(sina)
+        switch_menu_group.addAction(sina)  # 添加到 QActionGroup
+        snowball = QAction(u'雪球', self)
+        snowball.setCheckable(True)
+        switch_menu_group.addAction(snowball)
+        icon = QIcon()
+        icon.addPixmap(QPixmap(":/rc/images/snowball.png"), QIcon.Normal, QIcon.Off)
+        snowball.setIcon(icon)
+        switch_menu.addAction(snowball)
+        sina.triggered.connect(self.switch_menu_sina)
+        snowball.triggered.connect(self.switch_menu_snowball)
+
+        open_license = QAction(u'开源许可', self)
+        quit_ = QAction(u'退出', self)
         icon = QIcon()
         icon.addPixmap(QPixmap(":/rc/images/open_license.png"), QIcon.Normal, QIcon.Off)
         open_license.setIcon(icon)
         icon = QIcon()
         icon.addPixmap(QPixmap(":/rc/images/quit.png"), QIcon.Normal, QIcon.Off)
         quit_.setIcon(icon)
-        tray_menu.addAction(setting)
         tray_menu.addAction(open_license)
         tray_menu.addAction(quit_)
         setting.triggered.connect(self.tray_menu_setting)
@@ -430,6 +468,12 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             self.check_update_status = True  # 已经检查更新的标志
         self.setting_is_active_window = True
         self.setting.exec()
+
+    def switch_menu_sina(self):
+        self.data_source = "SINA"  # 数据源
+
+    def switch_menu_snowball(self):
+        self.data_source = "SNOWBALL"  # 数据源
 
     def tray_menu_license(self):
         """开源协议"""
@@ -599,12 +643,13 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             lambda: self.show_value_futures_polling(self.symbol_futures, self.down_style, self.default_style))
 
     def get_value_futures(self, symbols: list):
+        """获取期货数据"""
         try:
             self.current_futures, self.percent_futures = [], []
             timestamp = int(time.time() * 1000)
             symbols = ['nf_' + symbol for symbol in symbols]
             symbol = ','.join(symbols)
-            quotes = self.sina_js.quote(symbol, timestamp)
+            quotes = self.sina_js.qh_quote_hq(symbol, timestamp)
             # print("Futures:", quotes)
             quotes_dict = {item['symbol']: item for item in quotes['data']}
             for symbol in symbols:
