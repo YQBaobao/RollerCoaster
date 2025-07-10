@@ -17,11 +17,13 @@ Through stocks and futures codes, monitor real-time price changes and place them
 - If it rises, the font is `red`. If it falls, the font is `green` (can be reversed);
 - After closing (16:00), you do not get the price. Before opening, check the time every 1 minute to get the price at the set time (9:00). [Note: This depends heavily on the computer local time, please make sure the time is accurate]
   - **`Note: In order to adapt to Hong Kong stocks, the closing time here is set to 16:00`**
+- Added the `Data source` switching function, currently available `Sina` and `Snowball`.
 
 ### How to use it?
 
 - Download the release version `exe` installer (may cause poison) and install it and start it. The default installation of `D disk`
 - Right-click icon in the system pallet》Settings》Basic settings》 and select the delay interval. After entering, click OK
+- Right-click icon in the system tray > Switch data source > Optional `Sina` and `Snowball`
 - Right-click the icon in the system tray to exit, then the program exits
 - Double-click the icon in the system tray to switch to hide/show data
 - Other settings: background color, shortcut keys, monitoring and reminder settings, update source selection
@@ -72,6 +74,10 @@ Through stocks and futures codes, monitor real-time price changes and place them
 8. New features?
 
    ![05.png](./readme/05.png)
+
+9. Switch data source 
+
+   ![09.png](readme/09.png)
 
 ### License
 
