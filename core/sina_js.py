@@ -66,6 +66,21 @@ class SinaJs(object):
             quote_dict['data'].append({"symbol": symbol.split(',')[index], "current": current, "percent": percent})
         return quote_dict
 
+    def qh_quote_w(self, symbol, timestamp):
+        url = self.gu_realtime_quote.format(timestamp, symbol)
+        self.headers.update({"host": "w.sinajs.cn", "Referer": "https://gu.sina.cn/"})
+        value = self.fetch(url, self.headers)
+        symbol_list = value.split("\n")[:-1]
+        quote_dict = {'data': []}
+        for index, value in enumerate(symbol_list):
+            value_list = value.split(',')
+            settlement_yesterday = float(value_list[10])
+            current = float(value_list[8])
+            percent = (current - settlement_yesterday) / settlement_yesterday * 100
+            percent = float(Decimal(percent).quantize(Decimal("0.01"), rounding="ROUND_HALF_UP"))
+            quote_dict['data'].append({"symbol": symbol.split(',')[index], "current": current, "percent": percent})
+        return quote_dict
+
     def gu_quote_w(self, symbol, timestamp):
         url = self.gu_realtime_quote.format(timestamp, symbol)
         self.headers.update({"host": "w.sinajs.cn", "Referer": "https://gu.sina.cn/"})
@@ -89,7 +104,8 @@ if __name__ == '__main__':
     for i in range(10):
         t = int(time.time() * 1000)
         # print(s.qh_quote_hq('nf_AU2602,nf_AU2508', t))
-        print(s.gu_quote_hq('sh600418,sz002436,sz001696', t))
-        # rn = s.rn()
-        # print(s.gu_quote_w('sh600418,sz002436,sz001696', rn))
+        # print(s.gu_quote_hq('sh600418,sz002436,sz001696', t))
+        rn = s.rn()
+        print(s.qh_quote_w('nf_AU2602,nf_AU2508', rn))
+        print(s.gu_quote_w('sh600418,sz002436,sz001696', rn))
         time.sleep(2)
