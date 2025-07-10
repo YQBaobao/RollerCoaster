@@ -37,7 +37,7 @@ Through stocks and futures codes, monitor real-time price changes and place them
 
 ### What problems may be encountered?
 - Show the word "错误":
-  - Solution: Add `stock.xueqiu.com`,`hq.sinajs.cn` to the proxy whitelist to prevent it from traversing proxy traffic
+  - Solution: Add `stock.xueqiu.com`,`hq.sinajs.cn`,`w.sinajs.cn` to the proxy whitelist to prevent it from traversing proxy traffic
 - Windows 11 does not display:
   - The new solution has been replaced, but the new solution shows a slight flaw compared to the old solution. However, there is no better solution at the moment. The reason is that after the 22H2 version of Windows 11, Microsoft updated the taskbar implementation method, which caused the original implementation method to be incompatible.
 
