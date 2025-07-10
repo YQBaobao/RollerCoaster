@@ -136,7 +136,10 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.label_value.setStyleSheet(self.default_style)
         self.label_rate.setStyleSheet(self.default_style)
         # 读取数据源
-        self.data_source = self.config['data_source']['source']
+        try:
+            self.data_source = self.config['data_source']['source']
+        except KeyError:
+            pass
 
     def set_taskbar(self):
         """设置任务栏"""
