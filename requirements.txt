@@ -8,3 +8,6 @@ psutil==6.1.1
 PyInstaller
 aiohttp==3.11.11
 asyncqt==0.8.0
+
+qdarkstyle
+qt-material
