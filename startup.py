@@ -34,7 +34,7 @@ class StartWindow(QObject):
 
         # 判断系统版本
         info = get_windows_system_info()
-        if not info.get('is_windows_11'):
+        if info.get('is_windows_11'):
             self.win11(loop)
         else:
             self.win10(loop)
