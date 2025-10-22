@@ -70,11 +70,13 @@ class Win11FloatingRollerCoasterApp(RollerCoasterApp):
 
     def get_taskbar_size(self):
         """获取任务栏尺寸"""
-        sections_width, _ = get_taskbar_sections_width()
-        if sections_width == self.sections_width:
-            return
-        self.sections_width = sections_width
-        self.move_window()
+        if not self.isMinimized():
+            sections_width, _ = get_taskbar_sections_width()
+            if sections_width == self.sections_width:
+                return
+            self.sections_width = sections_width
+            self.move_window()
+        return
 
     def init_action(self):
         super(Win11FloatingRollerCoasterApp, self).init_action()

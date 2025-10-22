@@ -172,11 +172,13 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
     def get_taskbar_size(self):
         """获取任务栏尺寸"""
-        self.b_new = win32gui.GetWindowRect(self.m_h_bar)
-        if self.b_new == self.b:  # 尺寸没变化，则直接返回
-            return
-        self.b = self.b_new
-        self.move_window()
+        if not self.isMinimized():
+            self.b_new = win32gui.GetWindowRect(self.m_h_bar)
+            if self.b_new == self.b:  # 尺寸没变化，则直接返回
+                return
+            self.b = self.b_new
+            self.move_window()
+        return
 
     def init_action(self):
         """信号"""
@@ -577,7 +579,12 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             return
         if data == 2:
             # 若是最小化，则正常显示窗口,若不是最小化，则最小化
-            self.showNormal() if self.isMinimized() or not self.isVisible() else self.showMinimized()
+            if self.isMinimized() or not self.isVisible():
+                self.showNormal()
+                self.time_set_taskbar.start()  # 启动
+            else:
+                self.showMinimized()
+                self.time_set_taskbar.stop()  # 停止
             return
         if data == 3:
             self.down_style = self.up if self.down_style == self.down else self.down

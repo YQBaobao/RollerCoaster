@@ -11,6 +11,7 @@ import asyncio
 import sys
 
 from PyQt5.QtCore import QObject, Qt
+from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtWidgets import QApplication
 from asyncqt import QEventLoop
 
@@ -23,16 +24,17 @@ class StartWindow(QObject):
     def __init__(self):
         super().__init__()
         # 启用 Qt 的高DPI支持
-        QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)  # 自动 DPI 缩放
-        QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)  # 使用高分辨率图像资源
-
+        QGuiApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)  # 启用高 DPI 缩放
+        QGuiApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)  # 矢量图/图标按 DPI 缩放
+        # 直通策略，避免缩放被 Qt 四舍五入（Qt 5.14+）
+        QGuiApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
         self.app = QApplication(sys.argv)
         loop = QEventLoop(self.app)  # 创建 asyncio 事件循环
         asyncio.set_event_loop(loop)
 
         # 判断系统版本
         info = get_windows_system_info()
-        if info.get('is_windows_11'):
+        if not info.get('is_windows_11'):
             self.win11(loop)
         else:
             self.win10(loop)
