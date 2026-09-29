@@ -1,0 +1,9 @@
+.idea/
+dist/
+build/
+node_modules/
+.DS_Store
+*.spec
+temp/
+test.*/
+user_data.ini
