@@ -101,11 +101,11 @@ if __name__ == '__main__':
     import time
 
     s = SinaJs()
-    for i in range(10):
+    for i in range(1):
         t = int(time.time() * 1000)
         # print(s.qh_quote_hq('nf_AU2602,nf_AU2508', t))
         # print(s.gu_quote_hq('sh600418,sz002436,sz001696', t))
         rn = s.rn()
-        print(s.qh_quote_w('nf_AU2602,nf_AU2508', rn))
+        # print(s.qh_quote_w('nf_AU2602,nf_AU2508', rn))
         print(s.gu_quote_w('sh600418,sz002436,sz001696', rn))
         time.sleep(2)

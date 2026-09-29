@@ -14,7 +14,7 @@ import time
 
 import psutil
 import win32gui
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QTimer, QEvent
 from PyQt5.QtGui import QIcon, QPixmap, QPalette, QColor, QFont
 from PyQt5.QtWidgets import QWidget, QSystemTrayIcon, QMenu, QAction, QLabel, QSizePolicy, QApplication, QActionGroup
 from configobj import ConfigObj
@@ -39,7 +39,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
     percent = [0]
     up = 'color: rgb(170, 0, 0);'
     down = 'color: rgb(0, 170, 0);'
-    light = 'color: rgb(255, 255, 255);'
+    light = 'color: rgb(268, 268, 268);'
     dark = 'color: rgb(0, 0, 0);'
     open_setting = ('control', 'up')  # 默认快捷键
     show_data = ('control', 'down')
@@ -83,6 +83,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         self.msg_status = True  # 消息提醒状态
         self.msg_futures_status = True  # FC 消息提醒状态
         self.check_update_status = False  # 未检查更新的标志
+        self.show_normal_status = True  # 显示状态
 
         self.symbol_is_enable = False  # 是否开启 Symbol
         self.futures_is_enable = False  # 是否开启 FC
@@ -162,6 +163,8 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
 
         self.setGeometry(self.b[2] - self.b[0] - 55, -6, 55, self.b[3] - self.b[1])  # 调整我们自己的窗口到预留位置的大小
         win32gui.SetParent(int(self.winId()), self.m_h_bar)  # 将我们自己的窗口设置为m_hBar的子窗口
+        if not self.show_normal_status:
+            print(22222222222)
 
     def timer_set_taskbar(self, interval: int = 200):  # 500ms
         """定时设置任务栏"""
@@ -1109,6 +1112,15 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
         except KeyboardInterrupt:
             print("Exiting...")
             exit(0)
+
+    def changeEvent(self, event):
+        # 当窗口状态改变时触发
+        if event.type() == QEvent.WindowStateChange:
+            # 如果我们希望窗口保持最小化
+            if self.is_minimized and self.windowState() != Qt.WindowMinimized:
+                # 强制恢复最小化状态
+                self.setWindowState(Qt.WindowMinimized)
+        super().changeEvent(event)
 
     def closeEvent(self, event) -> None:
         try:
