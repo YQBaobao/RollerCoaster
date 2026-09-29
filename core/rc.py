@@ -249,7 +249,7 @@ class RollerCoasterApp(QWidget, Ui_RollerCoaster):
             timestamp = int(time.time() * 1000)
             print("Date Source: ", self.data_source)
             if self.data_source == "SNOWBALL":
-                symbols = [symbol.upper() for symbol in symbols]  # 全大写
+                symbols = [symbol.lower() for symbol in symbols]  # 全小写
                 symbol = ','.join(symbols)
                 quotes = self.snowball.quote(symbol, timestamp)
             elif self.data_source == "SINA1":
