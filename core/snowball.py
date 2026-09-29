@@ -46,9 +46,20 @@ class Snowball(object):
             raise Exception(response.content)
         return json.loads(response.content)
 
+    @staticmethod
+    def format_quote(response):
+        """格式化行情数据"""
+        quote_dict = {'data': []}
+        for item in response['data']['items']:
+            quote = item['quote']
+            quote_dict['data'].append({"symbol": quote['symbol'].lower(),
+                                       "current": quote['current'],
+                                       "percent": quote['percent']})
+        return quote_dict
+
     def quote(self, token, symbol, timestamp):
         url = self.realtime_quote + symbol + f'&_={timestamp}'
-        return self.fetch(token, url)
+        return self.format_quote(self.fetch(token, url))
 
 
 class GuShiTong(object):
@@ -83,7 +94,7 @@ class GuShiTong(object):
 if __name__ == '__main__':
     s = Snowball()
     t = int(time.time() * 1000)
-    print(s.quote('xq_a_token=7024a6bc72f8463c74a9ea9e33051f71286293a2;', 'sh600418,sz002436,sz001696', t))
+    print(s.quote('xq_a_token=7024a6bc72f8463c74a9ea9e33051f71286293a2;', 'SH603327,SH600203,SZ000823', t))
 
-    g = GuShiTong()
-    print(g.get_trade_status('SZ002594'))
+    # g = GuShiTong()
+    # print(g.get_trade_status('SZ002594'))

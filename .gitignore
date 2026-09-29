@@ -1,3 +1,6 @@
+__pycache__/
+*.pyc
+__MACOSX/
 .idea/
 dist/
 build/
